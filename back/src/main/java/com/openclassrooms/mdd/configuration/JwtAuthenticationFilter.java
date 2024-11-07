@@ -32,7 +32,7 @@ import java.util.Optional;
  */
 @Component
 @Slf4j
-abstract public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtService jwtService;
