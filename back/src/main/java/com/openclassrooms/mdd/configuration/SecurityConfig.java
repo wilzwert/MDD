@@ -50,8 +50,8 @@ public class SecurityConfig {
                         auth.requestMatchers(
                                         "/api/auth/register",
                                         "/api/auth/login",
-                                        // TODO apiDocProperties.getApiDocsPath()+"/**",
-                                        // TODO apiDocProperties.getSwaggerPath()+"/**",
+                                        apiDocProperties.getApiDocsPath()+"/**",
+                                        apiDocProperties.getSwaggerPath()+"/**",
                                         // note : we have to add /swagger-ui/** because event if swagger path is set in configuration
                                         // the ui is redirected to /swagger-ui/index.html
                                         "/swagger-ui/**"
@@ -64,11 +64,11 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-    /* TODO
+
     @Bean
     public UserDetailsService userDetailsService() {
         return userDetailsService;
-    }*/
+    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

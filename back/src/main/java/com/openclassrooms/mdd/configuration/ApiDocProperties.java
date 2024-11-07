@@ -15,7 +15,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @Getter
 @Setter
 public class ApiDocProperties {
-    /*
+
     @NestedConfigurationProperty
     private ApiDocs apiDocs = new ApiDocs();
     public String getApiDocsPath() {
@@ -39,5 +39,5 @@ public class ApiDocProperties {
     @Setter
     public static class SwaggerUi {
         private String path;
-    }*/
+    }
 }
