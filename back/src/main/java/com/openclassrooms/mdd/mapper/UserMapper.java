@@ -24,5 +24,8 @@ public interface UserMapper {
     UserDto userToUserDTO(User user);
 
     @InheritInverseConfiguration
+    @Mapping(target = "id",ignore = true)
+    @Mapping(target = "createdAt",ignore = true)
+    @Mapping(target = "updatedAt",ignore = true)
     User registerUserDtoToUser(RegisterUserDto userDto);
 }
