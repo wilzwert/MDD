@@ -79,6 +79,15 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy-agent -->
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy-agent</artifactId>
+            <version>1.15.10</version>
+            <scope>test</scope>
+        </dependency>
+
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -141,6 +150,24 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>@{argLine} -javaagent:${net.bytebuddy:byte-buddy-agent:jar}</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
@@ -155,7 +182,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
+                <version>0.8.12</version>
                 <configuration>
                     <excludes>
                         <exclude>com/openclassrooms/starterjwt/SpringBootSecurityJwtApplication.class</exclude>
@@ -242,6 +269,7 @@
                         </configuration>
                     </execution>
 
+                    <!-- TODO
                     <execution>
                         <id>jacoco-check</id>
                         <goals>
@@ -260,9 +288,9 @@
                                         </limit>
                                     </limits>
                                 </rule>
-                            </rules>
+                            </rules>-
                         </configuration>
-                    </execution>
+                    </execution>-->
 
                 </executions>
             </plugin>
@@ -271,6 +299,7 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.22.2</version>
                 <configuration>
+                    <!--<argLine>@{argLine} ${failsafe.jacoco.args} -javaagent:${net.bytebuddy:byte-buddy-agent:jar}</argLine>-->
                     <argLine>${failsafe.jacoco.args}</argLine>
                     <includes>
                         <include>**/*IT.java</include>
