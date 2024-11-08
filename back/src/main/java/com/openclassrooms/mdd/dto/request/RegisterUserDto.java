@@ -14,7 +14,7 @@ import lombok.Data;
  */
 
 @Data
-@Schema(description = "Object expected for user registration request" )
+@Schema(description = "Object expected for a user registration request" )
 public class RegisterUserDto {
     @NotBlank(message = "The email is required")
     @Email(message = "Email should be valid")

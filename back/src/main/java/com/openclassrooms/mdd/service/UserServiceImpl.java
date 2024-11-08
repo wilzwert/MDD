@@ -24,20 +24,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
     // TODO private final AclService aclService;
 
     public UserServiceImpl(
             final UserRepository userRepository,
             final PasswordEncoder passwordEncoder,
             final AuthenticationManager authenticationManager,
-            final JwtService jwtService
             // TODO final AclService aclService
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
-        this.jwtService = jwtService;
         // this.aclService = aclService;
     }
 
@@ -80,7 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findUserById(final long id) {
+    public Optional<User> findUserById(final int id) {
         return userRepository.findById(id);
     }
 

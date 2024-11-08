@@ -1,11 +1,9 @@
 package com.openclassrooms.mdd.repository;
 
 
-import com.openclassrooms.mdd.model.User;
+import com.openclassrooms.mdd.model.Topic;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -14,6 +12,5 @@ import java.util.Optional;
  */
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByEmail(String email);
+public interface TopicRepository extends JpaRepository<Topic, Integer> {
 }

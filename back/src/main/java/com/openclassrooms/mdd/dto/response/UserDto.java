@@ -1,4 +1,4 @@
-package com.openclassrooms.mdd.dto;
+package com.openclassrooms.mdd.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,8 +9,6 @@ import lombok.*;
  * DTO used to send a User in a http response
  */
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "Representation of a user" )
