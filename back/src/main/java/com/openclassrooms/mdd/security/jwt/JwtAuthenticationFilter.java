@@ -1,9 +1,9 @@
-package com.openclassrooms.mdd.configuration;
+package com.openclassrooms.mdd.security.jwt;
 
 
 import com.openclassrooms.mdd.model.JwtToken;
-import com.openclassrooms.mdd.service.CustomUserDetailsService;
-import com.openclassrooms.mdd.service.JwtService;
+import com.openclassrooms.mdd.security.service.CustomUserDetailsService;
+import com.openclassrooms.mdd.security.service.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;

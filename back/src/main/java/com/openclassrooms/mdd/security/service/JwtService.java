@@ -1,4 +1,4 @@
-package com.openclassrooms.mdd.service;
+package com.openclassrooms.mdd.security.service;
 
 
 import com.openclassrooms.mdd.model.JwtToken;
