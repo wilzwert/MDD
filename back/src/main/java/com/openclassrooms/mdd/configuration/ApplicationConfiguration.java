@@ -11,7 +11,7 @@ import org.springframework.context.annotation.PropertySource;
  * Time:16:05
  */
 @Configuration
-@PropertySource("file:./back/.env")
+@PropertySource("file:.env")
 @EnableConfigurationProperties({ ServerProperties.class, ApiDocProperties.class})
 public class ApplicationConfiguration {
 
