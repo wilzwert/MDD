@@ -9,6 +9,7 @@ package com.openclassrooms.mdd.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,8 +23,8 @@ import java.util.List;
  * @author Wilhelm Zwertvaegher
  */
 
-@Getter
-@Setter
+@Data
+@Accessors(chain = true)
 @Entity
 @Table(name="user")
 @AllArgsConstructor
