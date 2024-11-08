@@ -1,6 +1,7 @@
 package com.openclassrooms.mdd.dto.request;
 
 
+import com.openclassrooms.mdd.validation.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -25,6 +26,7 @@ public class RegisterUserDto {
     private String userName;
 
     @NotBlank(message = "The password is required")
+    @Password
     @Schema(description = "User password")
     private String password;
 }
