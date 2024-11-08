@@ -3,6 +3,7 @@ package com.openclassrooms.mdd.service;
 
 import com.openclassrooms.mdd.model.User;
 import com.openclassrooms.mdd.repository.UserRepository;
+import com.openclassrooms.mdd.security.service.JwtService;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
