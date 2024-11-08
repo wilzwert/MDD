@@ -17,6 +17,7 @@
 
     <properties>
         <java.version>23</java.version>
+        <start-class>com.openclassrooms.mdd.MddApplication</start-class>
     </properties>
 
     <dependencies>

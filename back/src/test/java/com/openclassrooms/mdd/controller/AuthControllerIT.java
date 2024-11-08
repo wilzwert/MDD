@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.mdd.payload.request.LoginRequest;
 import com.openclassrooms.mdd.payload.request.RegisterUserDto;
 import com.openclassrooms.mdd.payload.response.JwtResponse;*/
+import com.openclassrooms.mdd.dto.request.LoginRequestDto;
 import com.openclassrooms.mdd.dto.request.RegisterUserDto;
+import com.openclassrooms.mdd.dto.response.JwtResponse;
 import com.openclassrooms.mdd.model.User;
 import com.openclassrooms.mdd.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,9 +27,11 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,7 +60,7 @@ public class AuthControllerIT {
 
     private final static String LOGIN_URL = "/api/auth/login";
     private final static String REGISTER_URL = "/api/auth/register";
-    /*
+
     @Nested
     class AuthControllerAuthenticateIT {
 
@@ -69,7 +73,7 @@ public class AuthControllerIT {
         @Test
         public void shouldReturnBadRequestWhenRequestBodyInvalid() throws Exception {
             // no password
-            LoginRequest loginRequest = new LoginRequest();
+            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail("test@example.com");
             mockMvc.perform(post(LOGIN_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(loginRequest)))
                     .andExpect(status().isBadRequest());
@@ -78,7 +82,7 @@ public class AuthControllerIT {
         @Test
         public void shouldReturnUnauthorizedWhenUserNotFound() throws Exception {
             // no password
-            LoginRequest loginRequest = new LoginRequest();
+            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail("test@example.com");
             loginRequest.setPassword("abcd1234");
             mockMvc.perform(post(LOGIN_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(loginRequest)))
@@ -88,17 +92,15 @@ public class AuthControllerIT {
         @Test
         public void shouldReturnJwtResponse() throws Exception {
             // no password
-            LoginRequest loginRequest = new LoginRequest();
+            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail("test@example.com");
             loginRequest.setPassword("abcd1234");
 
             User user = new User()
-                    .setId(1L)
+                    .setId(1)
                     .setEmail("test@example.com")
                     .setPassword(passwordEncoder.encode("abcd1234"))
-                    .setFirstName("Test")
-                    .setLastName("User")
-                    .setAdmin(true);
+                    .setUserName("testuser");
 
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
 
@@ -110,12 +112,9 @@ public class AuthControllerIT {
             assertThat(response.getType()).isEqualTo("Bearer");
             assertThat(response.getToken()).isNotEmpty();
             assertThat(response.getId()).isEqualTo(user.getId());
-            assertThat(response.getUsername()).isEqualTo("test@example.com");
-            assertThat(response.getAdmin()).isTrue();
-            assertThat(response.getFirstName()).isEqualTo("Test");
-            assertThat(response.getLastName()).isEqualTo("User");
+            assertThat(response.getUsername()).isEqualTo("testuser");
         }
-    }*/
+    }
 
     @Nested
     class AuthControllerRegisterIT {
@@ -133,7 +132,7 @@ public class AuthControllerIT {
 
         @Test
         public void shouldReturnBadRequestWhenRequestBodyEmpty() throws Exception {
-            mockMvc.perform(post(REGISTER_URL))
+            mockMvc.perform(post(REGISTER_URL)).andDo(print())
                     .andExpect(status().isBadRequest());
         }
 
@@ -176,6 +175,7 @@ public class AuthControllerIT {
         public void shouldReturnBadRequestWhenPasswordWithNoUppercase() throws Exception {
             registerUserDto.setPassword("abcd1234.");
             mockMvc.perform(post(REGISTER_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerUserDto)))
+                    .andDo(print())
                     .andExpect(status().isBadRequest());
         }
 

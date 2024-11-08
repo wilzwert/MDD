@@ -30,28 +30,23 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationEntryPoint unauthorizedHandler;
     private final ApiDocProperties apiDocProperties;
 
     public SecurityConfig(
             CustomUserDetailsService userDetailsService,
             JwtAuthenticationFilter jwtAuthenticationFilter,
-            AuthenticationEntryPoint authenticationEntryPoint,
             ApiDocProperties apiDocProperties
 
     ) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.unauthorizedHandler = authenticationEntryPoint;
         this.apiDocProperties = apiDocProperties;
-
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         // allow publicly accessible paths
