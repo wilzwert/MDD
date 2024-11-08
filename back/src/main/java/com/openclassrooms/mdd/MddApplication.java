@@ -2,6 +2,8 @@ package com.openclassrooms.mdd;
 
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -9,6 +11,8 @@ import org.springframework.boot.SpringApplication;
  * Time:15:47
  */
 
+@SpringBootApplication
+@EnableJpaAuditing
 public class MddApplication {
     public static void main(String[] args) {
         SpringApplication.run(MddApplication.class, args);
