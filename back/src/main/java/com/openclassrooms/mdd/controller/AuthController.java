@@ -6,7 +6,7 @@ import com.openclassrooms.mdd.dto.response.ErrorResponseDto;
 import com.openclassrooms.mdd.dto.response.JwtTokenDto;
 import com.openclassrooms.mdd.mapper.UserMapper;
 import com.openclassrooms.mdd.model.User;
-import com.openclassrooms.mdd.service.JwtService;
+import com.openclassrooms.mdd.security.service.JwtService;
 import com.openclassrooms.mdd.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -59,7 +59,6 @@ public class AuthController {
     public JwtTokenDto register(@Valid @RequestBody final RegisterUserDto registerUserDto) {
         log.info("Register user with email {} and userName {}", registerUserDto.getEmail(), registerUserDto.getUserName());
         User registerUser = userMapper.registerUserDtoToUser(registerUserDto);
-        log.info("Register user with email {} and userName {}", registerUser.getEmail(), registerUser.getUserName());
         try {
             User user = userService.registerUser(registerUser);
             String token = jwtService.generateToken(user);
