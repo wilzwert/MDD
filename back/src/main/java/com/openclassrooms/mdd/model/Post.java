@@ -1,14 +1,10 @@
 package com.openclassrooms.mdd.model;
 
-
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,20 +12,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * @author Wilhelm Zwertvaegher
- * Date:08/11/2024
- * Time:15:23
- */
-
 @Data
 @Accessors(chain = true)
 @Entity
-@Table(name="topic")
+@Table(name="post")
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners({AuditingEntityListener.class})
-public class Topic {
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -38,7 +28,7 @@ public class Topic {
     private String title;
 
     @Column
-    private String description;
+    private String content;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -49,20 +39,13 @@ public class Topic {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator_id", nullable = true)
-    // let db handle cascade deletion
-    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "topic_id", nullable = false)
+    private Topic topic;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "topic")
-    private List<Post> posts;
-
-    /**
-     * Override
-     * @return String the string representation of this Topic
-     */
-    @Override
-    public String toString() {
-        return "Topic [id=" + id + ", title=" + title +"]";
-    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 }
