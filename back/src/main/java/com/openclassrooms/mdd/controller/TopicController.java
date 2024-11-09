@@ -3,10 +3,13 @@ package com.openclassrooms.mdd.controller;
 
 import com.openclassrooms.mdd.dto.request.CreateTopicDto;
 import com.openclassrooms.mdd.dto.response.PostDto;
+import com.openclassrooms.mdd.dto.response.SubscriptionDto;
 import com.openclassrooms.mdd.dto.response.TopicDto;
 import com.openclassrooms.mdd.mapper.PostMapper;
+import com.openclassrooms.mdd.mapper.SubscriptionMapper;
 import com.openclassrooms.mdd.mapper.TopicMapper;
 import com.openclassrooms.mdd.model.Post;
+import com.openclassrooms.mdd.model.Subscription;
 import com.openclassrooms.mdd.model.Topic;
 import com.openclassrooms.mdd.model.User;
 import com.openclassrooms.mdd.service.PostService;
@@ -53,12 +56,21 @@ public class TopicController {
 
     private final PostMapper postMapper;
 
-    public TopicController(TopicService topicService, UserService userService, PostService postService, TopicMapper topicMapper, PostMapper postMapper) {
+    private final SubscriptionMapper subscriptionMapper;
+
+    public TopicController(
+            TopicService topicService,
+            UserService userService,
+            PostService postService,
+            TopicMapper topicMapper,
+            PostMapper postMapper,
+            SubscriptionMapper subscriptionMapper) {
         this.topicService = topicService;
         this.userService = userService;
         this.postService = postService;
         this.topicMapper = topicMapper;
         this.postMapper = postMapper;
+        this.subscriptionMapper = subscriptionMapper;
     }
 
     @Operation(summary = "Retrieve all topics", description = "Retrieve all topics")
@@ -131,4 +143,33 @@ public class TopicController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Topic could not be created");
         }
     }
+
+    @PostMapping("{id}/subscription")
+    public SubscriptionDto subscribe(@PathVariable("id") String id, Principal principal) {
+        log.info("Subscribe to topic {}", id);
+        try {
+            Optional<User> foundUser = userService.findUserByEmail(principal.getName());
+            if(foundUser.isEmpty()) {
+                log.warn("Subscribe to a topic : couldn't get user info");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
+            }
+            Subscription subscription = userService.subscribe(foundUser.get(), Integer.parseInt(id));
+            return subscriptionMapper.subscriptionToSubscriptionDto(subscription);
+        }
+        catch(Exception e) {
+            log.error("Subscribe to a topic: subscription could not be created", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Subscription could not be created");
+        }
+    }
+    /* TODO
+    @DeleteMapping("{id}/participation")
+    public ResponseEntity<?> noLongerParticipate(@PathVariable("id") String id, @PathVariable("userId") String userId) {
+        try {
+            this.sessionService.noLongerParticipate(Long.parseLong(id), Long.parseLong(userId));
+
+            return ResponseEntity.ok().build();
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }*/
 }

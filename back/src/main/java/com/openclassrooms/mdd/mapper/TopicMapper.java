@@ -4,7 +4,6 @@ package com.openclassrooms.mdd.mapper;
 import com.openclassrooms.mdd.dto.request.CreateTopicDto;
 import com.openclassrooms.mdd.dto.response.TopicDto;
 import com.openclassrooms.mdd.model.Topic;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 
@@ -23,6 +22,5 @@ public interface TopicMapper {
 
     List<TopicDto> topicToTopicDTO(List<Topic> topics);
 
-    @InheritInverseConfiguration
     Topic createTopicDtoToTopic(CreateTopicDto topicDto);
 }

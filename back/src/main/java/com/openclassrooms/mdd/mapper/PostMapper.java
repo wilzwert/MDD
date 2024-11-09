@@ -4,7 +4,6 @@ package com.openclassrooms.mdd.mapper;
 import com.openclassrooms.mdd.dto.request.CreatePostDto;
 import com.openclassrooms.mdd.dto.response.PostDto;
 import com.openclassrooms.mdd.model.Post;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 
@@ -23,6 +22,5 @@ public interface PostMapper {
 
     List<PostDto> postToPostDTO(List<Post> posts);
 
-    @InheritInverseConfiguration
     Post createPostDtoToPost(CreatePostDto postDto);
 }

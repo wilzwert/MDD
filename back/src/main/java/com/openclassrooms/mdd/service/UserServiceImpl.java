@@ -1,9 +1,14 @@
 package com.openclassrooms.mdd.service;
 
 
+import com.openclassrooms.mdd.model.Subscription;
+import com.openclassrooms.mdd.model.Topic;
 import com.openclassrooms.mdd.model.User;
+import com.openclassrooms.mdd.repository.SubscriptionRepository;
+import com.openclassrooms.mdd.repository.TopicRepository;
 import com.openclassrooms.mdd.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,19 +24,27 @@ import java.util.Optional;
  * Time:16:32
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final TopicRepository topicRepository;
+    private final SubscriptionRepository subscriptionRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+
     // TODO private final AclService aclService;
 
     public UserServiceImpl(
             final UserRepository userRepository,
+            final TopicRepository topicRepository,
+            final SubscriptionRepository subscriptionRepository,
             final PasswordEncoder passwordEncoder,
             final AuthenticationManager authenticationManager
             // TODO final AclService aclService
     ) {
         this.userRepository = userRepository;
+        this.topicRepository = topicRepository;
+        this.subscriptionRepository = subscriptionRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         // this.aclService = aclService;
@@ -51,6 +64,17 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(User user) {
         // TODO aclService.removeUser(user);
         userRepository.delete(user);
+    }
+
+    @Override
+    public Subscription subscribe(User user, int topicId) {
+        Topic topic = topicRepository.findById(topicId).orElseThrow(() -> new RuntimeException("Cannot find topic"));
+
+        Subscription subscription = new Subscription();
+        subscription.setTopic(topic);
+        subscription.setUser(user);
+
+        return subscriptionRepository.save(subscription);
     }
 
     @Override

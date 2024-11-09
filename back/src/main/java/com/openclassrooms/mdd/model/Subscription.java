@@ -1,6 +1,7 @@
 package com.openclassrooms.mdd.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,14 +22,16 @@ import java.time.LocalDateTime;
 public class Subscription {
 
     @EmbeddedId
-    private SubscriptionKey id;
+    private SubscriptionKey id = new SubscriptionKey();
 
     @ManyToOne
+    @NotNull
     @MapsId("userId")
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
+    @NotNull
     @MapsId("topicId")
     @JoinColumn(name = "topic_id")
     private Topic topic;

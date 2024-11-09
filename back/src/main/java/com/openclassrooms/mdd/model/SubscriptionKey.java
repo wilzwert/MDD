@@ -10,8 +10,8 @@ import java.io.Serializable;
 @Embeddable
 public class SubscriptionKey implements Serializable {
     @Column(name = "user_id")
-    int userId;
+    private int userId;
 
     @Column(name = "topic_id")
-    int topicId;
+    private int topicId;
 }
