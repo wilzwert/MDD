@@ -43,7 +43,7 @@ public class CustomUserDetailsServiceTest {
 
         assertThat(userDetails).isNotNull();
         assertThat(userDetails.getId()).isEqualTo(1L);
-        assertThat(userDetails.getUsername()).isEqualTo("Username");
+        assertThat(userDetails.getUsername()).isEqualTo("test@example.com");
         assertThat(userDetails.getPassword()).isEqualTo("password");
         assertThat(userDetails.getAuthorities()).hasSize(0);
         assertThat(userDetails.isAccountNonExpired()).isTrue();

@@ -1,6 +1,7 @@
 package com.openclassrooms.mdd.exception;
 
 import com.openclassrooms.mdd.dto.response.ErrorResponseDto;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -64,5 +65,23 @@ public class GlobalExceptionHandler {
         ErrorResponseDto.setMessage("Unsupported method");
         ErrorResponseDto.setTime(new Date().toString());
         return new ResponseEntity<>(ErrorResponseDto, ex.getStatusCode());
+    }
+
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<ErrorResponseDto> generateNumberFormatException(NumberFormatException ex) {
+        ErrorResponseDto ErrorResponseDto = new ErrorResponseDto();
+        ErrorResponseDto.setStatus(HttpStatus.BAD_REQUEST.toString());
+        ErrorResponseDto.setMessage("Bad Request " + ex.getMessage());
+        ErrorResponseDto.setTime(new Date().toString());
+        return new ResponseEntity<>(ErrorResponseDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponseDto> generateBadRequestException(BadRequestException ex) {
+        ErrorResponseDto ErrorResponseDto = new ErrorResponseDto();
+        ErrorResponseDto.setStatus(HttpStatus.BAD_REQUEST.toString());
+        ErrorResponseDto.setMessage("Bad Request " + ex.getMessage());
+        ErrorResponseDto.setTime(new Date().toString());
+        return new ResponseEntity<>(ErrorResponseDto, HttpStatus.BAD_REQUEST);
     }
 }

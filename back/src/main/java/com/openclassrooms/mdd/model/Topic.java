@@ -1,40 +1,40 @@
 package com.openclassrooms.mdd.model;
 
+
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author Wilhelm Zwertvaegher
- * Date:07/11/2024
- * Time:15:52
+ * Date:08/11/2024
+ * Time:15:23
  */
 
 @Data
 @Accessors(chain = true)
 @Entity
-@Table(name="user")
+@Table(name="topic")
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners({AuditingEntityListener.class})
-public class User {
+public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(unique = true, nullable = false)
-    private String email;
 
-    @Column(name = "user_name", unique = true, nullable = false)
-    private String userName;
+    @Column
+    private String title;
 
-    @Column(nullable = false)
-    private String password;
+    @Column
+    private String description;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -44,15 +44,16 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
-    private List<Topic> topics;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id")
+    private User creator;
 
     /**
      * Override
-     * @return String the string representation of this User
+     * @return String the string representation of this Topic
      */
     @Override
     public String toString() {
-        return "User [id=" + id + ", email=" + email + ", userName=" + userName + ", createdAd=" + createdAt+", updatedAt=" + updatedAt+"]";
+        return "Topic [id=" + id + ", title=" + title +"]";
     }
 }
