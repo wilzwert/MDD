@@ -1,10 +1,6 @@
 package com.openclassrooms.mdd.controller;
 
 
-import com.openclassrooms.mdd.dto.request.LoginRequestDto;
-import com.openclassrooms.mdd.dto.request.RegisterUserDto;
-import com.openclassrooms.mdd.dto.response.ErrorResponseDto;
-import com.openclassrooms.mdd.dto.response.JwtResponse;
 import com.openclassrooms.mdd.dto.response.UserDto;
 import com.openclassrooms.mdd.mapper.UserMapper;
 import com.openclassrooms.mdd.model.User;
@@ -17,12 +13,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityExistsException;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
