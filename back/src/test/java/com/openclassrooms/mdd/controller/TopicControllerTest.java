@@ -47,7 +47,6 @@ public class TopicControllerTest {
     @Mock
     private TopicMapper topicMapper;
 
-    @Disabled
     @Nested
     class TopicControllerFindTest {
         @Test
