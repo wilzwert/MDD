@@ -1,7 +1,5 @@
 package com.openclassrooms.mdd.model;
 
-
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -56,6 +54,9 @@ public class Topic {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "topic")
     private List<Post> posts;
+
+    @OneToMany(mappedBy = "topic")
+    private List<Subscription> subscriptions;
 
     /**
      * Override
