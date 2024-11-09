@@ -200,7 +200,7 @@ public class AuthControllerIT {
 
             mockMvc.perform(post(REGISTER_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerUserDto)))
                     .andExpect(status().is(HttpStatus.CONFLICT.value()))
-                    .andExpect(status().reason("Email already exists"));
+                    .andExpect(jsonPath("message").value("Email already exists"));
         }
 
         @Test
