@@ -1,6 +1,7 @@
 package com.openclassrooms.mdd.controller;
 
 import com.openclassrooms.mdd.dto.request.CreatePostDto;
+import com.openclassrooms.mdd.dto.response.CommentDto;
 import com.openclassrooms.mdd.dto.response.PostDto;
 import com.openclassrooms.mdd.dto.response.PostDto;
 import com.openclassrooms.mdd.mapper.PostMapper;
@@ -160,6 +161,29 @@ public class PostControllerTest {
             assertThat(createdPostDto.getContent()).isEqualTo("Post content");
             assertThat(createdPostDto.getCreatedAt()).isEqualTo(now);
             assertThat(createdPostDto.getUpdatedAt()).isEqualTo(now);
+        }
+    }
+
+    @Nested
+    class PostControllerCreateCommentTest {
+
+        @Mock
+        private Principal principal;
+
+        @Test
+        public void shouldCreateComment() {
+            LocalDateTime now = LocalDateTime.now();
+
+            Post post = new Post();
+            post.setId(1).setTitle("Test post").setCreatedAt(now).setUpdatedAt(now).setAuthor(new User().setId(1));
+
+            CommentDto responseCommentDto = new CommentDto();
+            responseCommentDto.setId(1);
+            responseCommentDto.setCreatedAt(now);
+            responseCommentDto.setUpdatedAt(now);
+            responseCommentDto.setContent("Comment content");
+            // TODO
+
         }
     }
     /* TODO
