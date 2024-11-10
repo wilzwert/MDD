@@ -1,10 +1,14 @@
 package com.openclassrooms.mdd.controller;
 
 import com.openclassrooms.mdd.dto.request.CreateTopicDto;
+import com.openclassrooms.mdd.dto.response.PostDto;
 import com.openclassrooms.mdd.dto.response.TopicDto;
+import com.openclassrooms.mdd.mapper.PostMapper;
 import com.openclassrooms.mdd.mapper.TopicMapper;
+import com.openclassrooms.mdd.model.Post;
 import com.openclassrooms.mdd.model.Topic;
 import com.openclassrooms.mdd.model.User;
+import com.openclassrooms.mdd.service.PostService;
 import com.openclassrooms.mdd.service.TopicService;
 import com.openclassrooms.mdd.service.UserService;
 import org.junit.jupiter.api.Disabled;
@@ -46,6 +50,12 @@ public class TopicControllerTest {
 
     @Mock
     private TopicMapper topicMapper;
+
+    @Mock
+    private PostService postService;
+
+    @Mock
+    private PostMapper postMapper;
 
     @Nested
     class TopicControllerFindTest {
@@ -103,7 +113,6 @@ public class TopicControllerTest {
             List<TopicDto> foundTopicDtos = topicController.findAll();
 
             assertThat(foundTopicDtos).isEqualTo(topicDtos);
-
         }
     }
 
@@ -215,6 +224,59 @@ public class TopicControllerTest {
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         }
     }*/
+
+    @Nested
+    class TopicControllerFindPostsTest {
+
+        @Test
+        public void shouldReturnBadRequestWhenBadIdFormat() {
+            assertThrows(NumberFormatException.class, () -> topicController.findPosts("badId1"));
+//            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
+        public void shouldReturnNotFoundWhenNotFound() {
+            when(topicService.getTopicById(1)).thenReturn(Optional.empty());
+
+            assertThrows(
+                    ResponseStatusException.class,
+                    () -> topicController.findById("1")
+            );
+        }
+
+        @Test
+        public void shouldFindAllTopicPosts() {
+            Topic topic = new Topic();
+            topic.setId(1);
+            topic.setTitle("Test Topic");
+            TopicDto topicDto = new TopicDto();
+            topicDto.setId(1);
+
+            Post post1 = new Post().setId(1).setTitle("Test post").setContent("Test post content");
+            Post post2 = new Post().setId(2).setTitle("Other test post").setContent("Other test post content");
+            List<Post> posts = Arrays.asList(post1, post2);
+
+            PostDto postDto1 = new PostDto();
+            postDto1.setId(1);
+            postDto1.setTitle("Test post");
+            postDto1.setContent("Test post content");
+
+            PostDto postDto2 = new PostDto();
+            postDto2.setId(2);
+            postDto2.setTitle("Other test post");
+            postDto2.setContent("Other test post content");
+
+            List<PostDto> postDtos = Arrays.asList(postDto1, postDto2);
+
+            when(topicService.getTopicById(1)).thenReturn(Optional.of(topic));
+            when(postService.getPostsByTopic(topic)).thenReturn(posts);
+            when(postMapper.postToPostDTO(posts)).thenReturn(postDtos);
+
+            List<PostDto> foundPostDtos = topicController.findPosts("1");
+
+            assertThat(foundPostDtos).isEqualTo(postDtos);
+        }
+    }
 
     /* TODO
     @Nested

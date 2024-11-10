@@ -1,0 +1,675 @@
+{
+	"info": {
+		"_postman_id": "6b320017-5c8b-44e1-adbd-b6b6990e9f8b",
+		"name": "MDDApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38710569"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"userMail\", (Math.random() + 1).toString(36).substring(7)+\"@wilhelm.me\");\r",
+									"pm.collectionVariables.set(\"userName\", (Math.random() + 1).toString(36).substring(7));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{userMail}}\",\n    \"userName\": \"{{userName}}\",\n    \"password\": \"abcd1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/auth/register",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Stores the authentication token in a global variable\r",
+									"var authToken = pm.response.json().token;\r",
+									"pm.collectionVariables.set(\"authToken\", authToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{userMail}}\",\n    \"password\": \"abcd1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/auth/login",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "me",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var id = pm.response.json().id;\r",
+									"pm.collectionVariables.set(\"userId\", id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/auth/me",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "topics",
+			"item": [
+				{
+					"name": "create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"randomText\", (Math.random() + 1).toString(36).substring(7));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "My postman rental {{randomText}} {{userId}}",
+									"type": "text"
+								},
+								{
+									"key": "surface",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "200",
+									"type": "text"
+								},
+								{
+									"key": "picture",
+									"type": "file",
+									"src": "postman-cloud:///1ef8583f-0647-44a0-9e09-68b88b944443"
+								},
+								{
+									"key": "description",
+									"value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a lectus eleifend, varius massa ac, mollis tortor. Quisque ipsum nulla, faucibus ac metus a, eleifend efficitur augue. Integer vel pulvinar ipsum. Praesent mollis neque sed sagittis ultricies. Suspendisse congue ligula at justo molestie, eget cursus nulla tincidunt. Pellentesque elementum rhoncus arcu, viverra gravida turpis mattis in. Maecenas tempor elementum lorem vel ultricies. Nam tempus laoreet eros, et viverra libero tincidunt a. Nunc vel nisi vulputate, sodales massa eu, varius erat.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/rentals",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"rentals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create2",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "My second postman rental {{randomText}} {{userId}}",
+									"type": "text"
+								},
+								{
+									"key": "surface",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "200",
+									"type": "text"
+								},
+								{
+									"key": "picture",
+									"type": "file",
+									"src": "postman-cloud:///1ef8583f-6b0b-4300-b517-8d3ffbca5c80"
+								},
+								{
+									"key": "description",
+									"value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a lectus eleifend, varius massa ac, mollis tortor. Quisque ipsum nulla, faucibus ac metus a, eleifend efficitur augue. Integer vel pulvinar ipsum. Praesent mollis neque sed sagittis ultricies. Suspendisse congue ligula at justo molestie, eget cursus nulla tincidunt. Pellentesque elementum rhoncus arcu, viverra gravida turpis mattis in. Maecenas tempor elementum lorem vel ultricies. Nam tempus laoreet eros, et viverra libero tincidunt a. Nunc vel nisi vulputate, sodales massa eu, varius erat.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/rentals",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"rentals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get All",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var userId = pm.collectionVariables.get(\"userId\");\r",
+									"var randomText = pm.collectionVariables.get(\"randomText\");\r",
+									"var r = pm.response.json().rentals.filter(rental =>  rental.name == \"My postman rental \"+randomText+\" \"+userId);\r",
+									"pm.collectionVariables.set(\"createdRentalId\", r[0].id);\r",
+									"\r",
+									"var r = pm.response.json().rentals.filter(rental =>  rental.name == \"My second postman rental \"+randomText+\" \"+userId);\r",
+									"pm.collectionVariables.set(\"secondCreatedRentalId\", r[0].id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/rentals",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"rentals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/rentals/{{createdRentalId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"rentals",
+								"{{createdRentalId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/rentals/{{createdRentalId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"rentals",
+								"{{createdRentalId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Oh yeah",
+									"type": "text"
+								},
+								{
+									"key": "surface",
+									"value": "250",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "450",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Lorem ipsum dolor et caetera.",
+									"type": "text"
+								},
+								{
+									"key": "picture",
+									"type": "file",
+									"src": "postman-cloud:///1ef8583f-0647-44a0-9e09-68b88b944443"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{createdRentalId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"topic",
+								"{{createdRentalId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "name",
+									"type": "text"
+								},
+								{
+									"key": "surface",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "200",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a lectus eleifend, varius massa ac, mollis tortor. Quisque ipsum nulla, faucibus ac metus a, eleifend efficitur augue. Integer vel pulvinar ipsum. Praesent mollis neque sed sagittis ultricies. Suspendisse congue ligula at justo molestie, eget cursus nulla tincidunt. Pellentesque elementum rhoncus arcu, viverra gravida turpis mattis in. Maecenas tempor elementum lorem vel ultricies. Nam tempus laoreet eros, et viverra libero tincidunt a. Nunc vel nisi vulputate, sodales massa eu, varius erat.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/rentals/{{secondCreatedRentalId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"rentals",
+								"{{secondCreatedRentalId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "delete",
+			"item": [
+				{
+					"name": "me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/auth/me",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "jwt",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "authToken",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "createdRentalId",
+			"value": ""
+		},
+		{
+			"key": "secondCreatedRentalId",
+			"value": ""
+		},
+		{
+			"key": "userMail",
+			"value": ""
+		},
+		{
+			"key": "randomText",
+			"value": ""
+		},
+		{
+			"key": "apiHost",
+			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"key": "apiPort",
+			"value": "8080",
+			"type": "string"
+		},
+		{
+			"key": "userName",
+			"value": ""
+		}
+	]
+}
