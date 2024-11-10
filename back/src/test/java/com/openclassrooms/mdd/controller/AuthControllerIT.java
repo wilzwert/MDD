@@ -29,6 +29,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -111,7 +112,7 @@ public class AuthControllerIT {
             JwtResponse response = objectMapper.readValue(json, JwtResponse.class);
             assertThat(response.getType()).isEqualTo("Bearer");
             assertThat(response.getToken()).isNotEmpty();
-            assertThat(response.getId()).isEqualTo(user.getId());
+            assertThat(response.getId()).isEqualTo(1);
             assertThat(response.getUsername()).isEqualTo("testuser");
         }
     }
@@ -175,7 +176,6 @@ public class AuthControllerIT {
         public void shouldReturnBadRequestWhenPasswordWithNoUppercase() throws Exception {
             registerUserDto.setPassword("abcd1234.");
             mockMvc.perform(post(REGISTER_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerUserDto)))
-                    .andDo(print())
                     .andExpect(status().isBadRequest());
         }
 
@@ -210,6 +210,8 @@ public class AuthControllerIT {
             mockMvc.perform(post(REGISTER_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerUserDto)))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("token").isNotEmpty());
+
+            verify(userRepository).save(any(User.class));
         }
     }
 }

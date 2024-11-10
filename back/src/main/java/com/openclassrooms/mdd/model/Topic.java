@@ -55,7 +55,7 @@ public class Topic {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "topic")
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "topic")
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.REMOVE)
     private List<Subscription> subscriptions;
 
     /**
