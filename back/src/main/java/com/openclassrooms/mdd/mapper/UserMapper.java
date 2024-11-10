@@ -13,7 +13,7 @@ import org.mapstruct.Mapper;
  * Time:16:38
  */
 
-@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = {SubscriptionMapper.class})
 public interface UserMapper {
 
     UserDto userToUserDTO(User user);

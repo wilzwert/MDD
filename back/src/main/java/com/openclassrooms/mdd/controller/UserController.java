@@ -16,10 +16,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.Optional;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -54,30 +56,19 @@ public class UserController {
         return userMapper.userToUserDTO(user);
     }
 
-    /*
-    @Operation(summary = "Login", description = "Get an access token")
-    @PostMapping("/login")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Login succeeded", content = {
-                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = JwtResponse.class))
-            }),
-            @ApiResponse(responseCode = "401", description = "Login failed", content = {
-                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponseDto.class))
-            })
-    })
-    public JwtResponse login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
-        log.info("User login with email {}", loginRequestDto.getEmail());
-        try {
-            User user = userService.authenticateUser(loginRequestDto.getEmail(), loginRequestDto.getPassword());
-            String token = jwtService.generateToken(user);
-            log.info("User with email {} successfully authenticated, sending JWT token", loginRequestDto.getEmail());
-            return new JwtResponse(token, user.getId(), user.getUserName());
+    @Operation(summary = "Delete current user", description = "Deletes current user account and info")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> deleteCurrentUser(Principal principal) {
+        log.info("Delete current User, email is {}", principal.getName());
+        Optional<User> foundUser = userService.findUserByEmail(principal.getName());
+        if(foundUser.isEmpty()) {
+            log.warn("Delete current User failed: no user found for email {}", principal.getName());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-        catch (AuthenticationException e) {
-            log.info("Login failed for User with email {}", loginRequestDto.getEmail());
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Login failed. "+e.getMessage());
-        }
-    }*/
-
-
+        userService.deleteUser(foundUser.get());
+        log.info("Current User deleted with email {}", foundUser.get().getEmail());
+        return ResponseEntity.noContent().build();
+    }
 }
