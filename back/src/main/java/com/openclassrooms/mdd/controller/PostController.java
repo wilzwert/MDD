@@ -1,12 +1,13 @@
 package com.openclassrooms.mdd.controller;
 
 
+import com.openclassrooms.mdd.dto.request.CreateOrUpdateCommentDto;
 import com.openclassrooms.mdd.dto.request.CreatePostDto;
+import com.openclassrooms.mdd.dto.response.CommentDto;
 import com.openclassrooms.mdd.dto.response.PostDto;
+import com.openclassrooms.mdd.mapper.CommentMapper;
 import com.openclassrooms.mdd.mapper.PostMapper;
-import com.openclassrooms.mdd.model.Post;
-import com.openclassrooms.mdd.model.Topic;
-import com.openclassrooms.mdd.model.User;
+import com.openclassrooms.mdd.model.*;
 import com.openclassrooms.mdd.service.PostService;
 import com.openclassrooms.mdd.service.TopicService;
 import com.openclassrooms.mdd.service.UserService;
@@ -49,11 +50,19 @@ public class PostController {
 
     private final PostMapper postMapper;
 
-    public PostController(PostService postService, UserService userService, TopicService topicService, PostMapper postMapper) {
+    private final CommentMapper commentMapper;
+
+    public PostController(
+            PostService postService,
+            UserService userService,
+            TopicService topicService,
+            PostMapper postMapper,
+            CommentMapper commentMapper) {
         this.postService = postService;
         this.userService = userService;
         this.topicService = topicService;
         this.postMapper = postMapper;
+        this.commentMapper = commentMapper;
     }
 
     @Operation(summary = "Retrieve all posts", description = "Retrieve all posts")
@@ -121,6 +130,32 @@ public class PostController {
         catch(Exception e) {
             log.error("Create a post: post could not be created", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Post could not be created");
+        }
+    }
+
+    @Operation(summary = "Create a comment", description = "Create a comment for a post")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comment created", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class))
+            })
+    })
+    @PostMapping(value = "{id}/comment", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public CommentDto createComment(@PathVariable("id") String id, @Valid @RequestBody CreateOrUpdateCommentDto createCommentDto, Principal principal) {
+        log.info("Create a comment for post {} from user {}", id, principal.getName());
+        try {
+            Optional<User> foundUser = userService.findUserByEmail(principal.getName());
+            if(foundUser.isEmpty()) {
+                log.warn("Create a comment : couldn't get user info");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
+            }
+
+            Comment comment = postService.createComment(foundUser.get(), Integer.parseInt(id), commentMapper.commentDtoToComment(createCommentDto));
+            log.info("Comment created : {}", comment);
+            return commentMapper.commentToCommentDto(comment);
+        }
+        catch(Exception e) {
+            log.error("Create a comment: comment could not be created", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Comment could not be created");
         }
     }
 }

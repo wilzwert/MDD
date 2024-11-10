@@ -6,6 +6,8 @@ import com.openclassrooms.mdd.dto.request.RegisterUserDto;
 import com.openclassrooms.mdd.model.User;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -17,6 +19,11 @@ import org.mapstruct.Mapper;
 public interface UserMapper {
 
     UserDto userToUserDTO(User user);
+
+    @Named("userToUserDtoWithoutSubscriptions")
+    @UserWithoutSubscriptions
+    @Mapping( target = "subscriptions", ignore = true)
+    UserDto userToUserDtoWithoutSubscriptions(User user);
 
     User registerUserDtoToUser(RegisterUserDto userDto);
 }
