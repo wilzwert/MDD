@@ -8,6 +8,7 @@ import com.openclassrooms.mdd.dto.response.PostDto;
 import com.openclassrooms.mdd.mapper.CommentMapper;
 import com.openclassrooms.mdd.mapper.PostMapper;
 import com.openclassrooms.mdd.model.*;
+import com.openclassrooms.mdd.repository.CommentRepository;
 import com.openclassrooms.mdd.service.PostService;
 import com.openclassrooms.mdd.service.TopicService;
 import com.openclassrooms.mdd.service.UserService;
@@ -51,18 +52,20 @@ public class PostController {
     private final PostMapper postMapper;
 
     private final CommentMapper commentMapper;
+    private final CommentRepository commentRepository;
 
     public PostController(
             PostService postService,
             UserService userService,
             TopicService topicService,
             PostMapper postMapper,
-            CommentMapper commentMapper) {
+            CommentMapper commentMapper, CommentRepository commentRepository) {
         this.postService = postService;
         this.userService = userService;
         this.topicService = topicService;
         this.postMapper = postMapper;
         this.commentMapper = commentMapper;
+        this.commentRepository = commentRepository;
     }
 
     @Operation(summary = "Retrieve all posts", description = "Retrieve all posts")
@@ -156,6 +159,31 @@ public class PostController {
         catch(Exception e) {
             log.error("Create a comment: comment could not be created", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Comment could not be created");
+        }
+    }
+
+    @Operation(summary = "Create a comment", description = "Create a comment for a post")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comment created", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class))
+            })
+    })
+    @GetMapping(value = "{id}/comment", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CommentDto> getComment(@PathVariable("id") String id) {
+        log.info("Get comments for post {} ", id);
+        try {
+            Optional<Post> foundPost = postService.getPostById(Integer.parseInt(id));
+            if(foundPost.isEmpty()) {
+                log.warn("Get post comments : couldn't get post info");
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot get post info");
+            }
+
+            List<Comment> comments = commentRepository.findCommentsByPost(foundPost.get());
+            return commentMapper.commentToCommentDto(comments);
+        }
+        catch(Exception e) {
+            log.error("Get post comments: comment could not be loaded", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Comments could not be loaded");
         }
     }
 }
