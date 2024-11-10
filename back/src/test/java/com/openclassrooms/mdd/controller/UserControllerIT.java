@@ -32,8 +32,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -93,6 +92,8 @@ public class UserControllerIT {
         MvcResult result = mockMvc.perform(get(ME_URL)).andExpect(status().isOk()).andReturn();
         UserDto userDto = objectMapper.readValue(result.getResponse().getContentAsString(), UserDto.class);
 
+        verify(userRepository, times(1)).findByEmail("test@example.com");
+
         assertThat(userDto.getId()).isEqualTo(1);
         assertThat(userDto.getUserName()).isEqualTo("username");
         assertThat(userDto.getEmail()).isEqualTo("test@example.com");
@@ -124,6 +125,9 @@ public class UserControllerIT {
         doNothing().when(userRepository).delete(user);
 
         mockMvc.perform(delete(DELETE_URL)).andExpect(status().isNoContent());
+        verify(userRepository, times(1)).findByEmail("test@example.com");
+        verify(userRepository, times(1)).delete(user);
+t
     }
 
 }
