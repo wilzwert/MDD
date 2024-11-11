@@ -145,21 +145,16 @@ public class PostController {
     @PostMapping(value = "{id}/comment", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public CommentDto createComment(@PathVariable("id") String id, @Valid @RequestBody CreateOrUpdateCommentDto createCommentDto, Principal principal) {
         log.info("Create a comment for post {} from user {}", id, principal.getName());
-        try {
-            Optional<User> foundUser = userService.findUserByEmail(principal.getName());
-            if(foundUser.isEmpty()) {
-                log.warn("Create a comment : couldn't get user info");
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
-            }
 
-            Comment comment = postService.createComment(foundUser.get(), Integer.parseInt(id), commentMapper.commentDtoToComment(createCommentDto));
-            log.info("Comment created : {}", comment);
-            return commentMapper.commentToCommentDto(comment);
+        Optional<User> foundUser = userService.findUserByEmail(principal.getName());
+        if(foundUser.isEmpty()) {
+            log.warn("Create a comment : couldn't get user info");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
         }
-        catch(Exception e) {
-            log.error("Create a comment: comment could not be created", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Comment could not be created");
-        }
+
+        Comment comment = postService.createComment(foundUser.get(), Integer.parseInt(id), commentMapper.commentDtoToComment(createCommentDto));
+        log.info("Comment created : {}", comment);
+        return commentMapper.commentToCommentDto(comment);
     }
 
     @Operation(summary = "Create a comment", description = "Create a comment for a post")
@@ -171,19 +166,14 @@ public class PostController {
     @GetMapping(value = "{id}/comment", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CommentDto> getComment(@PathVariable("id") String id) {
         log.info("Get comments for post {} ", id);
-        try {
-            Optional<Post> foundPost = postService.getPostById(Integer.parseInt(id));
-            if(foundPost.isEmpty()) {
-                log.warn("Get post comments : couldn't get post info");
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot get post info");
-            }
 
-            List<Comment> comments = commentRepository.findCommentsByPost(foundPost.get());
-            return commentMapper.commentToCommentDto(comments);
+        Optional<Post> foundPost = postService.getPostById(Integer.parseInt(id));
+        if(foundPost.isEmpty()) {
+            log.warn("Get post comments : couldn't get post info");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot get post info");
         }
-        catch(Exception e) {
-            log.error("Get post comments: comment could not be loaded", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Comments could not be loaded");
-        }
+
+        List<Comment> comments = commentRepository.findCommentsByPost(foundPost.get());
+        return commentMapper.commentToCommentDto(comments);
     }
 }
