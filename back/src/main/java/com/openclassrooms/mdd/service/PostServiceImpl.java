@@ -1,9 +1,13 @@
 package com.openclassrooms.mdd.service;
 
 
+import com.openclassrooms.mdd.model.Comment;
 import com.openclassrooms.mdd.model.Post;
 import com.openclassrooms.mdd.model.Topic;
+import com.openclassrooms.mdd.model.User;
+import com.openclassrooms.mdd.repository.CommentRepository;
 import com.openclassrooms.mdd.repository.PostRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +23,16 @@ import java.util.Optional;
 @Slf4j
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
     // TODO private final AclService aclService;
 
     public PostServiceImpl(
-            final PostRepository postRepository
+            final PostRepository postRepository,
+            final CommentRepository commentRepository
             // TODO final AclService aclService
     ) {
         this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
         // this.aclService = aclService;
     }
 
@@ -56,5 +63,18 @@ public class PostServiceImpl implements PostService {
     @Override
     public Optional<Post> getPostById(int id) {
         return postRepository.findById(id);
+    }
+
+    @Override
+    public void deletePostById(int id) {
+        postRepository.deleteById(id);
+    }
+
+    @Override
+    public Comment createComment(User user, int postId, Comment comment) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("post not found"));
+        comment.setPost(post);
+        comment.setAuthor(user);
+        return commentRepository.save(comment);
     }
 }

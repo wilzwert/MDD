@@ -1,7 +1,9 @@
 package com.openclassrooms.mdd.service;
 
+import com.openclassrooms.mdd.model.Comment;
 import com.openclassrooms.mdd.model.Post;
 import com.openclassrooms.mdd.model.Topic;
+import com.openclassrooms.mdd.model.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +21,6 @@ public interface PostService {
     List<Post> getAllPosts();
     List<Post> getPostsByTopic(Topic topic);
     Optional<Post> getPostById(final int id);
+    void deletePostById(final int id);
+    Comment createComment(User user, int postId, Comment comment);
 }

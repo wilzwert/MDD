@@ -53,6 +53,9 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Subscription> subscriptions;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
+
     /**
      * Override
      * @return String the string representation of this User

@@ -1,5 +1,6 @@
 package com.openclassrooms.mdd.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -32,5 +33,6 @@ public class UserDto {
     private String updatedAt;
 
     @Schema(description = "User subscriptions")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<SubscriptionDto> subscriptions;
 }

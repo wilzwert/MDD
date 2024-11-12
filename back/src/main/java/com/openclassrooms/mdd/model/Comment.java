@@ -8,23 +8,20 @@ import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Accessors(chain = true)
 @Entity
-@Table(name="post")
+@Table(name="comment")
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners({AuditingEntityListener.class})
-public class Post {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column
-    private String title;
 
     @Column
     private String content;
@@ -37,15 +34,11 @@ public class Post {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "topic_id", nullable = false)
-    private Topic topic;
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    User author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false)
-    private User author;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
-    List<Comment> comments;
-
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    Post post;
 }

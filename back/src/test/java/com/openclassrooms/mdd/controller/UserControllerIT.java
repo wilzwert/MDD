@@ -2,26 +2,18 @@ package com.openclassrooms.mdd.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openclassrooms.mdd.dto.request.LoginRequestDto;
-import com.openclassrooms.mdd.dto.request.RegisterUserDto;
-import com.openclassrooms.mdd.dto.response.JwtResponse;
 import com.openclassrooms.mdd.dto.response.SubscriptionDto;
-import com.openclassrooms.mdd.dto.response.TopicDto;
 import com.openclassrooms.mdd.dto.response.UserDto;
 import com.openclassrooms.mdd.model.Subscription;
 import com.openclassrooms.mdd.model.Topic;
 import com.openclassrooms.mdd.model.User;
 import com.openclassrooms.mdd.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,8 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -127,7 +117,7 @@ public class UserControllerIT {
         mockMvc.perform(delete(DELETE_URL)).andExpect(status().isNoContent());
         verify(userRepository, times(1)).findByEmail("test@example.com");
         verify(userRepository, times(1)).delete(user);
-t
+
     }
 
 }

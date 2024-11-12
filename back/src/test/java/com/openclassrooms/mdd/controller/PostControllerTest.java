@@ -1,15 +1,13 @@
 package com.openclassrooms.mdd.controller;
 
+import com.openclassrooms.mdd.dto.request.CreateOrUpdateCommentDto;
 import com.openclassrooms.mdd.dto.request.CreatePostDto;
+import com.openclassrooms.mdd.dto.response.CommentDto;
 import com.openclassrooms.mdd.dto.response.PostDto;
-import com.openclassrooms.mdd.dto.response.PostDto;
+import com.openclassrooms.mdd.mapper.CommentMapper;
 import com.openclassrooms.mdd.mapper.PostMapper;
-import com.openclassrooms.mdd.mapper.PostMapper;
+import com.openclassrooms.mdd.model.*;
 import com.openclassrooms.mdd.model.Post;
-import com.openclassrooms.mdd.model.Post;
-import com.openclassrooms.mdd.model.Topic;
-import com.openclassrooms.mdd.model.User;
-import com.openclassrooms.mdd.service.PostService;
 import com.openclassrooms.mdd.service.PostService;
 import com.openclassrooms.mdd.service.TopicService;
 import com.openclassrooms.mdd.service.UserService;
@@ -20,8 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -31,6 +29,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -56,6 +56,9 @@ public class PostControllerTest {
 
     @Mock
     private PostMapper postMapper;
+
+    @Mock
+    private CommentMapper commentMapper;
 
     @Nested
     class PostControllerFindTest {
@@ -160,6 +163,64 @@ public class PostControllerTest {
             assertThat(createdPostDto.getContent()).isEqualTo("Post content");
             assertThat(createdPostDto.getCreatedAt()).isEqualTo(now);
             assertThat(createdPostDto.getUpdatedAt()).isEqualTo(now);
+        }
+    }
+
+    @Nested
+    class PostControllerCreateCommentTest {
+
+        @Mock
+        private Principal principal;
+
+        @Test
+        public void shouldThrowUnauthorizedWhenUserNotFound() {
+            CreateOrUpdateCommentDto requestCommentDto = new CreateOrUpdateCommentDto();
+            requestCommentDto.setContent("Comment content");
+
+            when(principal.getName()).thenReturn("user@example.com");
+            when(userService.findUserByEmail("user@example.com")).thenReturn(Optional.empty());
+
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> postController.createComment("1", requestCommentDto, principal));
+
+            assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        }
+
+        @Test
+        public void shouldCreateComment() {
+            LocalDateTime now = LocalDateTime.now();
+
+            User user = new User().setId(1);
+
+            CreateOrUpdateCommentDto requestCommentDto = new CreateOrUpdateCommentDto();
+            requestCommentDto.setContent("Comment content");
+
+            Comment comment = new Comment().setId(1).setContent("Comment content");
+
+
+            CommentDto responseCommentDto = new CommentDto();
+            responseCommentDto.setId(1);
+            responseCommentDto.setCreatedAt(now);
+            responseCommentDto.setUpdatedAt(now);
+            responseCommentDto.setContent("Comment content");
+
+            when(principal.getName()).thenReturn("user@example.com");
+            when(userService.findUserByEmail("user@example.com")).thenReturn(Optional.of(user));
+            when(postService.createComment(eq(user), eq(1), any(Comment.class))).thenAnswer(i -> i.getArgument(2));
+            when(commentMapper.commentDtoToComment(requestCommentDto)).thenReturn(comment);
+            when(commentMapper.commentToCommentDto(any(Comment.class))).thenReturn(responseCommentDto);
+
+            CommentDto resultCommentDto = postController.createComment("1", requestCommentDto, principal);
+
+            verify(userService).findUserByEmail("user@example.com");
+            verify(postService).createComment(eq(user), eq(1), any(Comment.class));
+            verify(commentMapper).commentDtoToComment(requestCommentDto);
+            verify(commentMapper).commentToCommentDto(any(Comment.class));
+
+            assertThat(resultCommentDto.getId()).isEqualTo(1);
+            assertThat(resultCommentDto.getCreatedAt()).isEqualTo(now);
+            assertThat(resultCommentDto.getUpdatedAt()).isEqualTo(now);
+            assertThat(resultCommentDto.getContent()).isEqualTo("Comment content");
+
         }
     }
     /* TODO
