@@ -4,8 +4,7 @@ package com.openclassrooms.mdd.security.jwt;
 import com.openclassrooms.mdd.model.JwtToken;
 import com.openclassrooms.mdd.security.service.CustomUserDetailsService;
 import com.openclassrooms.mdd.security.service.JwtService;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 import java.util.Optional;
 
@@ -94,15 +92,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }
         // send appropriate http status code and messages to request response
-        catch(MalformedJwtException e) {
-            log.warn("Malformed token");
+        catch(JwtException e) {
+            log.warn("JWT authentication filter : token exception {}", e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().print("malformed token");
-        }
-        catch(ExpiredJwtException e) {
-            log.warn("Expired token");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().print("invalid_token");
+            response.getWriter().print("token_error");
         }
     }
 }

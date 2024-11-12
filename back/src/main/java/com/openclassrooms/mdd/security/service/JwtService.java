@@ -6,6 +6,7 @@ import com.openclassrooms.mdd.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Optional;
+
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -31,7 +33,7 @@ public class JwtService {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
-    public Optional<JwtToken> extractTokenFromRequest(HttpServletRequest request) throws ExpiredJwtException, MalformedJwtException, SecurityException, IllegalArgumentException {
+    public Optional<JwtToken> extractTokenFromRequest(HttpServletRequest request) throws ExpiredJwtException, MalformedJwtException, IllegalArgumentException, UnsupportedJwtException, SignatureException {
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.info("Authorization header not found or not compatible with Bearer token");
@@ -39,12 +41,34 @@ public class JwtService {
         }
         final String token = authHeader.substring(7);
 
-        Jwt<?, ?> parsedToken = Jwts
-                .parser().verifyWith(getSignInKey()).build().parse(token);
-        Claims claims = (Claims) parsedToken.getPayload();
+        try {
+            Jwt<?, ?> parsedToken = Jwts
+                    .parser().verifyWith(getSignInKey()).build().parse(token);
+            Claims claims = (Claims) parsedToken.getPayload();
 
-        JwtToken jwtToken = new JwtToken(claims.getSubject(), claims);
-        return Optional.of(jwtToken);
+            JwtToken jwtToken = new JwtToken(claims.getSubject(), claims);
+            return Optional.of(jwtToken);
+        }
+        catch (ExpiredJwtException e) {
+            log.warn("Expired JWT token: {}", e.getMessage());
+            throw e;
+        }
+        catch (MalformedJwtException e) {
+            log.warn("Malformed JWT token: {}", e.getMessage());
+            throw e;
+        }
+        catch (SignatureException e) {
+            log.warn("Invalid JWT signature: {}", e.getMessage());
+            throw e;
+        }
+        catch (UnsupportedJwtException e) {
+            log.warn("Unsupported JWT token: {}", e.getMessage());
+            throw e;
+        }
+        catch (IllegalArgumentException e) {
+            log.warn("Empty JWT claims: {}", e.getMessage());
+            throw e;
+        }
     }
 
     public String generateToken(User user) {

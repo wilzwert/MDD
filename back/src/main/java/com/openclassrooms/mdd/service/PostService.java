@@ -17,10 +17,8 @@ import java.util.Optional;
 
 public interface PostService {
     Post createPost(Post post);
-    Post updatePost(Post post);
     List<Post> getAllPosts();
     List<Post> getPostsByTopic(Topic topic);
     Optional<Post> getPostById(final int id);
-    void deletePostById(final int id);
     Comment createComment(User user, int postId, Comment comment);
 }
