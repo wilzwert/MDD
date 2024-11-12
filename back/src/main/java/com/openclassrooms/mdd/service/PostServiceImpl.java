@@ -7,6 +7,7 @@ import com.openclassrooms.mdd.model.Topic;
 import com.openclassrooms.mdd.model.User;
 import com.openclassrooms.mdd.repository.CommentRepository;
 import com.openclassrooms.mdd.repository.PostRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -71,7 +72,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Comment createComment(User user, int postId, Comment comment) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("post not found"));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("post not found"));
         comment.setPost(post);
         comment.setAuthor(user);
         return commentRepository.save(comment);

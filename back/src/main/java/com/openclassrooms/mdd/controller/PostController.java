@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -110,30 +111,25 @@ public class PostController {
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public PostDto createPost(@Valid @RequestBody CreatePostDto createPostDto, Principal principal) {
         log.info("Create a post for topic {} from user {}", createPostDto.getTopicId(), principal.getName());
-        try {
-            Optional<User> foundUser = userService.findUserByEmail(principal.getName());
-            if(foundUser.isEmpty()) {
-                log.warn("Create a post : couldn't get user info");
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
-            }
 
-            Optional<Topic> foundTopic = topicService.getTopicById(createPostDto.getTopicId());
-            if(foundTopic.isEmpty()) {
-                log.warn("Create a post : couldn't get topic info");
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot get topic info");
-            }
-            Post createPost = postMapper.createPostDtoToPost(createPostDto);
-            createPost.setAuthor(foundUser.get());
-            createPost.setTopic(foundTopic.get());
+        Optional<User> foundUser = userService.findUserByEmail(principal.getName());
+        if(foundUser.isEmpty()) {
+            log.warn("Create a post : couldn't get user info");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
+        }
 
-            Post post = postService.createPost(createPost);
-            log.info("Post created : {}", post);
-            return postMapper.postToPostDTO(post);
+        Optional<Topic> foundTopic = topicService.getTopicById(createPostDto.getTopicId());
+        if(foundTopic.isEmpty()) {
+            log.warn("Create a post : couldn't get topic info");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot get topic info");
         }
-        catch(Exception e) {
-            log.error("Create a post: post could not be created", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Post could not be created");
-        }
+        Post createPost = postMapper.createPostDtoToPost(createPostDto);
+        createPost.setAuthor(foundUser.get());
+        createPost.setTopic(foundTopic.get());
+
+        Post post = postService.createPost(createPost);
+        log.info("Post created : {}", post);
+        return postMapper.postToPostDTO(post);
     }
 
     @Operation(summary = "Create a comment", description = "Create a comment for a post")
@@ -145,16 +141,20 @@ public class PostController {
     @PostMapping(value = "{id}/comment", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public CommentDto createComment(@PathVariable("id") String id, @Valid @RequestBody CreateOrUpdateCommentDto createCommentDto, Principal principal) {
         log.info("Create a comment for post {} from user {}", id, principal.getName());
+        try {
+            Optional<User> foundUser = userService.findUserByEmail(principal.getName());
+            if (foundUser.isEmpty()) {
+                log.warn("Create a comment : couldn't get user info");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
+            }
 
-        Optional<User> foundUser = userService.findUserByEmail(principal.getName());
-        if(foundUser.isEmpty()) {
-            log.warn("Create a comment : couldn't get user info");
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
+            Comment comment = postService.createComment(foundUser.get(), Integer.parseInt(id), commentMapper.commentDtoToComment(createCommentDto));
+            log.info("Comment created : {}", comment);
+            return commentMapper.commentToCommentDto(comment);
         }
-
-        Comment comment = postService.createComment(foundUser.get(), Integer.parseInt(id), commentMapper.commentDtoToComment(createCommentDto));
-        log.info("Comment created : {}", comment);
-        return commentMapper.commentToCommentDto(comment);
+        catch(EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
+        }
     }
 
     @Operation(summary = "Create a comment", description = "Create a comment for a post")
