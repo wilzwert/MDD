@@ -6,7 +6,7 @@ import com.openclassrooms.mdd.dto.response.PostDto;
 import com.openclassrooms.mdd.model.Post;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-
+import org.mapstruct.Mapping;
 import java.util.List;
 
 /**
@@ -22,5 +22,11 @@ public interface PostMapper {
 
     List<PostDto> postToPostDTO(List<Post> posts);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "topic", ignore = true)
+    @Mapping(target = "author", ignore = true)
+    @Mapping(target = "comments", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Post createPostDtoToPost(CreatePostDto postDto);
 }

@@ -6,7 +6,7 @@ import com.openclassrooms.mdd.dto.response.TopicDto;
 import com.openclassrooms.mdd.model.Topic;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-
+import org.mapstruct.Mapping;
 import java.util.List;
 
 /**
@@ -22,5 +22,11 @@ public interface TopicMapper {
 
     List<TopicDto> topicToTopicDTO(List<Topic> topics);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "creator", ignore = true)
+    @Mapping(target = "posts", ignore = true)
+    @Mapping(target = "subscriptions", ignore = true)
     Topic createTopicDtoToTopic(CreateTopicDto topicDto);
 }
