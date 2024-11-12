@@ -8,10 +8,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -28,6 +31,13 @@ public class CustomUserDetailsServiceTest {
 
     @InjectMocks
     private CustomUserDetailsService customUserDetailsService;
+
+    @Test
+    public void shouldThrowUsernameNotFoundExceptionWHenUserNotFound() {
+        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
+        assertThrows(UsernameNotFoundException.class, () -> customUserDetailsService.loadUserByUsername("test@example.com"));
+        verify(userRepository).findByEmail("test@example.com");
+    }
 
     @Test
     public void shouldLoadUserByUsername() {
