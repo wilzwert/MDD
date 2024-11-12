@@ -59,7 +59,7 @@ public class AuthController {
             })
     })
     public JwtResponse register(@Valid @RequestBody final RegisterUserDto registerUserDto) {
-        log.info("Register user with email {} and userName {}", registerUserDto.getEmail(), registerUserDto.getUserName());
+        log.info("Register user with {}", registerUserDto);
         User registerUser = userMapper.registerUserDtoToUser(registerUserDto);
         try {
             User user = userService.registerUser(registerUser);
@@ -86,7 +86,9 @@ public class AuthController {
     public JwtResponse login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
         log.info("User login with email {}", loginRequestDto.getEmail());
         try {
+            log.info("User login - authenticating");
             User user = userService.authenticateUser(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+            log.info("User login - generating token");
             String token = jwtService.generateToken(user);
             log.info("User with email {} successfully authenticated, sending JWT token", loginRequestDto.getEmail());
             return new JwtResponse(token, user.getId(), user.getUserName());

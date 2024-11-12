@@ -8,7 +8,7 @@ import com.openclassrooms.mdd.dto.response.PostDto;
 import com.openclassrooms.mdd.mapper.CommentMapper;
 import com.openclassrooms.mdd.mapper.PostMapper;
 import com.openclassrooms.mdd.model.*;
-import com.openclassrooms.mdd.repository.CommentRepository;
+import com.openclassrooms.mdd.service.CommentService;
 import com.openclassrooms.mdd.service.PostService;
 import com.openclassrooms.mdd.service.TopicService;
 import com.openclassrooms.mdd.service.UserService;
@@ -53,20 +53,21 @@ public class PostController {
     private final PostMapper postMapper;
 
     private final CommentMapper commentMapper;
-    private final CommentRepository commentRepository;
+    private final CommentService commentService;
 
     public PostController(
             PostService postService,
             UserService userService,
             TopicService topicService,
             PostMapper postMapper,
-            CommentMapper commentMapper, CommentRepository commentRepository) {
+            CommentMapper commentMapper,
+            CommentService commentService) {
         this.postService = postService;
         this.userService = userService;
         this.topicService = topicService;
         this.postMapper = postMapper;
         this.commentMapper = commentMapper;
-        this.commentRepository = commentRepository;
+        this.commentService = commentService;
     }
 
     @Operation(summary = "Retrieve all posts", description = "Retrieve all posts")
@@ -110,7 +111,7 @@ public class PostController {
     })
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public PostDto createPost(@Valid @RequestBody CreatePostDto createPostDto, Principal principal) {
-        log.info("Create a post for topic {} from user {}", createPostDto.getTopicId(), principal.getName());
+        log.info("Create a post for topic {} from user {}", createPostDto.getTopicId(), principal);
 
         Optional<User> foundUser = userService.findUserByEmail(principal.getName());
         if(foundUser.isEmpty()) {
@@ -173,7 +174,7 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot get post info");
         }
 
-        List<Comment> comments = commentRepository.findCommentsByPost(foundPost.get());
+        List<Comment> comments = commentService.getCommentsByPost(foundPost.get());
         return commentMapper.commentToCommentDto(comments);
     }
 }

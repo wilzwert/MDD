@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -108,7 +109,7 @@ public class TopicController {
         Optional<Topic> foundTopic = this.topicService.getTopicById(Integer.parseInt(id));
 
         if (foundTopic.isEmpty()) {
-            log.info("Topic for posts not found");
+            log.info("Topic for posts retrieval not found");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Topic not found");
         }
 
@@ -126,27 +127,21 @@ public class TopicController {
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public TopicDto createTopic(@Valid @RequestBody CreateTopicDto createTopicDto, Principal principal) {
         log.info("Create a topic {}", principal);
-        try {
-            Optional<User> foundUser = userService.findUserByEmail(principal.getName());
-            if(foundUser.isEmpty()) {
-                log.warn("Create a topic : couldn't get user info");
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
-            }
-            Topic createTopic = topicMapper.createTopicDtoToTopic(createTopicDto);
-            createTopic.setCreator(foundUser.get());
-            Topic topic = topicService.createTopic(createTopic);
-            log.info("Topic created : {}", topic);
-            return topicMapper.topicToTopicDTO(topic);
+
+        Optional<User> foundUser = userService.findUserByEmail(principal.getName());
+        if(foundUser.isEmpty()) {
+            log.warn("Create a topic : couldn't get user info");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
         }
-        catch(Exception e) {
-            log.error("Create a topic: topic could not be created", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Topic could not be created");
-        }
+        Topic createTopic = topicMapper.createTopicDtoToTopic(createTopicDto);
+        createTopic.setCreator(foundUser.get());
+        Topic topic = topicService.createTopic(createTopic);
+        log.info("Topic created : {}", topic);
+        return topicMapper.topicToTopicDTO(topic);
     }
 
     @PostMapping("{id}/subscription")
     public SubscriptionDto subscribe(@PathVariable("id") String id, Principal principal) {
-        log.info("Subscribe to topic {}", id);
         try {
             Optional<User> foundUser = userService.findUserByEmail(principal.getName());
             if(foundUser.isEmpty()) {
@@ -156,9 +151,8 @@ public class TopicController {
             Subscription subscription = userService.subscribe(foundUser.get(), Integer.parseInt(id));
             return subscriptionMapper.subscriptionToSubscriptionDto(subscription);
         }
-        catch(Exception e) {
-            log.error("Subscribe to a topic: subscription could not be created", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Subscription could not be created");
+        catch(EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Topic not found");
         }
     }
     /* TODO
