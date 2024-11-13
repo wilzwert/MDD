@@ -79,7 +79,7 @@ public class PostControllerTest {
             postDto.setContent("Test Content");
 
             when(postService.getPostById(1)).thenReturn(Optional.of(post));
-            when(postMapper.postToPostDTO(post)).thenReturn(postDto);
+            when(postMapper.postToPostDto(post)).thenReturn(postDto);
 
             PostDto responsePostDto = postController.findById("1");
 
@@ -118,7 +118,7 @@ public class PostControllerTest {
             List<PostDto> postDtos = Arrays.asList(postDto1, postDto2);
 
             when(postService.getAllPosts()).thenReturn(posts);
-            when(postMapper.postToPostDTO(posts)).thenReturn(postDtos);
+            when(postMapper.postToPostDto(posts)).thenReturn(postDtos);
 
             List<PostDto> foundPostDtos = postController.findAll();
 
@@ -197,7 +197,7 @@ public class PostControllerTest {
             when(principal.getName()).thenReturn("user@example.com");
             when(userService.findUserByEmail("user@example.com")).thenReturn(Optional.of(new User().setId(1)));
             when(postMapper.createPostDtoToPost(createPostDto)).thenReturn(post);
-            when(postMapper.postToPostDTO(post)).thenReturn(responsePostDto);
+            when(postMapper.postToPostDto(post)).thenReturn(responsePostDto);
 
             PostDto createdPostDto = postController.createPost(createPostDto, principal);
 
@@ -206,7 +206,7 @@ public class PostControllerTest {
             verify(principal).getName();
             verify(userService).findUserByEmail("user@example.com");
             verify(postMapper).createPostDtoToPost(createPostDto);
-            verify(postMapper).postToPostDTO(post);
+            verify(postMapper).postToPostDto(post);
 
             assertThat(createdPostDto.getId()).isEqualTo(1);
             assertThat(createdPostDto.getTitle()).isEqualTo("Test post");

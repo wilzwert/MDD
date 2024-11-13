@@ -81,7 +81,7 @@ public class PostController {
         log.info("Get all posts");
         List<Post> foundPosts = this.postService.getAllPosts();
         log.info("Got all posts {}", foundPosts);
-        return postMapper.postToPostDTO(foundPosts);
+        return postMapper.postToPostDto(foundPosts);
     }
 
     @Operation(summary = "Retrieve a post", description = "Retrieve a post with its id")
@@ -100,7 +100,7 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
         }
 
-        return postMapper.postToPostDTO(foundPost.get());
+        return postMapper.postToPostDto(foundPost.get());
     }
 
     @Operation(summary = "Create a post", description = "Create a post")
@@ -130,7 +130,7 @@ public class PostController {
 
         Post post = postService.createPost(createPost);
         log.info("Post created : {}", post);
-        return postMapper.postToPostDTO(post);
+        return postMapper.postToPostDto(post);
     }
 
     @Operation(summary = "Create a comment", description = "Create a comment for a post")

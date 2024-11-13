@@ -12,9 +12,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -35,19 +35,9 @@ public class TopicMapperTest {
     public void testNullTopicToDto() {
         Topic topic = null;
 
-        TopicDto topicDto = topicMapper.topicToTopicDTO(topic);
+        TopicDto topicDto = topicMapper.topicToTopicDto(topic);
 
         assertThat(topicDto).isNull();
-    }
-
-    @Test
-    public void testTopicWithoutUsersToDto() {
-        Topic topic = new Topic().setId(1);
-
-        TopicDto topicDto = topicMapper.topicToTopicDTO(topic);
-
-        assertThat(topicDto).isNotNull();
-        assertThat(topicDto.getId()).isEqualTo(1);
     }
 
     @Test
@@ -60,7 +50,7 @@ public class TopicMapperTest {
                 .setCreator(new User().setId(1).setUserName("testuser"))
                 .setCreatedAt(now)
                 .setUpdatedAt(now);
-        TopicDto topicDto = topicMapper.topicToTopicDTO(topic);
+        TopicDto topicDto = topicMapper.topicToTopicDto(topic);
 
         assertThat(topicDto).isNotNull();
         assertThat(topicDto.getId()).isEqualTo(1);
@@ -74,31 +64,27 @@ public class TopicMapperTest {
     public void testNullTopicListToDto() {
         List<Topic> topics = null;
 
-        List<TopicDto> topicDtos = topicMapper.topicToTopicDTO(topics);
+        List<TopicDto> topicDtos = topicMapper.topicToTopicDto(topics);
 
         assertThat(topicDtos).isNull();
     }
 
     @Test
     public void testTopicListToDtoList() {
-        List<Topic> topics = new ArrayList<>();
-        List<List<Long>> expectedUsers = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Topic topic = new Topic();
-            topic.setId(i);
-            topic.setCreator(new User().setId(i).setUserName("testuser"+i));
-            topic.setTitle("Test topic "+i);
-            topic.setCreatedAt(LocalDateTime.now());
-            topic.setUpdatedAt(LocalDateTime.now());
-            topics.add(topic);
-        }
+        LocalDateTime now = LocalDateTime.now();
 
-        List<TopicDto> topicDtos = topicMapper.topicToTopicDTO(topics);
+        Topic topic1 = new Topic().setId(1).setTitle("test topic1").setDescription("this is a test topic1").setCreatedAt(now).setUpdatedAt(now);
+        Topic topic2 = new Topic().setId(2).setTitle("test topic2").setDescription("this is a test topic2").setCreatedAt(now).setUpdatedAt(now);
+
+        List<TopicDto> topicDtos = topicMapper.topicToTopicDto(Arrays.asList(topic1, topic2));
 
         assertThat(topicDtos).isNotNull();
-        assertThat(topicDtos).extracting(TopicDto::getId).containsExactlyElementsOf(topics.stream().map(Topic::getId).collect(Collectors.toList()));
-        assertThat(topicDtos).extracting(TopicDto::getCreatedAt).containsExactlyElementsOf(topics.stream().map(Topic::getCreatedAt).collect(Collectors.toList()));
-        assertThat(topicDtos).extracting(TopicDto::getUpdatedAt).containsExactlyElementsOf(topics.stream().map(Topic::getUpdatedAt).collect(Collectors.toList()));
+        assertThat(topicDtos.size()).isEqualTo(2);
+        assertThat(topicDtos).extracting(TopicDto::getId).containsExactlyElementsOf(Arrays.asList(1, 2));
+        assertThat(topicDtos).extracting(TopicDto::getTitle).containsExactlyElementsOf(Arrays.asList("test topic1", "test topic2"));
+        assertThat(topicDtos).extracting(TopicDto::getDescription).containsExactlyElementsOf(Arrays.asList("this is a test topic1", "this is a test topic2"));
+        assertThat(topicDtos).extracting(TopicDto::getCreatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
+        assertThat(topicDtos).extracting(TopicDto::getUpdatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
     }
 
     @Test

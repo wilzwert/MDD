@@ -15,7 +15,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = {SubscriptionMapper.class})
 public interface UserMapper {
 
-    UserDto userToUserDTO(User user);
+    UserDto userToUserDto(User user);
 
     @Named("userToUserDtoWithoutSubscriptions")
     @UserWithoutSubscriptions

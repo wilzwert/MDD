@@ -85,7 +85,7 @@ public class TopicController {
         log.info("Get all topics");
         List<Topic> foundTopics = this.topicService.getAllTopics();
         log.info("Got all topics {}", foundTopics);
-        return topicMapper.topicToTopicDTO(foundTopics);
+        return topicMapper.topicToTopicDto(foundTopics);
     }
 
     @Operation(summary = "Retrieve a topic", description = "Retrieve a topic with its id")
@@ -99,7 +99,7 @@ public class TopicController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Topic not found");
         }
 
-        return topicMapper.topicToTopicDTO(foundTopic.get());
+        return topicMapper.topicToTopicDto(foundTopic.get());
     }
 
     @Operation(summary = "Retrieve topic posts", description = "Retrieve all posts for a topic with its id")
@@ -115,7 +115,7 @@ public class TopicController {
 
         List<Post> posts = postService.getPostsByTopic(foundTopic.get());
 
-        return postMapper.postToPostDTO(posts);
+        return postMapper.postToPostDto(posts);
     }
 
     @Operation(summary = "Create a topic", description = "Create a topic")
@@ -137,7 +137,7 @@ public class TopicController {
         createTopic.setCreator(foundUser.get());
         Topic topic = topicService.createTopic(createTopic);
         log.info("Topic created : {}", topic);
-        return topicMapper.topicToTopicDTO(topic);
+        return topicMapper.topicToTopicDto(topic);
     }
 
     @PostMapping("{id}/subscription")

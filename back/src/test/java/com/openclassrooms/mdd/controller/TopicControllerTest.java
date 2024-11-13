@@ -79,7 +79,7 @@ public class TopicControllerTest {
             topicDto.setId(1);
 
             when(topicService.getTopicById(1)).thenReturn(Optional.of(topic));
-            when(topicMapper.topicToTopicDTO(topic)).thenReturn(topicDto);
+            when(topicMapper.topicToTopicDto(topic)).thenReturn(topicDto);
 
             TopicDto responseTopicDto = topicController.findById("1");
 
@@ -118,7 +118,7 @@ public class TopicControllerTest {
             List<TopicDto> topicDtos = Arrays.asList(topicDto1, topicDto2);
 
             when(topicService.getAllTopics()).thenReturn(topics);
-            when(topicMapper.topicToTopicDTO(topics)).thenReturn(topicDtos);
+            when(topicMapper.topicToTopicDto(topics)).thenReturn(topicDtos);
 
             List<TopicDto> foundTopicDtos = topicController.findAll();
 
@@ -164,7 +164,7 @@ public class TopicControllerTest {
             when(principal.getName()).thenReturn("user@example.com");
             when(userService.findUserByEmail("user@example.com")).thenReturn(Optional.of(new User().setId(1)));
             when(topicMapper.createTopicDtoToTopic(requestTopicDto)).thenReturn(topic);
-            when(topicMapper.topicToTopicDTO(topic)).thenReturn(responseTopicDto);
+            when(topicMapper.topicToTopicDto(topic)).thenReturn(responseTopicDto);
 
             TopicDto createdTopicDto = topicController.createTopic(requestTopicDto, principal);
 
@@ -289,7 +289,7 @@ public class TopicControllerTest {
 
             when(topicService.getTopicById(1)).thenReturn(Optional.of(topic));
             when(postService.getPostsByTopic(topic)).thenReturn(posts);
-            when(postMapper.postToPostDTO(posts)).thenReturn(postDtos);
+            when(postMapper.postToPostDto(posts)).thenReturn(postDtos);
 
             List<PostDto> foundPostDtos = topicController.findPosts("1");
 
@@ -335,7 +335,7 @@ public class TopicControllerTest {
             Topic topic = new Topic().setId(1).setTitle("Test topic").setCreatedAt(LocalDateTime.now());
             Subscription subscription = new Subscription().setTopic(topic).setUser(user);
             SubscriptionDto subscriptionDto = new SubscriptionDto();
-            subscriptionDto.setTopic(topicMapper.topicToTopicDTO(topic));
+            subscriptionDto.setTopic(topicMapper.topicToTopicDto(topic));
             subscriptionDto.setUserId(1);
             subscriptionDto.setCreatedAt(LocalDateTime.now());
 
