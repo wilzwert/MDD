@@ -1,6 +1,7 @@
 package com.openclassrooms.mdd.security.jwt;
 
 
+import com.openclassrooms.mdd.configuration.ApiDocProperties;
 import com.openclassrooms.mdd.model.JwtToken;
 import com.openclassrooms.mdd.security.service.CustomUserDetailsService;
 import com.openclassrooms.mdd.security.service.JwtService;
@@ -9,6 +10,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,13 +36,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtService jwtService;
+    private final ApiDocProperties apiDocProperties;
 
     public JwtAuthenticationFilter(
             final CustomUserDetailsService customUserDetailsService,
-            final JwtService jwtService
+            final JwtService jwtService,
+            final ApiDocProperties apiDocProperties
     ) {
         this.customUserDetailsService = customUserDetailsService;
         this.jwtService = jwtService;
+        this.apiDocProperties = apiDocProperties;
     }
 
     /**
@@ -53,14 +58,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // bypass filter if path should remain publicly accessible
-        String path = request.getServletPath();
-        if(path.matches("/api/auth/(login|register)")) {
-            log.info("Path should remain publicly accessible, no need to handle Bearer token");
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         try {
             Optional<JwtToken> token = jwtService.extractTokenFromRequest(request);
             // if not token found, security filter chain continues
@@ -75,6 +72,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String userEmail = jwtToken.getClaims().getSubject();
             log.info("User email: {}", userEmail);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println(userEmail);
+            System.out.println(authentication);
             if (userEmail != null && authentication == null) {
                 UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(userEmail);
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -88,8 +87,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 log.info("Token handled, set security context authentication");
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-            // security filter chain continues
-            filterChain.doFilter(request, response);
         }
         // send appropriate http status code and messages to request response
         catch(JwtException e) {
@@ -97,5 +94,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().print("token_error");
         }
+
+        // security filter chain continues
+        filterChain.doFilter(request, response);
+    }
+
+    @Override
+    public boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+        // bypass filter if path should remain publicly accessible
+        String path = request.getRequestURI();
+        return path.matches("/api/auth/(login|register)")
+                || path.matches(apiDocProperties.getApiDocsPath()+"/?.*")
+                || path.matches(apiDocProperties.getSwaggerPath()+"/?.*")
+                || path.matches("/swagger-ui/.*");
     }
 }

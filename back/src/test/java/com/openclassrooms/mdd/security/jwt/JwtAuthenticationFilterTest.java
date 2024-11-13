@@ -105,7 +105,6 @@ public class JwtAuthenticationFilterTest {
         assertThat(jwtAuthenticationFilter.shouldNotFilter(request)).isTrue();
     }
 
-    // TODO
     @Test
     public void shouldReturnFalseWhenFilteringNecessary() {
         when(apiDocProperties.getApiDocsPath()).thenReturn("/api/doc");
