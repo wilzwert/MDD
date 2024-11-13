@@ -57,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @throws IOException - throws {@link IOException}
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
             Optional<JwtToken> token = jwtService.extractTokenFromRequest(request);
             // if not token found, security filter chain continues
