@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "Representation of a user" )
+@Schema(description = "Representation of a topic" )
 public class TopicDto {
 
     @Schema(description = "Topic id")
