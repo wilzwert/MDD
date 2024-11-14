@@ -1,0 +1,16 @@
+<mat-toolbar color="primary" fxLayout="row" fxLayoutAlign="space-between center">
+    <span>Yoga app</span>
+    @if ($isLogged() | async) {
+    <div>
+      <span routerLink="sessions" class="link">Sessions</span>
+      <span routerLink="me" class="link">Account</span>
+      <span (click)="logout()" class="link">Logout</span>
+    </div>
+  }
+  @else {    
+      <div>
+        <span routerLink="login" class="link">Login</span>
+        <span routerLink="register" class="link">Register</span>
+      </div>
+  }
+  </mat-toolbar>
