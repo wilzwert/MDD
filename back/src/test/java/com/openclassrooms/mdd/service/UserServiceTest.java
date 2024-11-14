@@ -20,6 +20,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -220,6 +224,46 @@ public class UserServiceTest {
 
             verify(topicRepository).findById(1);
             verify(subscriptionRepository).save(any(Subscription.class));
+        }
+    }
+
+    @Nested
+    class SubscriptionDeletionTest {
+        @Test
+        public void shouldThrowEntityNotFoundExceptionWhenTopicNotFound() {
+            User user = new User().setEmail("test@example.com").setPassword("password").setUserName("test");
+            when(topicRepository.findById(1)).thenReturn(Optional.empty());
+
+            assertThrows(EntityNotFoundException.class, () -> userService.unSubscribe(user, 1));
+
+            verify(topicRepository).findById(1);
+        }
+
+        @Test
+        public void shouldThrowEntityNotFoundExceptionWhenParticipationNotFound() {
+            User user = new User().setEmail("test@example.com").setPassword("password").setUserName("test").setSubscriptions(new ArrayList<>());
+            Topic topic = new Topic().setId(1).setTitle("Topic title");
+            when(topicRepository.findById(1)).thenReturn(Optional.of(topic));
+
+            assertThrows(EntityNotFoundException.class, () -> userService.unSubscribe(user, 1));
+
+            verify(topicRepository).findById(1);
+        }
+
+        @Test
+        public void shouldDeleteSubscription() {
+            User user = new User().setEmail("test@example.com").setPassword("password").setUserName("test");
+            Topic topic = new Topic().setId(1).setTitle("Topic title");
+            Subscription subscription = new Subscription().setUser(user).setTopic(topic).setCreatedAt(LocalDateTime.now());
+            user.setSubscriptions(Collections.singletonList(subscription));
+
+            when(topicRepository.findById(1)).thenReturn(Optional.of(topic));
+            doNothing().when(subscriptionRepository).delete(subscription);
+
+            userService.unSubscribe(user, 1);
+
+            verify(topicRepository).findById(1);
+            verify(subscriptionRepository).delete(subscription);
         }
     }
 }
