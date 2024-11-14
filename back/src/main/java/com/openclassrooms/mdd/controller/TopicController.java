@@ -28,6 +28,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -155,15 +156,23 @@ public class TopicController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Topic not found");
         }
     }
-    /* TODO
-    @DeleteMapping("{id}/participation")
-    public ResponseEntity<?> noLongerParticipate(@PathVariable("id") String id, @PathVariable("userId") String userId) {
-        try {
-            this.sessionService.noLongerParticipate(Long.parseLong(id), Long.parseLong(userId));
 
-            return ResponseEntity.ok().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
+    @DeleteMapping("{id}/subscription")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> unSubscribe(@PathVariable("id") String id, Principal principal) {
+        log.info("Unsubscribe topic {}", id);
+        try {
+            Optional<User> foundUser = userService.findUserByEmail(principal.getName());
+            if(foundUser.isEmpty()) {
+                log.warn("Unsubscribe to a topic : couldn't get user info");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
+            }
+
+            userService.unSubscribe(foundUser.get(), Integer.parseInt(id));
+            return ResponseEntity.noContent().build();
         }
-    }*/
+        catch(EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 }

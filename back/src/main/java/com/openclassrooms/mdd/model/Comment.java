@@ -41,4 +41,14 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "post_id")
     Post post;
+
+    /**
+     * Override
+     * @return String the string representation of this Coment
+     * Avoid loops beween post - user - comment toString
+     */
+    @Override
+    public String toString() {
+        return "Comment [id=" + id + ", post=" + post.getId() + ", author =" + author.getId() + ", createdAd=" + createdAt+", updatedAt=" + updatedAt+"]";
+    }
 }

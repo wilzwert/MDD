@@ -21,4 +21,5 @@ public interface UserService {
     String encodePassword(String password);
     void deleteUser(User user);
     Subscription subscribe(User user, int topicId);
+    void unSubscribe(User user, int topicId);
 }

@@ -12,11 +12,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -79,6 +79,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void unSubscribe(User user, int topicId) {
+        Topic topic = topicRepository.findById(topicId).orElseThrow(() -> new EntityNotFoundException("Cannot find topic"));
+
+        List<Subscription> subscriptions = user.getSubscriptions().stream().filter(sub -> sub.getTopic().getId() == topic.getId()).toList();
+        if(subscriptions.isEmpty()) {
+            throw new EntityNotFoundException("Cannot find subscription");
+        }
+
+        subscriptionRepository.delete(subscriptions.getFirst());
+    }
+
+    @Override
     public User authenticateUser(String email, String password) throws AuthenticationException {
         Optional<User> user = findUserByEmail(email);
         if(user.isEmpty()) {
@@ -89,7 +101,7 @@ public class UserServiceImpl implements UserService {
                 }
             };
         }
-        Authentication authentication = authenticationManager.authenticate(
+        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password)
         );
         return user.get();
