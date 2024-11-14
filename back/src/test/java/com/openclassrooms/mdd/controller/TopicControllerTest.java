@@ -23,6 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -32,8 +33,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -354,29 +354,38 @@ public class TopicControllerTest {
             assertThat(responseSubscriptionDto).isEqualTo(subscriptionDto);
         }
     }
-    /*
+
     @Nested
-    class TopicControllerNoLongerSubscribeTest {
+    class TopicControllerUnsubscribeTest {
         @Test
-        public void shouldReturnBadRequestWhenBadTopicIdFormat() {
-            ResponseEntity<?> responseEntity = topicController.noLongerSubscribe("badId1", "1");
-
-            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        public void shouldReturnUnauthorizedWhenUserNotFound() {
+            when(principal.getName()).thenReturn("test@example.com");
+            when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.empty());
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> topicController.unSubscribe("badId1", principal));
+            assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         }
 
         @Test
-        public void shouldReturnBadRequestWhenBadUserIdFormat() {
-            ResponseEntity<?> responseEntity = topicController.noLongerSubscribe("1", "badUserId1");
+        public void shouldReturnEntityNotFoundExceptionWhenTopicOrSubscriptionNotFound() {
+            when(principal.getName()).thenReturn("test@example.com");
+            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
+            doThrow(EntityNotFoundException.class).when(userService).unSubscribe(user, 1);
 
-            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> topicController.unSubscribe("1", principal));
+            assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         }
 
         @Test
-        public void shouldNoLongerSubscribe() {
-            ResponseEntity<?> responseEntity = topicController.noLongerSubscribe("1", "1");
+        public void shouldReturnNoContentWhenUnsubscribeSuccessful() {
+            when(principal.getName()).thenReturn("test@example.com");
+            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
+            doNothing().when(userService).unSubscribe(user, 1);
 
-            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+            ResponseEntity<?> responseEntity = topicController.unSubscribe("1", principal);
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         }
-
-    }*/
+    }
 }
