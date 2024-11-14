@@ -157,9 +157,10 @@ public class TopicController {
         }
     }
 
-    @DeleteMapping("{id}/participation")
+    @DeleteMapping("{id}/subscription")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public ResponseEntity<?> unSubscribe(@PathVariable("id") String id, Principal principal) {
+        log.info("Unsubscribe topic {}", id);
         try {
             Optional<User> foundUser = userService.findUserByEmail(principal.getName());
             if(foundUser.isEmpty()) {
