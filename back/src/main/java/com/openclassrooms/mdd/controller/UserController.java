@@ -38,7 +38,7 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    public UserController(UserService userService, JwtService jwtService, UserMapper userMapper) {
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
     }
@@ -53,7 +53,7 @@ public class UserController {
     public UserDto me(Principal principal) {
         log.info("Get current user {} info", principal.getName());
         User user = userService.findUserByEmail(principal.getName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return userMapper.userToUserDTO(user);
+        return userMapper.userToUserDto(user);
     }
 
     @Operation(summary = "Delete current user", description = "Deletes current user account and info")

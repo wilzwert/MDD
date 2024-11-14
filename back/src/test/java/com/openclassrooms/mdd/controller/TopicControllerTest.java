@@ -2,16 +2,19 @@ package com.openclassrooms.mdd.controller;
 
 import com.openclassrooms.mdd.dto.request.CreateTopicDto;
 import com.openclassrooms.mdd.dto.response.PostDto;
+import com.openclassrooms.mdd.dto.response.SubscriptionDto;
 import com.openclassrooms.mdd.dto.response.TopicDto;
 import com.openclassrooms.mdd.mapper.PostMapper;
+import com.openclassrooms.mdd.mapper.SubscriptionMapper;
 import com.openclassrooms.mdd.mapper.TopicMapper;
 import com.openclassrooms.mdd.model.Post;
+import com.openclassrooms.mdd.model.Subscription;
 import com.openclassrooms.mdd.model.Topic;
 import com.openclassrooms.mdd.model.User;
 import com.openclassrooms.mdd.service.PostService;
 import com.openclassrooms.mdd.service.TopicService;
 import com.openclassrooms.mdd.service.UserService;
-import org.junit.jupiter.api.Disabled;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -28,6 +32,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -57,8 +62,14 @@ public class TopicControllerTest {
     @Mock
     private PostMapper postMapper;
 
+    @Mock
+    private SubscriptionMapper subscriptionMapper;
+
+    @Mock
+    private Principal principal;
+
     @Nested
-    class TopicControllerFindTest {
+    class TopicControllerRetrievalTest {
         @Test
         public void shouldFindTopicById() {
             Topic topic = new Topic();
@@ -68,7 +79,7 @@ public class TopicControllerTest {
             topicDto.setId(1);
 
             when(topicService.getTopicById(1)).thenReturn(Optional.of(topic));
-            when(topicMapper.topicToTopicDTO(topic)).thenReturn(topicDto);
+            when(topicMapper.topicToTopicDto(topic)).thenReturn(topicDto);
 
             TopicDto responseTopicDto = topicController.findById("1");
 
@@ -78,7 +89,6 @@ public class TopicControllerTest {
         @Test
         public void shouldReturnBadRequestWhenBadIdFormat() {
             assertThrows(NumberFormatException.class, () -> topicController.findById("badId1"));
-//            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         }
 
         @Test
@@ -108,7 +118,7 @@ public class TopicControllerTest {
             List<TopicDto> topicDtos = Arrays.asList(topicDto1, topicDto2);
 
             when(topicService.getAllTopics()).thenReturn(topics);
-            when(topicMapper.topicToTopicDTO(topics)).thenReturn(topicDtos);
+            when(topicMapper.topicToTopicDto(topics)).thenReturn(topicDtos);
 
             List<TopicDto> foundTopicDtos = topicController.findAll();
 
@@ -119,8 +129,18 @@ public class TopicControllerTest {
     @Nested
     class TopicControllerCreateTest {
 
-        @Mock
-        private Principal principal;
+        @Test
+        public void shouldThrowUnauthorizedResponseStatusExceptionWhenUserNotFound() {
+            CreateTopicDto createTopicDto = new CreateTopicDto();
+            createTopicDto.setTitle("Test topic");
+            createTopicDto.setDescription("Test description");
+
+            when(principal.getName()).thenReturn("test@example.com");
+            when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.empty());
+
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> topicController.createTopic(createTopicDto, principal));
+            assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        }
 
         @Test
         public void shouldCreateTopic() {
@@ -144,7 +164,7 @@ public class TopicControllerTest {
             when(principal.getName()).thenReturn("user@example.com");
             when(userService.findUserByEmail("user@example.com")).thenReturn(Optional.of(new User().setId(1)));
             when(topicMapper.createTopicDtoToTopic(requestTopicDto)).thenReturn(topic);
-            when(topicMapper.topicToTopicDTO(topic)).thenReturn(responseTopicDto);
+            when(topicMapper.topicToTopicDto(topic)).thenReturn(responseTopicDto);
 
             TopicDto createdTopicDto = topicController.createTopic(requestTopicDto, principal);
 
@@ -226,21 +246,20 @@ public class TopicControllerTest {
     }*/
 
     @Nested
-    class TopicControllerFindPostsTest {
+    class TopicControllerPostsRetrievalTest {
 
         @Test
         public void shouldReturnBadRequestWhenBadIdFormat() {
             assertThrows(NumberFormatException.class, () -> topicController.findPosts("badId1"));
-//            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         }
 
         @Test
-        public void shouldReturnNotFoundWhenNotFound() {
+        public void shouldReturnNotFoundWhenTopicNotFound() {
             when(topicService.getTopicById(1)).thenReturn(Optional.empty());
 
             assertThrows(
                     ResponseStatusException.class,
-                    () -> topicController.findById("1")
+                    () -> topicController.findPosts("1")
             );
         }
 
@@ -270,7 +289,7 @@ public class TopicControllerTest {
 
             when(topicService.getTopicById(1)).thenReturn(Optional.of(topic));
             when(postService.getPostsByTopic(topic)).thenReturn(posts);
-            when(postMapper.postToPostDTO(posts)).thenReturn(postDtos);
+            when(postMapper.postToPostDto(posts)).thenReturn(postDtos);
 
             List<PostDto> foundPostDtos = topicController.findPosts("1");
 
@@ -278,32 +297,64 @@ public class TopicControllerTest {
         }
     }
 
-    /* TODO
     @Nested
     class TopicControllerSubscribeTest {
-        @Test
-        public void shouldReturnBadRequestWhenBadTopicIdFormat() {
-            ResponseEntity<?> responseEntity = topicController.subscribe("badId1", "1");
 
-            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        @Test
+        public void shouldThrowUnauthorizedResponseStatusExceptionWhenUserNotFound() {
+            when(principal.getName()).thenReturn("test@example.com");
+            when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.empty());
+
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> topicController.subscribe("1", principal));
+
+            verify(principal).getName();
+            verify(userService).findUserByEmail("test@example.com");
+
+            assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         }
 
         @Test
-        public void shouldReturnBadRequestWhenBadUserIdFormat() {
-            ResponseEntity<?> responseEntity = topicController.subscribe("1", "badUserId1");
+        public void shouldThrowNotFoundResponseStatusExceptionWhenTopicNotFound() {
+            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
 
-            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+            when(principal.getName()).thenReturn("test@example.com");
+            when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
+            when(userService.subscribe(user, 1)).thenThrow(EntityNotFoundException.class);
+
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> topicController.subscribe("1", principal));
+
+            verify(principal).getName();
+            verify(userService).findUserByEmail("test@example.com");
+            verify(userService).subscribe(user, 1);
+            assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         }
 
-
         @Test
-        public void shouldSubscribe() {
-            ResponseEntity<?> responseEntity = topicController.subscribe("1", "1");
+        public void shouldReturnSubscriptionWhenSubscriptionSuccessful() {
+            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            Topic topic = new Topic().setId(1).setTitle("Test topic").setCreatedAt(LocalDateTime.now());
+            Subscription subscription = new Subscription().setTopic(topic).setUser(user);
+            SubscriptionDto subscriptionDto = new SubscriptionDto();
+            subscriptionDto.setTopic(topicMapper.topicToTopicDto(topic));
+            subscriptionDto.setUserId(1);
+            subscriptionDto.setCreatedAt(LocalDateTime.now());
 
-            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            when(principal.getName()).thenReturn("test@example.com");
+            when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
+            when(userService.subscribe(user, 1)).thenReturn(subscription);
+            when(subscriptionMapper.subscriptionToSubscriptionDto(subscription)).thenReturn(subscriptionDto);
+
+            SubscriptionDto responseSubscriptionDto = topicController.subscribe("1", principal);
+
+            verify(principal).getName();
+            verify(userService).findUserByEmail("test@example.com");
+            verify(userService).subscribe(user, 1);
+            verify(subscriptionMapper).subscriptionToSubscriptionDto(subscription);
+
+            assertThat(responseSubscriptionDto).isEqualTo(subscriptionDto);
         }
     }
-    
+    /*
     @Nested
     class TopicControllerNoLongerSubscribeTest {
         @Test

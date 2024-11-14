@@ -7,6 +7,7 @@ import com.openclassrooms.mdd.model.Post;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
 import java.util.List;
 
 /**
@@ -18,9 +19,10 @@ import java.util.List;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = UserMapper.class)
 public interface PostMapper {
 
-    PostDto postToPostDTO(Post post);
+    @Mapping(source = "author", target = "author", qualifiedByName = "userToUserDtoWithoutSubscriptions")
+    PostDto postToPostDto(Post post);
 
-    List<PostDto> postToPostDTO(List<Post> posts);
+    List<PostDto> postToPostDto(List<Post> posts);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "topic", ignore = true)

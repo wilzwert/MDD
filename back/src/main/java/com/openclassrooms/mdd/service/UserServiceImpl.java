@@ -8,6 +8,7 @@ import com.openclassrooms.mdd.repository.SubscriptionRepository;
 import com.openclassrooms.mdd.repository.TopicRepository;
 import com.openclassrooms.mdd.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -68,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Subscription subscribe(User user, int topicId) {
-        Topic topic = topicRepository.findById(topicId).orElseThrow(() -> new RuntimeException("Cannot find topic"));
+        Topic topic = topicRepository.findById(topicId).orElseThrow(() -> new EntityNotFoundException("Cannot find topic"));
 
         Subscription subscription = new Subscription();
         subscription.setTopic(topic);

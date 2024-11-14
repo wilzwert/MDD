@@ -14,7 +14,6 @@ import java.util.Optional;
 
 public interface TopicService {
     Topic createTopic(Topic topic);
-    Topic updateTopic(Topic topic);
     List<Topic> getAllTopics();
     Optional<Topic> getTopicById(final int id);
 }

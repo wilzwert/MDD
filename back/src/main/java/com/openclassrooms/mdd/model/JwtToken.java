@@ -17,6 +17,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class JwtToken {
     @NotNull
-    private String token;
+    private String subject;
     private Claims claims;
 }

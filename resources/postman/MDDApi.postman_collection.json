@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "6b320017-5c8b-44e1-adbd-b6b6990e9f8b",
+		"_postman_id": "b53408b6-0a4f-4704-8b1c-1dcfbb79686c",
 		"name": "MDDApi",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38710569"
+		"_exporter_id": "38976165"
 	},
 	"item": [
 		{
@@ -32,7 +32,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"{{userMail}}\",\n    \"userName\": \"{{userName}}\",\n    \"password\": \"abcd1234\"\n}",
+							"raw": "{\n    \"email\": \"{{userMail}}\",\n    \"userName\": \"{{userName}}\",\n    \"password\": \"aAbcd.1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -78,7 +78,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"{{userMail}}\",\n    \"password\": \"abcd1234\"\n}",
+							"raw": "{\n    \"email\": \"{{userMail}}\",\n    \"password\": \"aAbcd.1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -139,14 +139,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/auth/me",
+							"raw": "{{apiHost}}:{{apiPort}}/api/user/me",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"auth",
+								"user",
 								"me"
 							]
 						}
@@ -187,7 +187,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									""
+									"pm.collectionVariables.set(\"createdTopicId\", pm.response.json().id);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -218,44 +218,23 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "My postman rental {{randomText}} {{userId}}",
-									"type": "text"
-								},
-								{
-									"key": "surface",
-									"value": "50",
-									"type": "text"
-								},
-								{
-									"key": "price",
-									"value": "200",
-									"type": "text"
-								},
-								{
-									"key": "picture",
-									"type": "file",
-									"src": "postman-cloud:///1ef8583f-0647-44a0-9e09-68b88b944443"
-								},
-								{
-									"key": "description",
-									"value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a lectus eleifend, varius massa ac, mollis tortor. Quisque ipsum nulla, faucibus ac metus a, eleifend efficitur augue. Integer vel pulvinar ipsum. Praesent mollis neque sed sagittis ultricies. Suspendisse congue ligula at justo molestie, eget cursus nulla tincidunt. Pellentesque elementum rhoncus arcu, viverra gravida turpis mattis in. Maecenas tempor elementum lorem vel ultricies. Nam tempus laoreet eros, et viverra libero tincidunt a. Nunc vel nisi vulputate, sodales massa eu, varius erat.",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"My postman topic {{randomText}} {{userId}}\",\r\n    \"description\":\"My postman topic description {{randomText}} {{userId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/rentals",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topic",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"rentals"
+								"topic"
 							]
 						}
 					},
@@ -263,6 +242,18 @@
 				},
 				{
 					"name": "create2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"secondCreatedTopicId\", pm.response.json().id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -277,44 +268,73 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "My second postman rental {{randomText}} {{userId}}",
-									"type": "text"
-								},
-								{
-									"key": "surface",
-									"value": "50",
-									"type": "text"
-								},
-								{
-									"key": "price",
-									"value": "200",
-									"type": "text"
-								},
-								{
-									"key": "picture",
-									"type": "file",
-									"src": "postman-cloud:///1ef8583f-6b0b-4300-b517-8d3ffbca5c80"
-								},
-								{
-									"key": "description",
-									"value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a lectus eleifend, varius massa ac, mollis tortor. Quisque ipsum nulla, faucibus ac metus a, eleifend efficitur augue. Integer vel pulvinar ipsum. Praesent mollis neque sed sagittis ultricies. Suspendisse congue ligula at justo molestie, eget cursus nulla tincidunt. Pellentesque elementum rhoncus arcu, viverra gravida turpis mattis in. Maecenas tempor elementum lorem vel ultricies. Nam tempus laoreet eros, et viverra libero tincidunt a. Nunc vel nisi vulputate, sodales massa eu, varius erat.",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\r\n\"title\": \"My second postman topic {{randomText}} {{userId}}\",\r\n\"description\": \"My second postman topic description {{randomText}} {{userId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/rentals",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topic",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"rentals"
+								"topic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subscribe",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"secondCreatedTopicId\", pm.response.json().id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"title\": \"My second postman topic {{randomText}} {{userId}}\",\r\n\"description\": \"My second postman topic description {{randomText}} {{userId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/topic",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"topic"
 							]
 						}
 					},
@@ -327,13 +347,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var userId = pm.collectionVariables.get(\"userId\");\r",
-									"var randomText = pm.collectionVariables.get(\"randomText\");\r",
-									"var r = pm.response.json().rentals.filter(rental =>  rental.name == \"My postman rental \"+randomText+\" \"+userId);\r",
-									"pm.collectionVariables.set(\"createdRentalId\", r[0].id);\r",
-									"\r",
-									"var r = pm.response.json().rentals.filter(rental =>  rental.name == \"My second postman rental \"+randomText+\" \"+userId);\r",
-									"pm.collectionVariables.set(\"secondCreatedRentalId\", r[0].id);"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -354,14 +368,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/rentals",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topic",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"rentals"
+								"topic"
 							]
 						}
 					},
@@ -383,22 +397,22 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/rentals/{{createdRentalId}}",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{createdTopicId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"rentals",
-								"{{createdRentalId}}"
+								"topic",
+								"{{createdTopicId}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "get Copy",
+					"name": "get posts",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -413,15 +427,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/rentals/{{createdRentalId}}",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{createdTopicId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"rentals",
-								"{{createdRentalId}}"
+								"topic",
+								"{{createdTopicId}}"
 							]
 						}
 					},
@@ -473,7 +487,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{createdRentalId}}",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{createdTopicId}}",
 							"host": [
 								"{{apiHost}}"
 							],
@@ -481,7 +495,7 @@
 							"path": [
 								"api",
 								"topic",
-								"{{createdRentalId}}"
+								"{{createdTopicId}}"
 							]
 						}
 					},
@@ -528,15 +542,15 @@
 							]
 						},
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/rentals/{{secondCreatedRentalId}}",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{secondCreatedTopicId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"rentals",
-								"{{secondCreatedRentalId}}"
+								"topic",
+								"{{secondCreatedTopicId}}"
 							]
 						}
 					},
@@ -567,6 +581,210 @@
 			]
 		},
 		{
+			"name": "posts",
+			"item": [
+				{
+					"name": "create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"createdPostId\", pm.response.json().id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"randomText\", (Math.random() + 1).toString(36).substring(7));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"title\": \"My postman post {{randomText}} {{userId}}\",\r\n\"content\": \"My postman post content {{randomText}} {{userId}}\",\r\n\"topic_id\": \"{{createdTopicId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/post",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/post/{{createdPostId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"post",
+								"{{createdPostId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\":\"youpi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/post/{{createdPostId}}/comment",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"post",
+								"{{createdPostId}}",
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post comments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\":\"youpi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/post/{{createdPostId}}/comment",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"post",
+								"{{createdPostId}}",
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/post",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"post"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "delete",
 			"item": [
 				{
@@ -585,14 +803,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/auth/me",
+							"raw": "{{apiHost}}:{{apiPort}}/api/user/me",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"auth",
+								"user",
 								"me"
 							]
 						}
@@ -642,14 +860,6 @@
 			"value": ""
 		},
 		{
-			"key": "createdRentalId",
-			"value": ""
-		},
-		{
-			"key": "secondCreatedRentalId",
-			"value": ""
-		},
-		{
 			"key": "userMail",
 			"value": ""
 		},
@@ -669,6 +879,18 @@
 		},
 		{
 			"key": "userName",
+			"value": ""
+		},
+		{
+			"key": "createdTopicId",
+			"value": ""
+		},
+		{
+			"key": "secondCreatedTopicId",
+			"value": ""
+		},
+		{
+			"key": "createdPostId",
 			"value": ""
 		}
 	]

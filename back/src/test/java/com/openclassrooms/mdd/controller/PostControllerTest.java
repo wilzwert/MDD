@@ -8,9 +8,11 @@ import com.openclassrooms.mdd.mapper.CommentMapper;
 import com.openclassrooms.mdd.mapper.PostMapper;
 import com.openclassrooms.mdd.model.*;
 import com.openclassrooms.mdd.model.Post;
+import com.openclassrooms.mdd.service.CommentService;
 import com.openclassrooms.mdd.service.PostService;
 import com.openclassrooms.mdd.service.TopicService;
 import com.openclassrooms.mdd.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -55,13 +57,16 @@ public class PostControllerTest {
     private UserService userService;
 
     @Mock
+    private CommentService commentService;
+
+    @Mock
     private PostMapper postMapper;
 
     @Mock
     private CommentMapper commentMapper;
 
     @Nested
-    class PostControllerFindTest {
+    class PostControllerRetrievalTest {
         @Test
         public void shouldFindPostById() {
             Post post = new Post();
@@ -74,7 +79,7 @@ public class PostControllerTest {
             postDto.setContent("Test Content");
 
             when(postService.getPostById(1)).thenReturn(Optional.of(post));
-            when(postMapper.postToPostDTO(post)).thenReturn(postDto);
+            when(postMapper.postToPostDto(post)).thenReturn(postDto);
 
             PostDto responsePostDto = postController.findById("1");
 
@@ -84,7 +89,6 @@ public class PostControllerTest {
         @Test
         public void shouldReturnBadRequestWhenBadIdFormat() {
             assertThrows(NumberFormatException.class, () -> postController.findById("badId1"));
-//            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         }
 
         @Test
@@ -114,7 +118,7 @@ public class PostControllerTest {
             List<PostDto> postDtos = Arrays.asList(postDto1, postDto2);
 
             when(postService.getAllPosts()).thenReturn(posts);
-            when(postMapper.postToPostDTO(posts)).thenReturn(postDtos);
+            when(postMapper.postToPostDto(posts)).thenReturn(postDtos);
 
             List<PostDto> foundPostDtos = postController.findAll();
 
@@ -129,15 +133,54 @@ public class PostControllerTest {
         private Principal principal;
 
         @Test
+        public void shouldThrowUnauthorizedResponseStatusExceptionWhenUserNotFound() {
+            CreatePostDto createPostDto = new CreatePostDto();
+            createPostDto.setTitle("Test post");
+            createPostDto.setContent("Post content");
+            createPostDto.setTopicId(1);
+
+            when(principal.getName()).thenReturn("user@example.com");
+            when(userService.findUserByEmail("user@example.com")).thenReturn(Optional.empty());
+
+            ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, () -> postController.createPost(createPostDto, principal));
+
+            verify(principal).getName();
+            verify(userService).findUserByEmail("user@example.com");
+
+            assertThat(responseStatusException.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        }
+
+        @Test
+        public void shouldThrowBadRequestResponseStatusExceptionWhenTopicNotFound() {
+            CreatePostDto createPostDto = new CreatePostDto();
+            createPostDto.setTitle("Test post");
+            createPostDto.setContent("Post content");
+            createPostDto.setTopicId(1);
+
+            when(principal.getName()).thenReturn("user@example.com");
+            when(userService.findUserByEmail("user@example.com")).thenReturn(Optional.of(new User().setId(1)));
+            when(topicService.getTopicById(1)).thenReturn(Optional.empty());
+
+            ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, () -> postController.createPost(createPostDto, principal));
+
+            verify(principal).getName();
+            verify(userService).findUserByEmail("user@example.com");
+            verify(topicService).getTopicById(1);
+
+
+            assertThat(responseStatusException.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
         public void shouldCreatePost() {
             LocalDateTime now = LocalDateTime.now();
 
             Topic topic = new Topic().setId(1);
 
-            CreatePostDto requestPostDto = new CreatePostDto();
-            requestPostDto.setTitle("Test post");
-            requestPostDto.setContent("Post content");
-            requestPostDto.setTopicId(1);
+            CreatePostDto createPostDto = new CreatePostDto();
+            createPostDto.setTitle("Test post");
+            createPostDto.setContent("Post content");
+            createPostDto.setTopicId(1);
 
             Post post = new Post();
             post.setId(1).setTitle("Test post").setCreatedAt(now).setUpdatedAt(now).setAuthor(new User().setId(1));
@@ -153,10 +196,17 @@ public class PostControllerTest {
             when(postService.createPost(any(Post.class))).thenReturn(post);
             when(principal.getName()).thenReturn("user@example.com");
             when(userService.findUserByEmail("user@example.com")).thenReturn(Optional.of(new User().setId(1)));
-            when(postMapper.createPostDtoToPost(requestPostDto)).thenReturn(post);
-            when(postMapper.postToPostDTO(post)).thenReturn(responsePostDto);
+            when(postMapper.createPostDtoToPost(createPostDto)).thenReturn(post);
+            when(postMapper.postToPostDto(post)).thenReturn(responsePostDto);
 
-            PostDto createdPostDto = postController.createPost(requestPostDto, principal);
+            PostDto createdPostDto = postController.createPost(createPostDto, principal);
+
+            verify(topicService).getTopicById(1);
+            verify(postService).createPost(any(Post.class));
+            verify(principal).getName();
+            verify(userService).findUserByEmail("user@example.com");
+            verify(postMapper).createPostDtoToPost(createPostDto);
+            verify(postMapper).postToPostDto(post);
 
             assertThat(createdPostDto.getId()).isEqualTo(1);
             assertThat(createdPostDto.getTitle()).isEqualTo("Test post");
@@ -164,6 +214,56 @@ public class PostControllerTest {
             assertThat(createdPostDto.getCreatedAt()).isEqualTo(now);
             assertThat(createdPostDto.getUpdatedAt()).isEqualTo(now);
         }
+    }
+
+    @Nested
+    class PostControllerCommentRetrievalTest {
+
+        @Test
+        public void shouldThrowNotFoundResponseStatusExceptionWhenPostNotFound() {
+            when(postService.getPostById(1)).thenReturn(Optional.empty());
+
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> postController.getComment("1"));
+            verify(postService).getPostById(1);
+            assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+
+        }
+        @Test
+        public void shouldReturnPostComments() {
+            LocalDateTime now = LocalDateTime.now();
+
+            Post post = new Post().setId(1).setTitle("Test post").setCreatedAt(LocalDateTime.now()).setUpdatedAt(LocalDateTime.now());
+            User user = new User().setId(1);
+            Comment comment1 = new Comment().setId(1).setContent("Comment content").setAuthor(user).setPost(post);
+            Comment comment2 = new Comment().setId(2).setContent("Comment content 2").setAuthor(user).setPost(post);
+            List<Comment> comments = Arrays.asList(comment1, comment2);
+
+            CommentDto commentDto1 = new CommentDto();
+            commentDto1.setId(1);
+            commentDto1.setContent("Comment content");
+            commentDto1.setCreatedAt(now);
+            commentDto1.setUpdatedAt(now);
+
+            CommentDto commentDto2 = new CommentDto();
+            commentDto2.setId(2);
+            commentDto2.setContent("Comment content");
+            commentDto2.setCreatedAt(now);
+            commentDto2.setUpdatedAt(now);
+
+            when(postService.getPostById(1)).thenReturn(Optional.of(post));
+            when(commentService.getCommentsByPost(post)).thenReturn(comments);
+            when(commentMapper.commentToCommentDto(comments)).thenReturn(Arrays.asList(commentDto1, commentDto2));
+
+            List<CommentDto> responseCommentDtos = postController.getComment("1");
+            verify(postService).getPostById(1);
+            verify(commentService).getCommentsByPost(post);
+            verify(commentMapper).commentToCommentDto(comments);
+
+            System.out.println(responseCommentDtos);
+        }
+
+
     }
 
     @Nested
@@ -183,6 +283,24 @@ public class PostControllerTest {
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> postController.createComment("1", requestCommentDto, principal));
 
             assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        }
+
+        @Test
+        public void shouldThrowNotFoundWhenPostNotFound() {
+            CreateOrUpdateCommentDto requestCommentDto = new CreateOrUpdateCommentDto();
+            requestCommentDto.setContent("Comment content");
+
+            User user = new User().setId(1);
+            Comment comment = new Comment().setContent("Comment content");
+
+            when(principal.getName()).thenReturn("user@example.com");
+            when(userService.findUserByEmail("user@example.com")).thenReturn(Optional.of(user));
+            when(commentMapper.commentDtoToComment(requestCommentDto)).thenReturn(comment);
+            when(postService.createComment(user, 1, comment)).thenThrow(new EntityNotFoundException("post not found"));
+
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> postController.createComment("1", requestCommentDto, principal));
+
+            assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         }
 
         @Test

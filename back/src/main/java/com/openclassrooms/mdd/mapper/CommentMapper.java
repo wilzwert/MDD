@@ -16,10 +16,9 @@ import java.util.List;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = UserMapper.class)
 public interface CommentMapper {
 
-    @Mappings({
-            @Mapping(source = "author", target = "author", qualifiedByName = "userToUserDtoWithoutSubscriptions"),
-            @Mapping(source = "post.id", target = "postId"),
-    })
+
+    @Mapping(source = "author", target = "author", qualifiedByName = "userToUserDtoWithoutSubscriptions")
+    @Mapping(source = "post.id", target = "postId")
     CommentDto commentToCommentDto(Comment comment);
 
 

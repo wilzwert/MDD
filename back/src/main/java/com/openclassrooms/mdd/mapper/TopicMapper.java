@@ -18,9 +18,9 @@ import java.util.List;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface TopicMapper {
 
-    TopicDto topicToTopicDTO(Topic topic);
+    TopicDto topicToTopicDto(Topic topic);
 
-    List<TopicDto> topicToTopicDTO(List<Topic> topics);
+    List<TopicDto> topicToTopicDto(List<Topic> topics);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)

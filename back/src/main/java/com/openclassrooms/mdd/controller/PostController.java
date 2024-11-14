@@ -8,7 +8,7 @@ import com.openclassrooms.mdd.dto.response.PostDto;
 import com.openclassrooms.mdd.mapper.CommentMapper;
 import com.openclassrooms.mdd.mapper.PostMapper;
 import com.openclassrooms.mdd.model.*;
-import com.openclassrooms.mdd.repository.CommentRepository;
+import com.openclassrooms.mdd.service.CommentService;
 import com.openclassrooms.mdd.service.PostService;
 import com.openclassrooms.mdd.service.TopicService;
 import com.openclassrooms.mdd.service.UserService;
@@ -53,20 +53,21 @@ public class PostController {
     private final PostMapper postMapper;
 
     private final CommentMapper commentMapper;
-    private final CommentRepository commentRepository;
+    private final CommentService commentService;
 
     public PostController(
             PostService postService,
             UserService userService,
             TopicService topicService,
             PostMapper postMapper,
-            CommentMapper commentMapper, CommentRepository commentRepository) {
+            CommentMapper commentMapper,
+            CommentService commentService) {
         this.postService = postService;
         this.userService = userService;
         this.topicService = topicService;
         this.postMapper = postMapper;
         this.commentMapper = commentMapper;
-        this.commentRepository = commentRepository;
+        this.commentService = commentService;
     }
 
     @Operation(summary = "Retrieve all posts", description = "Retrieve all posts")
@@ -80,7 +81,7 @@ public class PostController {
         log.info("Get all posts");
         List<Post> foundPosts = this.postService.getAllPosts();
         log.info("Got all posts {}", foundPosts);
-        return postMapper.postToPostDTO(foundPosts);
+        return postMapper.postToPostDto(foundPosts);
     }
 
     @Operation(summary = "Retrieve a post", description = "Retrieve a post with its id")
@@ -99,7 +100,7 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
         }
 
-        return postMapper.postToPostDTO(foundPost.get());
+        return postMapper.postToPostDto(foundPost.get());
     }
 
     @Operation(summary = "Create a post", description = "Create a post")
@@ -110,7 +111,7 @@ public class PostController {
     })
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public PostDto createPost(@Valid @RequestBody CreatePostDto createPostDto, Principal principal) {
-        log.info("Create a post for topic {} from user {}", createPostDto.getTopicId(), principal.getName());
+        log.info("Create a post for topic {} from user {}", createPostDto.getTopicId(), principal);
 
         Optional<User> foundUser = userService.findUserByEmail(principal.getName());
         if(foundUser.isEmpty()) {
@@ -129,7 +130,7 @@ public class PostController {
 
         Post post = postService.createPost(createPost);
         log.info("Post created : {}", post);
-        return postMapper.postToPostDTO(post);
+        return postMapper.postToPostDto(post);
     }
 
     @Operation(summary = "Create a comment", description = "Create a comment for a post")
@@ -173,7 +174,7 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot get post info");
         }
 
-        List<Comment> comments = commentRepository.findCommentsByPost(foundPost.get());
+        List<Comment> comments = commentService.getCommentsByPost(foundPost.get());
         return commentMapper.commentToCommentDto(comments);
     }
 }

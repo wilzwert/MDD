@@ -19,7 +19,7 @@ public class PasswordValidatorTest {
     @Mock
     private ConstraintValidatorContext constraintValidatorContext;
 
-    private PasswordValidator passwordValidator = new PasswordValidator();
+    private final PasswordValidator passwordValidator = new PasswordValidator();
 
     /*Un mot de passe est valide si :
 - son nombre de caractère est supérieur ou égal à 8 caractères ;
@@ -28,6 +28,12 @@ public class PasswordValidatorTest {
 - lettre minuscule,
 - lettre majuscule,
 - caractère spécial*/
+
+    @Test
+    public void shouldNotValidatePasswordWhenNull() {
+        String tooShortPassword = null;
+        assertThat(passwordValidator.isValid(tooShortPassword, constraintValidatorContext)).isFalse();
+    }
 
     @Test
     public void shouldNotValidatePasswordWhenTooShort() {

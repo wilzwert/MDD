@@ -37,11 +37,6 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public Topic updateTopic(Topic topic) {
-        return null;
-    }
-
-    @Override
     public List<Topic> getAllTopics() {
         return topicRepository.findAll();
     }

@@ -1,22 +1,11 @@
 package com.openclassrooms.mdd.controller;
 
-import com.openclassrooms.mdd.dto.request.CreateTopicDto;
-import com.openclassrooms.mdd.dto.response.PostDto;
 import com.openclassrooms.mdd.dto.response.SubscriptionDto;
 import com.openclassrooms.mdd.dto.response.TopicDto;
 import com.openclassrooms.mdd.dto.response.UserDto;
-import com.openclassrooms.mdd.mapper.PostMapper;
-import com.openclassrooms.mdd.mapper.TopicMapper;
 import com.openclassrooms.mdd.mapper.UserMapper;
-import com.openclassrooms.mdd.model.Post;
-import com.openclassrooms.mdd.model.Subscription;
-import com.openclassrooms.mdd.model.Topic;
 import com.openclassrooms.mdd.model.User;
-import com.openclassrooms.mdd.security.service.UserDetailsImpl;
-import com.openclassrooms.mdd.service.PostService;
-import com.openclassrooms.mdd.service.TopicService;
 import com.openclassrooms.mdd.service.UserService;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,23 +14,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.security.Principal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 /**
@@ -99,7 +78,7 @@ public class UserControllerTest {
         Principal principal = mock(Principal.class);
         when(principal.getName()).thenReturn("test@example.com");
         when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
-        when(userMapper.userToUserDTO(user)).thenReturn(userDto);
+        when(userMapper.userToUserDto(user)).thenReturn(userDto);
 
         UserDto responseUserDto = userController.me(principal);
 

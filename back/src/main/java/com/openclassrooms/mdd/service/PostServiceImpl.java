@@ -46,11 +46,6 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post updatePost(Post post) {
-        return null;
-    }
-
-    @Override
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
@@ -63,11 +58,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public Optional<Post> getPostById(int id) {
         return postRepository.findById(id);
-    }
-
-    @Override
-    public void deletePostById(int id) {
-        postRepository.deleteById(id);
     }
 
     @Override

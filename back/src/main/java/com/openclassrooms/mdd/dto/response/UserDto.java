@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -26,11 +27,11 @@ public class UserDto {
 
     @JsonProperty("created_at")
     @Schema(description = "User creation date")
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     @JsonProperty("updated_at")
     @Schema(description = "User update date")
-    private String updatedAt;
+    private LocalDateTime updatedAt;
 
     @Schema(description = "User subscriptions")
     @JsonInclude(JsonInclude.Include.NON_NULL)
