@@ -247,7 +247,7 @@ public class PostControllerTest {
 
             CommentDto commentDto2 = new CommentDto();
             commentDto2.setId(2);
-            commentDto2.setContent("Comment content");
+            commentDto2.setContent("Comment content 2");
             commentDto2.setCreatedAt(now);
             commentDto2.setUpdatedAt(now);
 
@@ -256,9 +256,16 @@ public class PostControllerTest {
             when(commentMapper.commentToCommentDto(comments)).thenReturn(Arrays.asList(commentDto1, commentDto2));
 
             List<CommentDto> responseCommentDtos = postController.getComment("1");
+
             verify(postService).getPostById(1);
             verify(commentService).getCommentsByPost(post);
             verify(commentMapper).commentToCommentDto(comments);
+
+            assertThat(responseCommentDtos).hasSize(2);
+            assertThat(responseCommentDtos).extracting(CommentDto::getId).containsExactlyElementsOf(Arrays.asList(1, 2));
+            assertThat(responseCommentDtos).extracting(CommentDto::getContent).containsExactlyElementsOf(Arrays.asList("Comment content", "Comment content 2"));
+            assertThat(responseCommentDtos).extracting(CommentDto::getCreatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
+            assertThat(responseCommentDtos).extracting(CommentDto::getUpdatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
         }
     }
 
