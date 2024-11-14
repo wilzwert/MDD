@@ -36,7 +36,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -89,7 +88,6 @@ public class PostControllerIT {
 
             MvcResult result = mockMvc.perform(get("/api/post"))
                     .andExpect(status().isOk())
-                    .andDo(print())
                     .andReturn();
 
             List<PostDto> responsePosts = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<PostDto>>() {});
