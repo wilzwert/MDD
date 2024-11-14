@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "b53408b6-0a4f-4704-8b1c-1dcfbb79686c",
+		"_postman_id": "bc0c2ea9-1cc3-42a5-a5f7-1c66b9a75b03",
 		"name": "MDDApi",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38976165"
+		"_exporter_id": "38710569"
 	},
 	"item": [
 		{
@@ -327,14 +327,68 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/topic",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{createdTopicId}}/subscription",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"topic"
+								"topic",
+								"{{createdTopicId}}",
+								"subscription"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unsubscribe",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"title\": \"My second postman topic {{randomText}} {{userId}}\",\r\n\"description\": \"My second postman topic description {{randomText}} {{userId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{createdTopicId}}/subscription",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"topic",
+								"{{createdTopicId}}",
+								"subscription"
 							]
 						}
 					},
