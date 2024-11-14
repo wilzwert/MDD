@@ -119,8 +119,8 @@ public class SubscriptionMapperTest {
         assertThat(subscriptionDtos).isNotNull();
         assertThat(subscriptionDtos.size()).isEqualTo(2);
 
-        assertThat(subscriptionDtos).extracting(SubscriptionDto::getUserId).containsExactlyElementsOf(Arrays.asList(1, 2));
-        assertThat(subscriptionDtos).extracting(SubscriptionDto::getCreatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
+        assertThat(subscriptionDtos).extracting(SubscriptionDto::getUserId).containsExactly(1, 2);
+        assertThat(subscriptionDtos).extracting(SubscriptionDto::getCreatedAt).containsExactly(now, now);
         assertThat(subscriptionDtos.getFirst().getTopic().getId()).isEqualTo(1);
         assertThat(subscriptionDtos.getFirst().getTopic().getTitle()).isEqualTo("test topic 1");
         assertThat(subscriptionDtos.get(1).getTopic().getId()).isEqualTo(2);

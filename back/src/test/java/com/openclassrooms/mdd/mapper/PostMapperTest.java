@@ -110,11 +110,11 @@ public class PostMapperTest {
         assertThat(postDtos).isNotNull();
         assertThat(postDtos.size()).isEqualTo(2);
 
-        assertThat(postDtos).extracting(PostDto::getId).containsExactlyElementsOf(Arrays.asList(1, 2));
-        assertThat(postDtos).extracting(PostDto::getTitle).containsExactlyElementsOf(Arrays.asList("test post1", "test post2"));
-        assertThat(postDtos).extracting(PostDto::getContent).containsExactlyElementsOf(Arrays.asList("this is a test post1", "this is a test post2"));
-        assertThat(postDtos).extracting(PostDto::getCreatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
-        assertThat(postDtos).extracting(PostDto::getUpdatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
+        assertThat(postDtos).extracting(PostDto::getId).containsExactly(1, 2);
+        assertThat(postDtos).extracting(PostDto::getTitle).containsExactly("test post1", "test post2");
+        assertThat(postDtos).extracting(PostDto::getContent).containsExactly("this is a test post1", "this is a test post2");
+        assertThat(postDtos).extracting(PostDto::getCreatedAt).containsExactly(now, now);
+        assertThat(postDtos).extracting(PostDto::getUpdatedAt).containsExactly(now, now);
         assertThat(postDtos.getFirst().getAuthor().getId()).isEqualTo(1);
         assertThat(postDtos.getFirst().getAuthor().getUserName()).isEqualTo("testuser1");
         // check that userToUserDtoWithoutSubscriptions is used to map User

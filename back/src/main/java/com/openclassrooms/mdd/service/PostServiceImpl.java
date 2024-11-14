@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
     public Post createPost(Post post) {
         log.info("Create Post {}", post.getTitle());
         Post newPost = postRepository.save(post);
-        log.info("Rental {} saved, setting owner permissions", post.getTitle());
+        log.info("Post {} saved", post.getTitle());
         // TODO aclService.grantOwnerPermissions(post);
         return newPost;
     }

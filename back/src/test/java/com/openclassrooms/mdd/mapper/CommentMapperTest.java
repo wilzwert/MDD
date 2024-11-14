@@ -137,10 +137,10 @@ public class CommentMapperTest {
         assertThat(commentDtos).isNotNull();
         assertThat(commentDtos.size()).isEqualTo(2);
 
-        assertThat(commentDtos).extracting(CommentDto::getId).containsExactlyElementsOf(Arrays.asList(1, 2));
-        assertThat(commentDtos).extracting(CommentDto::getContent).containsExactlyElementsOf(Arrays.asList("this is a test comment1", "this is a test comment2"));
-        assertThat(commentDtos).extracting(CommentDto::getCreatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
-        assertThat(commentDtos).extracting(CommentDto::getUpdatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
+        assertThat(commentDtos).extracting(CommentDto::getId).containsExactly(1, 2);
+        assertThat(commentDtos).extracting(CommentDto::getContent).containsExactly("this is a test comment1", "this is a test comment2");
+        assertThat(commentDtos).extracting(CommentDto::getCreatedAt).containsExactly(now, now);
+        assertThat(commentDtos).extracting(CommentDto::getUpdatedAt).containsExactly(now, now);
         assertThat(commentDtos.getFirst().getAuthor().getId()).isEqualTo(1);
         assertThat(commentDtos.getFirst().getAuthor().getUserName()).isEqualTo("testuser1");
         // check that userToUserDtoWithoutSubscriptions is used to map User

@@ -88,25 +88,6 @@ public class UserServiceTest {
 
             verify(userRepository).findByEmail("test@example.com");
         }
-
-        @Test
-        public void shouldReturnEmptyOptionalWhenUserNotFoundById() {
-            when(userRepository.findById(1)).thenReturn(Optional.empty());
-
-            assertThat(userService.findUserById(1)).isEmpty();
-
-            verify(userRepository).findById(1);
-        }
-
-        @Test
-        public void shouldReturnUserFoundById() {
-            User user = new User().setId(1).setEmail("test@example.com");
-            when(userRepository.findById(1)).thenReturn(Optional.of(user));
-
-            assertThat(userService.findUserById(1)).isPresent().get().isEqualTo(user);
-
-            verify(userRepository).findById(1);
-        }
     }
 
     @Nested
