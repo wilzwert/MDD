@@ -259,11 +259,7 @@ public class PostControllerTest {
             verify(postService).getPostById(1);
             verify(commentService).getCommentsByPost(post);
             verify(commentMapper).commentToCommentDto(comments);
-
-            System.out.println(responseCommentDtos);
         }
-
-
     }
 
     @Nested
