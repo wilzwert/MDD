@@ -31,7 +31,7 @@ public class TopicServiceImpl implements TopicService {
     public Topic createTopic(Topic topic) {
         log.info("Create Topic {}", topic.getTitle());
         Topic newTopic = topicRepository.save(topic);
-        log.info("Rental {} saved, setting owner permissions", topic.getTitle());
+        log.info("Topic {} saved", topic.getTitle());
         // TODO aclService.grantOwnerPermissions(topic);
         return newTopic;
     }

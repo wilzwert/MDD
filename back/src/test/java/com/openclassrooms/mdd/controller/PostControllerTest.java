@@ -262,10 +262,10 @@ public class PostControllerTest {
             verify(commentMapper).commentToCommentDto(comments);
 
             assertThat(responseCommentDtos).hasSize(2);
-            assertThat(responseCommentDtos).extracting(CommentDto::getId).containsExactlyElementsOf(Arrays.asList(1, 2));
-            assertThat(responseCommentDtos).extracting(CommentDto::getContent).containsExactlyElementsOf(Arrays.asList("Comment content", "Comment content 2"));
-            assertThat(responseCommentDtos).extracting(CommentDto::getCreatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
-            assertThat(responseCommentDtos).extracting(CommentDto::getUpdatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
+            assertThat(responseCommentDtos).extracting(CommentDto::getId).containsExactly(1, 2);
+            assertThat(responseCommentDtos).extracting(CommentDto::getContent).containsExactly("Comment content", "Comment content 2");
+            assertThat(responseCommentDtos).extracting(CommentDto::getCreatedAt).containsExactly(now, now);
+            assertThat(responseCommentDtos).extracting(CommentDto::getUpdatedAt).containsExactly(now, now);
         }
     }
 

@@ -17,7 +17,6 @@ public interface UserService {
     User authenticateUser(String email, String password) throws AuthenticationException;
 
     Optional<User> findUserByEmail(String email);
-    Optional<User> findUserById(final int id);
     String encodePassword(String password);
     void deleteUser(User user);
     Subscription subscribe(User user, int topicId);

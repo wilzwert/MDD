@@ -80,11 +80,11 @@ public class TopicMapperTest {
 
         assertThat(topicDtos).isNotNull();
         assertThat(topicDtos.size()).isEqualTo(2);
-        assertThat(topicDtos).extracting(TopicDto::getId).containsExactlyElementsOf(Arrays.asList(1, 2));
-        assertThat(topicDtos).extracting(TopicDto::getTitle).containsExactlyElementsOf(Arrays.asList("test topic1", "test topic2"));
-        assertThat(topicDtos).extracting(TopicDto::getDescription).containsExactlyElementsOf(Arrays.asList("this is a test topic1", "this is a test topic2"));
-        assertThat(topicDtos).extracting(TopicDto::getCreatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
-        assertThat(topicDtos).extracting(TopicDto::getUpdatedAt).containsExactlyElementsOf(Arrays.asList(now, now));
+        assertThat(topicDtos).extracting(TopicDto::getId).containsExactly(1, 2);
+        assertThat(topicDtos).extracting(TopicDto::getTitle).containsExactly("test topic1", "test topic2");
+        assertThat(topicDtos).extracting(TopicDto::getDescription).containsExactly("this is a test topic1", "this is a test topic2");
+        assertThat(topicDtos).extracting(TopicDto::getCreatedAt).containsExactly(now, now);
+        assertThat(topicDtos).extracting(TopicDto::getUpdatedAt).containsExactly(now, now);
     }
 
     @Test

@@ -113,11 +113,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findUserById(final int id) {
-        return userRepository.findById(id);
-    }
-
-    @Override
     public String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
