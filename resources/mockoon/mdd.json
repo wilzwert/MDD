@@ -163,7 +163,7 @@
       "responses": [
         {
           "uuid": "2552b642-4042-4af9-8dd9-2b910e0a188e",
-          "body": "{}",
+          "body": "{\n}",
           "latency": 0,
           "statusCode": 401,
           "label": "",
@@ -175,7 +175,7 @@
               "target": "header",
               "modifier": "Authorization",
               "value": "Bearer jwt",
-              "invert": true,
+              "invert": false,
               "operator": "equals"
             }
           ],
@@ -190,7 +190,7 @@
         },
         {
           "uuid": "2accac71-b052-4efe-9819-06dde4e5c8e9",
-          "body": "{\n  \"id\": 1,\n\t\"name\": \"Test TEST\",\n\t\"email\": \"test@test.com\",\n\t\"created_at\": \"2022/02/02\",\n\t\"updated_at\": \"2022/08/02\"  \n}",
+          "body": "{\n  \"id\": 1,\n\t\"user_name\": \"test\",\n\t\"email\": \"test@test.com\",\n\t\"created_at\": \"2022/02/02\",\n\t\"updated_at\": \"2022/08/02\"  \n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -202,7 +202,7 @@
               "target": "header",
               "modifier": "Authorization",
               "value": "Bearer jwt",
-              "invert": false,
+              "invert": true,
               "operator": "equals"
             }
           ],
@@ -432,7 +432,7 @@
           "rules": [
             {
               "target": "body",
-              "modifier": "refresh_token",
+              "modifier": "refreshToken",
               "value": "refresh_token",
               "invert": false,
               "operator": "equals"

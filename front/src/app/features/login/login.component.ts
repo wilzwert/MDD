@@ -61,9 +61,8 @@ export class LoginComponent {
         next: (response: SessionInformation) => {
           this.sessionService.logIn(response);
           this.router.navigate(['/'])
-        }
+        },
+        error: error => this.onError = true,
       })
-
   }
-
 }

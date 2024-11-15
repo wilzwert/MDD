@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { SessionInformation } from '../models/sessionInformation.interface';
+import { TokenStorageService } from './token-storage.service';
+import { User } from '../models/user.interface';
+import { RefreshTokenResponse } from '../models/refreshTokenResponse.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -8,22 +11,48 @@ import { SessionInformation } from '../models/sessionInformation.interface';
 export class SessionService {
 
   public isLogged = false;
-  public sessionInformation: SessionInformation | undefined;
 
   private isLoggedSubject = new BehaviorSubject<boolean>(this.isLogged);
+
+  constructor(private tokenStorageService: TokenStorageService) {
+    if(this.tokenStorageService.getToken() != null) {
+      this.isLogged = true;
+      this.next();
+    }
+  }
+
+  public getToken() :string | null {
+    return this.tokenStorageService.getToken();
+  }
+
+  public getTokenType() :string | null {
+    return this.tokenStorageService.getTokenType();
+  }
+
+  public getRefreshToken() :string | null {
+    return this.tokenStorageService.getRefreshToken();
+  }
+
+  public getUser() :User | null {
+    return this.tokenStorageService.getUser();
+  }
 
   public $isLogged(): Observable<boolean> {
     return this.isLoggedSubject.asObservable();
   }
 
-  public logIn(user: SessionInformation): void {
-    this.sessionInformation = user;
+  public handleTokenAfterRefresh(data: RefreshTokenResponse): void {
+    this.tokenStorageService.saveTokenAfterRefresh(data);
+  }
+
+  public logIn(data: SessionInformation): void {
+    this.tokenStorageService.saveSessionInformation(data);
     this.isLogged = true;
     this.next();
   }
 
   public logOut(): void {
-    this.sessionInformation = undefined;
+    this.tokenStorageService.clearSessionInformation();
     this.isLogged = false;
     this.next();
   }
