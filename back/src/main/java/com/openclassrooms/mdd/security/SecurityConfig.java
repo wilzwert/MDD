@@ -52,6 +52,7 @@ public class SecurityConfig {
                         auth.requestMatchers(
                                         "/api/auth/register",
                                         "/api/auth/login",
+                                        "/api/auth/refreshToken",
                                         apiDocProperties.getApiDocsPath()+"/**",
                                         apiDocProperties.getSwaggerPath()+"/**",
                                         // note : we have to add /swagger-ui/** because event if swagger path is set in configuration

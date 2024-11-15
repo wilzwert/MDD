@@ -29,5 +29,6 @@ public interface UserMapper {
     @Mapping(target = "topics", ignore = true)
     @Mapping(target = "subscriptions", ignore = true)
     @Mapping(target = "comments", ignore = true)
+    @Mapping(target = "refreshToken", ignore = true)
     User registerUserDtoToUser(RegisterUserDto userDto);
 }
