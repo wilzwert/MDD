@@ -2,12 +2,16 @@ package com.openclassrooms.mdd.controller;
 
 
 import com.openclassrooms.mdd.dto.request.LoginRequestDto;
+import com.openclassrooms.mdd.dto.request.RefreshTokenRequestDto;
 import com.openclassrooms.mdd.dto.request.RegisterUserDto;
 import com.openclassrooms.mdd.dto.response.ErrorResponseDto;
+import com.openclassrooms.mdd.dto.response.JwtRefreshResponse;
 import com.openclassrooms.mdd.dto.response.JwtResponse;
 import com.openclassrooms.mdd.mapper.UserMapper;
+import com.openclassrooms.mdd.model.RefreshToken;
 import com.openclassrooms.mdd.model.User;
 import com.openclassrooms.mdd.security.service.JwtService;
+import com.openclassrooms.mdd.security.service.RefreshTokenService;
 import com.openclassrooms.mdd.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 /**
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
@@ -40,11 +46,13 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthController {
     private final UserService userService;
     private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
     private final UserMapper userMapper;
 
-    public AuthController(UserService userService, JwtService jwtService, UserMapper userMapper) {
+    public AuthController(UserService userService, JwtService jwtService, RefreshTokenService refreshTokenServicen, UserMapper userMapper) {
         this.userService = userService;
         this.jwtService = jwtService;
+        this.refreshTokenService = refreshTokenServicen;
         this.userMapper = userMapper;
     }
 
@@ -65,7 +73,7 @@ public class AuthController {
             User user = userService.registerUser(registerUser);
             String token = jwtService.generateToken(user);
             log.info("User with email {} registered with id {}", registerUserDto.getEmail(), user.getId());
-            return new JwtResponse(token, user.getId(), user.getUserName());
+            return new JwtResponse(token, "Bearer", refreshTokenService.getOrCreateRefreshToken(user).getToken(), user.getId(), user.getUserName());
         }
         catch (EntityExistsException e) {
             log.warn("Email {} already exists", registerUserDto.getEmail());
@@ -91,7 +99,7 @@ public class AuthController {
             log.info("User login - generating token");
             String token = jwtService.generateToken(user);
             log.info("User with email {} successfully authenticated, sending JWT token", loginRequestDto.getEmail());
-            return new JwtResponse(token, user.getId(), user.getUserName());
+            return new JwtResponse(token, "Bearer", refreshTokenService.getOrCreateRefreshToken(user).getToken(), user.getId(), user.getUserName());
         }
         catch (AuthenticationException e) {
             log.info("Login failed for User with email {}", loginRequestDto.getEmail());
@@ -99,5 +107,29 @@ public class AuthController {
         }
     }
 
+    @Operation(summary = "Refresh access token", description = "Get a new access token")
+    @PostMapping("/refreshToken")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Refresh succeeded", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = JwtRefreshResponse.class))
+            }),
+            @ApiResponse(responseCode = "401", description = "Refresh failed", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponseDto.class))
+            })
+    })
+    public JwtRefreshResponse refreshToken(@Valid @RequestBody RefreshTokenRequestDto refreshTokenRequestDto) {
+        Optional<RefreshToken> foundRefreshToken = refreshTokenService.findByToken(refreshTokenRequestDto.getRefreshToken());
+        if(foundRefreshToken.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token not found");
+        }
 
+        if(!refreshTokenService.verifyExpiration(foundRefreshToken.get())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token expired, please login again");
+        }
+        RefreshToken refreshToken = foundRefreshToken.get();
+        User user = refreshToken.getUser();
+        String token = jwtService.generateToken(user);
+
+        return new JwtRefreshResponse(token, "Bearer", refreshToken.getToken());
+    }
 }
