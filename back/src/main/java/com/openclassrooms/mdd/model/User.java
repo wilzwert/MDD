@@ -1,5 +1,6 @@
 package com.openclassrooms.mdd.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -55,6 +56,10 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
+
+    @Nullable
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private RefreshToken refreshToken;
 
     /**
      * Override

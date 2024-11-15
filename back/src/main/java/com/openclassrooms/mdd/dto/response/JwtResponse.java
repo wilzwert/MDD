@@ -1,5 +1,6 @@
 package com.openclassrooms.mdd.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -10,16 +11,17 @@ import lombok.*;
 public class JwtResponse {
   @Schema(description = "The JWT token")
   private String token;
+
   @Schema(description = "The token type")
   private String type = "Bearer";
+
+  @JsonProperty("refresh_token")
+  @Schema(description = "The associated refresh token")
+  private String refreshToken;
+
   @Schema(description = "The User id")
   private int id;
+
   @Schema(description = "The User usename")
   private String username;
-
-  public JwtResponse(String accessToken, int id, String username) {
-    this.token = accessToken;
-    this.id = id;
-    this.username = username;
-  }
 }

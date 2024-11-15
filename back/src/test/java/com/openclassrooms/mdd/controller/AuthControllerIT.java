@@ -2,14 +2,13 @@ package com.openclassrooms.mdd.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-/*import com.openclassrooms.mdd.models.User;
-import com.openclassrooms.mdd.payload.request.LoginRequest;
-import com.openclassrooms.mdd.payload.request.RegisterUserDto;
-import com.openclassrooms.mdd.payload.response.JwtResponse;*/
 import com.openclassrooms.mdd.dto.request.LoginRequestDto;
+import com.openclassrooms.mdd.dto.request.RefreshTokenRequestDto;
 import com.openclassrooms.mdd.dto.request.RegisterUserDto;
 import com.openclassrooms.mdd.dto.response.JwtResponse;
+import com.openclassrooms.mdd.model.RefreshToken;
 import com.openclassrooms.mdd.model.User;
+import com.openclassrooms.mdd.repository.RefreshTokenRepository;
 import com.openclassrooms.mdd.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -24,9 +23,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
+import java.time.Instant;
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -49,6 +47,9 @@ public class AuthControllerIT {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private RefreshTokenRepository refreshTokenRepository;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -60,6 +61,7 @@ public class AuthControllerIT {
 
     private final static String LOGIN_URL = "/api/auth/login";
     private final static String REGISTER_URL = "/api/auth/register";
+    private final static String REFRESH_TOKEN_URL = "/api/auth/refreshToken";
 
     @Nested
     class AuthControllerAuthenticateIT {
@@ -103,6 +105,7 @@ public class AuthControllerIT {
                     .setUserName("testuser");
 
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+            when(refreshTokenRepository.save(any(RefreshToken.class))).thenAnswer(i -> i.getArgument(0));
 
             MvcResult result = mockMvc.perform(post(LOGIN_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(loginRequest)))
                     .andExpect(status().isOk())
@@ -111,6 +114,7 @@ public class AuthControllerIT {
             JwtResponse response = objectMapper.readValue(json, JwtResponse.class);
             assertThat(response.getType()).isEqualTo("Bearer");
             assertThat(response.getToken()).isNotEmpty();
+            assertThat(response.getRefreshToken()).isNotEmpty();
             assertThat(response.getId()).isEqualTo(1);
             assertThat(response.getUsername()).isEqualTo("testuser");
         }
@@ -205,12 +209,61 @@ public class AuthControllerIT {
         @Test
         public void shouldRegisterUser() throws Exception {
             when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
+            when(refreshTokenRepository.save(any(RefreshToken.class))).thenAnswer(i -> i.getArgument(0));
 
             mockMvc.perform(post(REGISTER_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerUserDto)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("token").isNotEmpty());
+                    .andExpect(jsonPath("token").isNotEmpty())
+                    .andExpect(jsonPath("refresh_token").isNotEmpty());
+
 
             verify(userRepository).save(any(User.class));
+        }
+    }
+
+    @Nested
+    class AuthControllerRefreshTokenIT {
+        @Test
+        public void shouldReturnUnauthorizedWhenRefreshTokenNotFound() throws Exception {
+            RefreshTokenRequestDto refreshTokenRequestDto = new RefreshTokenRequestDto();
+            refreshTokenRequestDto.setRefreshToken("refresh_token");
+
+            when(refreshTokenRepository.findByToken("refresh_token")).thenReturn(Optional.empty());
+
+            mockMvc.perform(post(REFRESH_TOKEN_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(refreshTokenRequestDto)))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message").value("Refresh token not found"));
+        }
+
+        @Test
+        public void shouldReturnUnauthorizedWhenRefreshTokenExpired() throws Exception {
+            RefreshTokenRequestDto refreshTokenRequestDto = new RefreshTokenRequestDto();
+            refreshTokenRequestDto.setRefreshToken("refresh_token");
+
+            RefreshToken refreshToken = new RefreshToken().setToken("refresh_token").setExpiryDate(Instant.now().minusSeconds(100));
+            when(refreshTokenRepository.findByToken("refresh_token")).thenReturn(Optional.of(refreshToken));
+
+            mockMvc.perform(post(REFRESH_TOKEN_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(refreshTokenRequestDto)))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message").value("Refresh token expired, please login again"));
+        }
+
+        @Test
+        public void shouldReturnJwtRefreshResponseOnRefreshSuccess() throws Exception {
+            RefreshTokenRequestDto refreshTokenRequestDto = new RefreshTokenRequestDto();
+            refreshTokenRequestDto.setRefreshToken("refresh_token");
+
+            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            RefreshToken refreshToken = new RefreshToken().setUser(user).setToken("refresh_token").setExpiryDate(Instant.now().plusSeconds(86400));
+
+            when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+            when(refreshTokenRepository.findByToken("refresh_token")).thenReturn(Optional.of(refreshToken));
+
+            mockMvc.perform(post(REFRESH_TOKEN_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(refreshTokenRequestDto)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("token").isNotEmpty())
+                    .andExpect(jsonPath("refresh_token").value("refresh_token"))
+                    .andExpect(jsonPath("type").value("Bearer"));
         }
     }
 }

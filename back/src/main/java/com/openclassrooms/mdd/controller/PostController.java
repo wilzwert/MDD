@@ -150,7 +150,7 @@ public class PostController {
             }
 
             Comment comment = postService.createComment(foundUser.get(), Integer.parseInt(id), commentMapper.commentDtoToComment(createCommentDto));
-            log.info("Comment created : {}", comment);
+            log.info("Comment created : {}", comment.getId());
             return commentMapper.commentToCommentDto(comment);
         }
         catch(EntityNotFoundException e) {
