@@ -1,7 +1,5 @@
 package com.openclassrooms.mdd.dto.response;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,13 +19,11 @@ import java.time.LocalDateTime;
 public class SubscriptionDto {
 
     @Schema(description = "User id")
-    @JsonProperty("user_id")
     private int userId;
 
     @Schema(description = "Topic")
     private TopicDto topic;
 
-    @JsonProperty("created_at")
     @Schema(description = "Subscription creation date")
     private LocalDateTime createdAt;
 }

@@ -214,7 +214,7 @@ public class AuthControllerIT {
             mockMvc.perform(post(REGISTER_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerUserDto)))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("token").isNotEmpty())
-                    .andExpect(jsonPath("refresh_token").isNotEmpty());
+                    .andExpect(jsonPath("refreshToken").isNotEmpty());
 
 
             verify(userRepository).save(any(User.class));
@@ -262,7 +262,7 @@ public class AuthControllerIT {
             mockMvc.perform(post(REFRESH_TOKEN_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(refreshTokenRequestDto)))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("token").isNotEmpty())
-                    .andExpect(jsonPath("refresh_token").value("refresh_token"))
+                    .andExpect(jsonPath("refreshToken").value("refresh_token"))
                     .andExpect(jsonPath("type").value("Bearer"));
         }
     }

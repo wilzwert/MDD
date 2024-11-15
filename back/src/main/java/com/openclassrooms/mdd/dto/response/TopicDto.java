@@ -1,7 +1,5 @@
 package com.openclassrooms.mdd.dto.response;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -27,11 +25,9 @@ public class TopicDto {
     @Schema(description = "Topic description")
     private String description;
 
-    @JsonProperty("created_at")
     @Schema(description = "Topic creation date")
     private LocalDateTime createdAt;
 
-    @JsonProperty("updated_at")
     @Schema(description = "Topic update date")
     private LocalDateTime updatedAt;
 }
