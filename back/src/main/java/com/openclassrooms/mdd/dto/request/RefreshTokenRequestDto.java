@@ -1,7 +1,5 @@
 package com.openclassrooms.mdd.dto.request;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -14,7 +12,6 @@ import lombok.Data;
 @Data
 public class RefreshTokenRequestDto {
 
-    @JsonProperty("refresh_token")
     @NotBlank
     private String refreshToken;
 }

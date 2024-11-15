@@ -1,6 +1,5 @@
 package com.openclassrooms.mdd.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -15,7 +14,6 @@ public class JwtResponse {
   @Schema(description = "The token type")
   private String type = "Bearer";
 
-  @JsonProperty("refresh_token")
   @Schema(description = "The associated refresh token")
   private String refreshToken;
 

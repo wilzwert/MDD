@@ -1,7 +1,5 @@
 package com.openclassrooms.mdd.dto.response;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,11 +30,9 @@ public class CommentDto {
     @Schema(description = "Comment content")
     private String content;
 
-    @JsonProperty("created_at")
     @Schema(description = "Comment creation date")
     private LocalDateTime createdAt;
 
-    @JsonProperty("updated_at")
     @Schema(description = "Comment update date")
     private LocalDateTime updatedAt;
 }

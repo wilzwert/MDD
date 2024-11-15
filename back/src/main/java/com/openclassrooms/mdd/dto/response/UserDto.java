@@ -1,7 +1,6 @@
 package com.openclassrooms.mdd.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -25,11 +24,9 @@ public class UserDto {
     @Schema(description = "User username")
     private String userName;
 
-    @JsonProperty("created_at")
     @Schema(description = "User creation date")
     private LocalDateTime createdAt;
 
-    @JsonProperty("updated_at")
     @Schema(description = "User update date")
     private LocalDateTime updatedAt;
 
