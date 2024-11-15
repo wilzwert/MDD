@@ -85,7 +85,7 @@
       "responses": [
         {
           "uuid": "146aeda1-3a8c-4a40-8760-1da047056fb4",
-          "body": "{\n  \"token\": \"jwt\"\n}",
+          "body": "{\n  \"token\": \"jwt\",\n  \"type\": \"Bearer\",\n  \"refresh_token\": \"refresh_token\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -413,6 +413,70 @@
       ],
       "responseMode": null,
       "type": "http"
+    },
+    {
+      "uuid": "df82e370-def5-4809-ba4c-2bc3323e9485",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "auth/refreshToken",
+      "responses": [
+        {
+          "uuid": "80d3352b-2163-4665-b794-79cdac169481",
+          "body": "{\n  \"token\": \"jwt\",\n  \"type\": \"Bearer\",\n  \"refresh_token\": \"refresh_token\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "refresh_token",
+              "value": "refresh_token",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": true,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "420490b3-c2e4-477a-a14f-97fdebaab01b",
+          "body": "{\n  \"message\": \"error\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "refresh_token",
+              "value": "refresh_token",
+              "invert": true,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,
@@ -468,6 +532,10 @@
     {
       "type": "route",
       "uuid": "4dc3af14-a0ba-4fa2-b4ca-b8dca5352b3e"
+    },
+    {
+      "type": "route",
+      "uuid": "df82e370-def5-4809-ba4c-2bc3323e9485"
     },
     {
       "type": "route",
