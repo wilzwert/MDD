@@ -14,8 +14,8 @@
       "endpoint": "auth/register",
       "responses": [
         {
-          "uuid": "a543e37c-e874-4480-adb1-90cdf17bc05a",
-          "body": "{}",
+          "uuid": "ea3a7416-6cc4-41ac-95f5-42e227cdac32",
+          "body": "{\n  \"token\": \"jwt\",\n  \"refresh_token\": \"refresh_token\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -26,50 +26,58 @@
             {
               "target": "body",
               "modifier": "userName",
-              "value": "",
-              "invert": false,
+              "value": "username",
+              "invert": true,
               "operator": "null"
             },
             {
               "target": "body",
               "modifier": "email",
-              "value": "",
+              "value": ".*@.*\\..*",
               "invert": false,
-              "operator": "null"
+              "operator": "regex"
             },
             {
               "target": "body",
               "modifier": "password",
-              "value": "",
-              "invert": false,
+              "value": "password",
+              "invert": true,
               "operator": "null"
             }
           ],
-          "rulesOperator": "OR",
+          "rulesOperator": "AND",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": false,
+          "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
           "crudKey": "id",
           "callbacks": []
         },
         {
-          "uuid": "ea3a7416-6cc4-41ac-95f5-42e227cdac32",
-          "body": "{\n  \"token\": \"jwt\"\n}",
+          "uuid": "60b25431-bc89-4f0f-a8a5-87b82bd06715",
+          "body": "{\n  \"message\": \"email: Email should be valid. \"\n}",
           "latency": 0,
-          "statusCode": 200,
+          "statusCode": 400,
           "label": "",
           "headers": [],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
-          "rules": [],
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "userName",
+              "value": "u",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
+          "default": false,
           "crudKey": "id",
           "callbacks": []
         }
@@ -190,7 +198,7 @@
         },
         {
           "uuid": "2accac71-b052-4efe-9819-06dde4e5c8e9",
-          "body": "{\n  \"id\": 1,\n\t\"user_name\": \"test\",\n\t\"email\": \"test@test.com\",\n\t\"created_at\": \"2022/02/02\",\n\t\"updated_at\": \"2022/08/02\"  \n}",
+          "body": "{\n  \"id\": 1,\n\t\"userName\": \"test\",\n\t\"email\": \"test@test.com\",\n\t\"createdAt\": \"2022/02/02\",\n\t\"updatedAt\": \"2022/08/02\"  \n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -201,8 +209,8 @@
             {
               "target": "header",
               "modifier": "Authorization",
-              "value": "Bearer jwt",
-              "invert": true,
+              "value": "Bearer refreshed_jwt",
+              "invert": false,
               "operator": "equals"
             }
           ],
@@ -223,18 +231,33 @@
       "uuid": "f63bc9e7-f7f8-464a-8fbb-f8fc95873e57",
       "documentation": "",
       "method": "get",
-      "endpoint": "topic",
+      "endpoint": "topics",
       "responses": [
         {
           "uuid": "85f61417-cb02-4db4-9e6d-299b5e075ef9",
-          "body": "[\n  {\n\t\"id\": 1,\n\t\"title\": \"test topic 1\",\n\t\"description\": \"This is a test topic\",\n\t\"created_at\": \"2012/12/02\",\n\t\"updated_at\": \"2014/12/02\"  \n},\n{\n\t\"id\": 2,\n\t\"title\": \"test topic 2\",\n\t\"description\": \"This is a second test topic\",\n\t\"created_at\": \"2012/12/02\",\n\t\"updated_at\": \"2014/12/02\"  \n},{\n\t\"id\": 3,\n\t\"title\": \"test topic 3\",\n\t\"description\": \"This is a third test topic\",\n\t\"created_at\": \"2012/12/02\",\n\t\"updated_at\": \"2014/12/02\"  \n}\n]\n",
+          "body": "[\n  {\n\t\"id\": 1,\n\t\"title\": \"test topic 1\",\n\t\"description\": \"This is a test topic\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\"  \n},\n{\n\t\"id\": 2,\n\t\"title\": \"test topic 2\",\n\t\"description\": \"This is a second test topic\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\"  \n},{\n\t\"id\": 3,\n\t\"title\": \"test topic 3\",\n\t\"description\": \"This is a third test topic\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\"  \n}\n]\n",
           "latency": 0,
           "statusCode": 200,
           "label": "",
           "headers": [],
           "filePath": "",
           "sendFileAsBody": false,
-          "rules": [],
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer jwt",
+              "invert": false,
+              "operator": "equals"
+            },
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer refreshed_jwt",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
@@ -279,7 +302,7 @@
       "uuid": "72e4ca05-94f7-4273-92f0-956a01594130",
       "documentation": "",
       "method": "get",
-      "endpoint": "topic/:id",
+      "endpoint": "topics/:id",
       "responses": [
         {
           "uuid": "a959a49a-f505-4e32-a262-d5a989269de3",
@@ -362,7 +385,7 @@
       "uuid": "ab17de52-463a-44c0-a8bf-3fe2f66a0a7d",
       "documentation": "",
       "method": "post",
-      "endpoint": "topic",
+      "endpoint": "topics",
       "responses": [
         {
           "uuid": "ebfe9cc6-4731-46fe-b495-b80b57a7ab60",
@@ -422,7 +445,7 @@
       "responses": [
         {
           "uuid": "80d3352b-2163-4665-b794-79cdac169481",
-          "body": "{\n  \"token\": \"jwt\",\n  \"type\": \"Bearer\",\n  \"refresh_token\": \"refresh_token\"\n}",
+          "body": "{\n  \"token\": \"refreshed_jwt\",\n  \"type\": \"Bearer\",\n  \"refresh_token\": \"refresh_token\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -471,6 +494,89 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
+    },
+    {
+      "uuid": "7a4c9e3e-0dae-4c55-b8bb-4b2df10832db",
+      "documentation": "",
+      "method": "delete",
+      "endpoint": "topics/:id",
+      "responses": [
+        {
+          "uuid": "8d46c3e5-17b8-4523-9a4f-521b1c6c24a1",
+          "body": "{\n\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "447893a8-eda7-4774-a4cd-81afff5c26c5",
+          "body": "",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer jwt",
+              "invert": true,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "6ab97227-a139-4271-b378-486081c2b4a1",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "1",
+              "invert": true,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
           "crudKey": "id",
           "callbacks": []
         }
@@ -552,6 +658,10 @@
     {
       "type": "route",
       "uuid": "ab17de52-463a-44c0-a8bf-3fe2f66a0a7d"
+    },
+    {
+      "type": "route",
+      "uuid": "7a4c9e3e-0dae-4c55-b8bb-4b2df10832db"
     }
   ],
   "callbacks": []

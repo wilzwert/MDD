@@ -1,0 +1,10 @@
+<ul>
+    @for (topic of topics$ | async; track $index) {
+        <app-topic
+            [topic]="topic"
+            (delete)="onTopicDelete($event)"
+        >
+
+        </app-topic>
+    }
+  </ul>

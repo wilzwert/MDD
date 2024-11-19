@@ -6,12 +6,13 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "jest", 
+    "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
   "private": true,
   "dependencies": {
+    "@angular-eslint/schematics": "^18.4.1",
     "@angular/animations": "^18.2.0",
     "@angular/cdk": "^18.2.13",
     "@angular/common": "^18.2.0",
