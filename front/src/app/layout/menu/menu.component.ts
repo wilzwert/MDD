@@ -3,7 +3,7 @@ import { AsyncPipe } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { SessionService } from '../../core/services/session.service';
 import { Observable } from 'rxjs';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -14,7 +14,8 @@ import { RouterLink } from '@angular/router';
 })
 export class MenuComponent {
   constructor(
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private router: Router
   ) {
 
   }
@@ -24,7 +25,8 @@ export class MenuComponent {
   }
 
   public logout(): void {
-
+    this.sessionService.logOut();
+    this.router.navigate(['']);
   }
 
 }

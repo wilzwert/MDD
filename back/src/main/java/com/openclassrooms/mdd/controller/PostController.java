@@ -40,7 +40,7 @@ import java.util.Optional;
 @RestController
 @Slf4j
 @SecurityRequirement(name = "Bearer Authentication")
-@RequestMapping("/api/post")
+@RequestMapping("/api/posts")
 @Tag(name = "Posts", description = "Post creation and update")
 public class PostController {
 

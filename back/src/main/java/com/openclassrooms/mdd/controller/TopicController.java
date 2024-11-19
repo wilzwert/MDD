@@ -44,7 +44,7 @@ import java.util.Optional;
 @RestController
 @Slf4j
 @SecurityRequirement(name = "Bearer Authentication")
-@RequestMapping("/api/topic")
+@RequestMapping("/api/topics")
 @Tag(name = "Topics", description = "Topic creation and update")
 public class TopicController {
 
@@ -104,7 +104,7 @@ public class TopicController {
     }
 
     @Operation(summary = "Retrieve topic posts", description = "Retrieve all posts for a topic with its id")
-    @GetMapping("/{id}/post")
+    @GetMapping("/{id}/posts")
     public List<PostDto> findPosts(@PathVariable("id") String id) {
         log.info("Get posts for topic with id {}", id);
         Optional<Topic> foundTopic = this.topicService.getTopicById(Integer.parseInt(id));

@@ -17,7 +17,7 @@ export class MeComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.userService.getCurrentUser().pipe(take(1)).subscribe((user: User) => {console.log(user);this.user = user});
+    this.userService.getCurrentUser().pipe().subscribe((user: User) => {console.log("got ",user);this.user = user});
   }
 
 }

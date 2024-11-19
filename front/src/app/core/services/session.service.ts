@@ -16,8 +16,12 @@ export class SessionService {
 
   constructor(private tokenStorageService: TokenStorageService) {
     if(this.tokenStorageService.getToken() != null) {
+      console.log('isLogged');
       this.isLogged = true;
       this.next();
+    }
+    else {
+      console.log('isNotLogged');
     }
   }
 
