@@ -1,12 +1,16 @@
-import { Component, EventEmitter, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TopicService } from '../../../../core/services/topic.service';
-import { filter, map, Observable, take, tap } from 'rxjs';
+import { BehaviorSubject, forkJoin, map, Observable } from 'rxjs';
 import { Topic } from '../../../../core/models/topic.interface';
 import { TopicComponent } from "../topic/topic.component";
 import { AsyncPipe } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AppNotification } from '../../../../core/models/app-notification.interface';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { Subscription } from '../../../../core/models/subscription.interface';
+import { UserService } from '../../../../core/services/user.service';
+import { ExtendedTopic } from '../../../../core/models/extended-topic.interface';
+
 
 @Component({
   selector: 'app-topics-list',
@@ -25,17 +29,43 @@ import { NotificationService } from '../../../../core/services/notification.serv
 export class TopicsListComponent implements OnInit{
   
   private topicService: TopicService = inject(TopicService);
-  public topics$: Observable<Topic[]> = this.topicService.topics$;
+  // keep a reference on an observable provided by topic service in case topics list is updated (this may happen in the future on topic deletion for example)
+  // public topics$: Observable<Topic[]> = this.topicService.topics$;
+  // for now we use our own behaviorsubject
+  public topics$: BehaviorSubject<ExtendedTopic[]> = new BehaviorSubject<ExtendedTopic[]>([]);
 
-  constructor(private notificationService: NotificationService){}
+  constructor(private notificationService: NotificationService, private userService: UserService){}
 
+  /* 
   onTopicDelete(topicId: number) : void {
     this.topicService.delete(topicId).subscribe(() => {
       this.notificationService.handleNotification({type: 'confirmation', message: "Topic has been deleted."} as AppNotification);
     })
+  }*/
+
+    onSubscribe(topicId: number) :void {
+        this.topicService.subscribe(topicId).subscribe((subscription) => {
+          const updated = this.topics$.getValue().map(topic => topic.id === topicId ? { ...topic, subscription: subscription} : topic);
+          this.topics$.next(updated);
+        });
+    }
+
+    onUnsubscribe(topicId: number) :void {
+      this.topicService.unSubscribe(topicId).subscribe(() => {
+        const updated = this.topics$.getValue().map(topic => topic.id === topicId ? { ...topic, subscription: undefined} : topic);
+        this.topics$.next(updated);
+      });
   }
 
   ngOnInit(): void {
-    this.topicService.getAll();
+    // initial data
+    forkJoin({
+      topics: this.topicService.getAll(),
+      user: this.userService.getCurrentUser()
+    }).subscribe({
+      next: (results) => {        
+        this.topics$.next(results.topics.map((t: Topic) => ({...t, subscription: results.user.subscriptions.find(s => s.topic.id == t.id)})));
+      }
+    })
   }
 }

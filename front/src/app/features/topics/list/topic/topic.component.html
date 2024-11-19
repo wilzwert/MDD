@@ -1,2 +1,8 @@
 <p>{{ topic.title }}</p>
-<a (click)="onDelete()">Supprimer</a>
+@if (topic.subscription) {
+    {{ topic.subscription.createdAt }}
+    <a (click)="onUnsubscribe()">Unsubscribe</a>
+}
+@else {
+    <a (click)="onSubscribe()">Subscribe</a>
+}

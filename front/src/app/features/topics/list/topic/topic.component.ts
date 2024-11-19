@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { User } from '../../../../core/models/user.interface';
 import { Topic } from '../../../../core/models/topic.interface';
+import { Subscription } from '../../../../core/models/subscription.interface';
+import { ExtendedTopic } from '../../../../core/models/extended-topic.interface';
 
 @Component({
   selector: 'app-topic',
@@ -11,10 +12,20 @@ import { Topic } from '../../../../core/models/topic.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopicComponent {
-  @Input({required: true}) topic!: Topic;
-  @Output() delete = new EventEmitter<number>();
+  @Input({required: true}) topic!: ExtendedTopic;
+  @Output() delete = new EventEmitter<ExtendedTopic>();
+  @Output() subscribe = new EventEmitter<number>();
+  @Output() unSubscribe = new EventEmitter<number>();
 
   onDelete() {
-    this.delete.emit(this.topic.id);
+    this.delete.emit(this.topic);
+  }
+
+  onSubscribe() {
+    this.subscribe.emit(this.topic.id);
+  }
+
+  onUnsubscribe() {
+    this.unSubscribe.emit(this.topic.id);
   }
 }
