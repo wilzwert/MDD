@@ -110,7 +110,7 @@ public class JwtAuthenticationFilterTest {
         when(apiDocProperties.getApiDocsPath()).thenReturn("/api/doc");
         when(apiDocProperties.getSwaggerPath()).thenReturn("/api/swagger");
 
-        when(request.getRequestURI()).thenReturn("/api/topic/");
+        when(request.getRequestURI()).thenReturn("/api/topics/");
 
         assertThat(jwtAuthenticationFilter.shouldNotFilter(request)).isFalse();
     }

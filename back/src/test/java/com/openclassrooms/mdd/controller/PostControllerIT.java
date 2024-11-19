@@ -72,7 +72,7 @@ public class PostControllerIT {
 
         @Test
         public void shouldReturnForbiddenWhenNotLoggedIn() throws Exception {
-            mockMvc.perform(get("/api/post"))
+            mockMvc.perform(get("/api/posts"))
                     .andExpect(status().isForbidden());
         }
 
@@ -86,7 +86,7 @@ public class PostControllerIT {
 
             when(postRepository.findAll()).thenReturn(Arrays.asList(post1, post2));
 
-            MvcResult result = mockMvc.perform(get("/api/post"))
+            MvcResult result = mockMvc.perform(get("/api/posts"))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -113,14 +113,14 @@ public class PostControllerIT {
         public void shouldReturnNotFoundWhenPostNotFound() throws Exception {
             when(postRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-            mockMvc.perform(get("/api/post/{id}", 1))
+            mockMvc.perform(get("/api/posts/{id}", 1))
                     .andExpect(status().isNotFound());
         }
 
         @Test
         @WithMockUser
         public void shouldReturnBadRequestWhenBadId() throws Exception {
-            mockMvc.perform(get("/api/post/badId"))
+            mockMvc.perform(get("/api/posts/badId"))
                     .andExpect(status().isBadRequest());
         }
 
@@ -133,7 +133,7 @@ public class PostControllerIT {
 
             when(postRepository.findById(anyInt())).thenReturn(Optional.of(post));
 
-            MvcResult result = mockMvc.perform(get("/api/post/{id}", 1))
+            MvcResult result = mockMvc.perform(get("/api/posts/{id}", 1))
                     .andExpect(status().isOk())
                     .andReturn();
             PostDto responsePostDto = objectMapper.readValue(result.getResponse().getContentAsString(), PostDto.class);
@@ -152,7 +152,7 @@ public class PostControllerIT {
     class PostControllerCreationIT {
         @Test
         public void shouldReturnForbiddenWhenNotLoggedIn() throws Exception {
-            mockMvc.perform(post("/api/post"))
+            mockMvc.perform(post("/api/posts"))
                     .andExpect(status().isForbidden());
         }
 
@@ -162,7 +162,7 @@ public class PostControllerIT {
             CreatePostDto createPostDto = new CreatePostDto();
             createPostDto.setTopicId(1);
 
-            mockMvc.perform(post("/api/post").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createPostDto)))
+            mockMvc.perform(post("/api/posts").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createPostDto)))
                     .andExpect(status().isBadRequest());
         }
 
@@ -176,7 +176,7 @@ public class PostControllerIT {
 
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-            mockMvc.perform(post("/api/post").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createPostDto)))
+            mockMvc.perform(post("/api/posts").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createPostDto)))
                     .andExpect(status().isUnauthorized());
         }
 
@@ -192,7 +192,7 @@ public class PostControllerIT {
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
             when(topicRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-            mockMvc.perform(post("/api/post").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createPostDto)))
+            mockMvc.perform(post("/api/posts").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createPostDto)))
                     .andExpect(status().isBadRequest());
         }
 
@@ -211,7 +211,7 @@ public class PostControllerIT {
             when(topicRepository.findById(anyInt())).thenReturn(Optional.of(topic));
             when(postRepository.save(any(Post.class))).thenAnswer(i -> i.getArgument(0));
 
-            MvcResult result = mockMvc.perform(post("/api/post").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createPostDto)))
+            MvcResult result = mockMvc.perform(post("/api/posts").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createPostDto)))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -239,7 +239,7 @@ public class PostControllerIT {
     class PostControllerCommentRetrievalIT {
         @Test
         public void shouldReturnForbiddenWhenNotLoggedIn() throws Exception {
-            mockMvc.perform(get("/api/post/{id}/comment", 1))
+            mockMvc.perform(get("/api/posts/{id}/comment", 1))
                     .andExpect(status().isForbidden());
 
         }
@@ -250,7 +250,7 @@ public class PostControllerIT {
 
             when(postRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-            mockMvc.perform(get("/api/post/{id}/comment", 1))
+            mockMvc.perform(get("/api/posts/{id}/comment", 1))
                     .andExpect(status().isNotFound());
         }
 
@@ -264,7 +264,7 @@ public class PostControllerIT {
             when(postRepository.findById(anyInt())).thenReturn(Optional.of(post));
             when(commentRepository.findCommentsByPost(post)).thenReturn(Arrays.asList(comment1, comment2));
 
-            MvcResult result = mockMvc.perform(get("/api/post/{id}/comment", 1))
+            MvcResult result = mockMvc.perform(get("/api/posts/{id}/comment", 1))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -283,7 +283,7 @@ public class PostControllerIT {
     class PostControllerCommentCreationIT {
         @Test
         public void shouldReturnForbiddenWhenNotLoggedIn() throws Exception {
-            mockMvc.perform(post("/api/post/{id}/comment", 1))
+            mockMvc.perform(post("/api/posts/{id}/comment", 1))
                     .andExpect(status().isForbidden());
 
         }
@@ -296,7 +296,7 @@ public class PostControllerIT {
 
             when(userRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-            mockMvc.perform(post("/api/post/{id}/comment", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
+            mockMvc.perform(post("/api/posts/{id}/comment", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
                     .andExpect(status().isUnauthorized());
         }
 
@@ -305,7 +305,7 @@ public class PostControllerIT {
         public void shouldReturnBadRequestWhenRequestBodyInvalid() throws Exception {
             CreateOrUpdateCommentDto createOrUpdateCommentDto = new CreateOrUpdateCommentDto();
 
-            mockMvc.perform(post("/api/post/{id}/comment", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
+            mockMvc.perform(post("/api/posts/{id}/comment", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
                     .andExpect(status().isBadRequest());
 
         }
@@ -320,7 +320,7 @@ public class PostControllerIT {
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
             when(postRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-            mockMvc.perform(post("/api/post/{id}/comment", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
+            mockMvc.perform(post("/api/posts/{id}/comment", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
                     .andExpect(status().isNotFound());
 
         }
@@ -337,7 +337,7 @@ public class PostControllerIT {
             when(postRepository.findById(anyInt())).thenReturn(Optional.of(post));
             when(commentRepository.save(any(Comment.class))).thenAnswer(i -> i.getArgument(0));
 
-            MvcResult result = mockMvc.perform(post("/api/post/{id}/comment", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
+            MvcResult result = mockMvc.perform(post("/api/posts/{id}/comment", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
                     .andExpect(status().isOk())
                     .andReturn();
 

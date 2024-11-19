@@ -67,7 +67,7 @@ public class TopicControllerIT {
 
         @Test
         public void shouldReturnForbiddenWhenNotLoggedIn() throws Exception {
-            mockMvc.perform(get("/api/topic"))
+            mockMvc.perform(get("/api/topics"))
                     .andExpect(status().isForbidden());
         }
 
@@ -81,7 +81,7 @@ public class TopicControllerIT {
 
             when(topicRepository.findAll()).thenReturn(Arrays.asList(topic1, topic2));
 
-            MvcResult result = mockMvc.perform(get("/api/topic"))
+            MvcResult result = mockMvc.perform(get("/api/topics"))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -99,14 +99,14 @@ public class TopicControllerIT {
         public void shouldReturnNotFoundWhenTopicNotFound() throws Exception {
             when(topicRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-            mockMvc.perform(get("/api/topic/{id}", 1))
+            mockMvc.perform(get("/api/topics/{id}", 1))
                     .andExpect(status().isNotFound());
         }
 
         @Test
         @WithMockUser
         public void shouldReturnBadRequestWhenBadId() throws Exception {
-            mockMvc.perform(get("/api/topic/badId"))
+            mockMvc.perform(get("/api/topics/badId"))
                     .andExpect(status().isBadRequest());
         }
 
@@ -119,7 +119,7 @@ public class TopicControllerIT {
 
             when(topicRepository.findById(anyInt())).thenReturn(Optional.of(topic));
 
-            MvcResult result = mockMvc.perform(get("/api/topic/{id}", 1))
+            MvcResult result = mockMvc.perform(get("/api/topics/{id}", 1))
                     .andExpect(status().isOk())
                     .andReturn();
             TopicDto responseTopicDto = objectMapper.readValue(result.getResponse().getContentAsString(), TopicDto.class);
@@ -135,7 +135,7 @@ public class TopicControllerIT {
     class TopicControllerCreationIT {
         @Test
         public void shouldReturnForbiddenWhenNotLoggedIn() throws Exception {
-            mockMvc.perform(post("/api/topic"))
+            mockMvc.perform(post("/api/topics"))
                     .andExpect(status().isForbidden());
         }
 
@@ -144,7 +144,7 @@ public class TopicControllerIT {
         public void shouldReturnBadRequestWhenRequestBodyInvalid() throws Exception {
             CreateTopicDto createTopicDto = new CreateTopicDto();
 
-            mockMvc.perform(post("/api/topic").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createTopicDto)))
+            mockMvc.perform(post("/api/topics").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createTopicDto)))
                     .andExpect(status().isBadRequest());
         }
 
@@ -157,7 +157,7 @@ public class TopicControllerIT {
 
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-            mockMvc.perform(post("/api/topic").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createTopicDto)))
+            mockMvc.perform(post("/api/topics").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createTopicDto)))
                     .andExpect(status().isUnauthorized());
         }
 
@@ -173,7 +173,7 @@ public class TopicControllerIT {
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
             when(topicRepository.save(any(Topic.class))).thenAnswer(i -> i.getArgument(0));
 
-            MvcResult result = mockMvc.perform(post("/api/topic").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createTopicDto)))
+            MvcResult result = mockMvc.perform(post("/api/topics").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createTopicDto)))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -199,7 +199,7 @@ public class TopicControllerIT {
     class TopicControllerPostRetrievalIT {
         @Test
         public void shouldReturnForbiddenWhenNotLoggedIn() throws Exception {
-            mockMvc.perform(get("/api/topic/1/post"))
+            mockMvc.perform(get("/api/topics/1/posts"))
                     .andExpect(status().isForbidden());
         }
         @Test
@@ -207,7 +207,7 @@ public class TopicControllerIT {
         public void shouldReturnNotFoundWhenTopicNotFound() throws Exception {
             when(topicRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-            mockMvc.perform(get("/api/topic/1/post"))
+            mockMvc.perform(get("/api/topics/1/posts"))
                     .andExpect(status().isNotFound());
         }
 
@@ -218,7 +218,7 @@ public class TopicControllerIT {
             when(topicRepository.findById(anyInt())).thenReturn(Optional.of(topic));
             when(postRepository.findByTopic(topic)).thenReturn(new ArrayList<>());
 
-            MvcResult result = mockMvc.perform(get("/api/topic/1/post"))
+            MvcResult result = mockMvc.perform(get("/api/topics/1/posts"))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -238,7 +238,7 @@ public class TopicControllerIT {
             when(topicRepository.findById(anyInt())).thenReturn(Optional.of(topic));
             when(postRepository.findByTopic(topic)).thenReturn(Arrays.asList(post1, post2));
 
-            MvcResult result = mockMvc.perform(get("/api/topic/1/post"))
+            MvcResult result = mockMvc.perform(get("/api/topics/1/posts"))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -262,7 +262,7 @@ public class TopicControllerIT {
     class TopicControllerSubscriptionCreationIT {
         @Test
         public void shouldReturnForbiddenWhenNotLoggedIn() throws Exception {
-            mockMvc.perform(post("/api/topic/1/subscription"))
+            mockMvc.perform(post("/api/topics/1/subscription"))
                     .andExpect(status().isForbidden());
         }
 
@@ -271,7 +271,7 @@ public class TopicControllerIT {
         public void shouldReturnUnauthorizedWhenUserNotFound() throws Exception {
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-            mockMvc.perform(post("/api/topic/1/subscription").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(post("/api/topics/1/subscription").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isUnauthorized());
         }
 
@@ -281,7 +281,7 @@ public class TopicControllerIT {
             User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-            mockMvc.perform(post("/api/topic/badId/subscription"))
+            mockMvc.perform(post("/api/topics/badId/subscription"))
                     .andExpect(status().isBadRequest());
         }
 
@@ -293,7 +293,7 @@ public class TopicControllerIT {
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
             when(topicRepository.findById(1)).thenReturn(Optional.empty());
 
-            mockMvc.perform(post("/api/topic/1/subscription").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(post("/api/topics/1/subscription").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound());
         }
 
@@ -308,7 +308,7 @@ public class TopicControllerIT {
             when(topicRepository.findById(1)).thenReturn(Optional.of(topic));
             when(subscriptionRepository.save(any(Subscription.class))).thenAnswer(i -> i.getArgument(0));
 
-            MvcResult result = mockMvc.perform(post("/api/topic/1/subscription").contentType(MediaType.APPLICATION_JSON))
+            MvcResult result = mockMvc.perform(post("/api/topics/1/subscription").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -326,7 +326,7 @@ public class TopicControllerIT {
     class TopicControllerSubscriptionDeletionIT {
         @Test
         public void shouldReturnForbiddenWhenNotLoggedIn() throws Exception {
-            mockMvc.perform(delete("/api/topic/1/subscription"))
+            mockMvc.perform(delete("/api/topics/1/subscription"))
                     .andExpect(status().isForbidden());
         }
 
@@ -335,7 +335,7 @@ public class TopicControllerIT {
         public void shouldReturnUnauthorizedWhenUserNotFound() throws Exception {
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-            mockMvc.perform(delete("/api/topic/1/subscription").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(delete("/api/topics/1/subscription").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isUnauthorized());
         }
 
@@ -345,7 +345,7 @@ public class TopicControllerIT {
             User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-            mockMvc.perform(delete("/api/topic/badId/subscription"))
+            mockMvc.perform(delete("/api/topics/badId/subscription"))
                     .andExpect(status().isBadRequest());
         }
 
@@ -357,7 +357,7 @@ public class TopicControllerIT {
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
             when(topicRepository.findById(1)).thenReturn(Optional.empty());
 
-            mockMvc.perform(delete("/api/topic/1/subscription").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(delete("/api/topics/1/subscription").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound());
         }
 
@@ -370,7 +370,7 @@ public class TopicControllerIT {
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
             when(topicRepository.findById(1)).thenReturn(Optional.of(topic));
 
-            mockMvc.perform(delete("/api/topic/1/subscription").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(delete("/api/topics/1/subscription").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound());
         }
 
@@ -385,7 +385,7 @@ public class TopicControllerIT {
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
             when(topicRepository.findById(1)).thenReturn(Optional.of(topic));
 
-            mockMvc.perform(delete("/api/topic/1/subscription").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(delete("/api/topics/1/subscription").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNoContent());
         }
     }
