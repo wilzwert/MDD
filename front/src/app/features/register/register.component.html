@@ -1,1 +1,33 @@
-<p>register works!</p>
+<div class="register">
+
+    <mat-card>
+        <mat-card-header >
+            <mat-card-title>Register</mat-card-title>
+        </mat-card-header>
+        <form class="login-form" [formGroup]="form" (ngSubmit)="submit()">
+            <mat-card-content >
+                <mat-form-field fxFlex>
+                    <input matInput placeholder="Email" formControlName="email">
+                </mat-form-field>
+                <mat-form-field fxFlex>
+                    <input matInput placeholder="Username" formControlName="userName">
+                </mat-form-field>
+                <mat-form-field fxFlex>
+                    <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password"
+                        formControlName="password">
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                </mat-form-field>
+            </mat-card-content>
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
+            @if (error) {
+                <p class="error">An error occurred : {{error}}</p>
+            }
+        </form>
+    </mat-card>
+
+</div>
+
+
