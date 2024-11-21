@@ -91,6 +91,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<Subscription> getSubscriptionsByUser(User user) {
+        return user.getSubscriptions();
+    }
+
+    @Override
     public User authenticateUser(String email, String password) throws AuthenticationException {
         Optional<User> user = findUserByEmail(email);
         if(user.isEmpty()) {

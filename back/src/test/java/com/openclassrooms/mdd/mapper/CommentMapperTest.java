@@ -81,7 +81,6 @@ public class CommentMapperTest {
         assertThat(commentDto.getCreatedAt()).isEqualTo(now);
         assertThat(commentDto.getUpdatedAt()).isEqualTo(now);
         assertThat(commentDto.getAuthor().getId()).isEqualTo(1);
-        assertThat(commentDto.getAuthor().getSubscriptions()).isNull();
     }
 
 
@@ -110,8 +109,6 @@ public class CommentMapperTest {
         assertThat(commentDto.getUpdatedAt()).isEqualTo(now);
         assertThat(commentDto.getAuthor().getId()).isEqualTo(1);
         assertThat(commentDto.getAuthor().getUserName()).isEqualTo("testuser");
-        assertThat(commentDto.getAuthor().getSubscriptions()).isNull();
-
     }
 
     @Test
@@ -143,12 +140,8 @@ public class CommentMapperTest {
         assertThat(commentDtos).extracting(CommentDto::getUpdatedAt).containsExactly(now, now);
         assertThat(commentDtos.getFirst().getAuthor().getId()).isEqualTo(1);
         assertThat(commentDtos.getFirst().getAuthor().getUserName()).isEqualTo("testuser1");
-        // check that userToUserDtoWithoutSubscriptions is used to map User
-        assertThat(commentDtos.getFirst().getAuthor().getSubscriptions()).isNull();
         assertThat(commentDtos.get(1).getAuthor().getId()).isEqualTo(2);
         assertThat(commentDtos.get(1).getAuthor().getUserName()).isEqualTo("testuser2");
-        // check that userToUserDtoWithoutSubscriptions is used to map User
-        assertThat(commentDtos.get(1).getAuthor().getSubscriptions()).isNull();
 
     }
 

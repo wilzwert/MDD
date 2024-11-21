@@ -239,7 +239,7 @@ public class PostControllerIT {
     class PostControllerCommentRetrievalIT {
         @Test
         public void shouldReturnForbiddenWhenNotLoggedIn() throws Exception {
-            mockMvc.perform(get("/api/posts/{id}/comment", 1))
+            mockMvc.perform(get("/api/posts/{id}/comments", 1))
                     .andExpect(status().isForbidden());
 
         }
@@ -250,7 +250,7 @@ public class PostControllerIT {
 
             when(postRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-            mockMvc.perform(get("/api/posts/{id}/comment", 1))
+            mockMvc.perform(get("/api/posts/{id}/comments", 1))
                     .andExpect(status().isNotFound());
         }
 
@@ -264,7 +264,7 @@ public class PostControllerIT {
             when(postRepository.findById(anyInt())).thenReturn(Optional.of(post));
             when(commentRepository.findCommentsByPost(post)).thenReturn(Arrays.asList(comment1, comment2));
 
-            MvcResult result = mockMvc.perform(get("/api/posts/{id}/comment", 1))
+            MvcResult result = mockMvc.perform(get("/api/posts/{id}/comments", 1))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -283,7 +283,7 @@ public class PostControllerIT {
     class PostControllerCommentCreationIT {
         @Test
         public void shouldReturnForbiddenWhenNotLoggedIn() throws Exception {
-            mockMvc.perform(post("/api/posts/{id}/comment", 1))
+            mockMvc.perform(post("/api/posts/{id}/comments", 1))
                     .andExpect(status().isForbidden());
 
         }
@@ -296,7 +296,7 @@ public class PostControllerIT {
 
             when(userRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-            mockMvc.perform(post("/api/posts/{id}/comment", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
+            mockMvc.perform(post("/api/posts/{id}/comments", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
                     .andExpect(status().isUnauthorized());
         }
 
@@ -305,7 +305,7 @@ public class PostControllerIT {
         public void shouldReturnBadRequestWhenRequestBodyInvalid() throws Exception {
             CreateOrUpdateCommentDto createOrUpdateCommentDto = new CreateOrUpdateCommentDto();
 
-            mockMvc.perform(post("/api/posts/{id}/comment", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
+            mockMvc.perform(post("/api/posts/{id}/comments", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
                     .andExpect(status().isBadRequest());
 
         }
@@ -320,7 +320,7 @@ public class PostControllerIT {
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
             when(postRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-            mockMvc.perform(post("/api/posts/{id}/comment", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
+            mockMvc.perform(post("/api/posts/{id}/comments", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
                     .andExpect(status().isNotFound());
 
         }
@@ -337,7 +337,7 @@ public class PostControllerIT {
             when(postRepository.findById(anyInt())).thenReturn(Optional.of(post));
             when(commentRepository.save(any(Comment.class))).thenAnswer(i -> i.getArgument(0));
 
-            MvcResult result = mockMvc.perform(post("/api/posts/{id}/comment", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
+            MvcResult result = mockMvc.perform(post("/api/posts/{id}/comments", 1).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createOrUpdateCommentDto)))
                     .andExpect(status().isOk())
                     .andReturn();
 

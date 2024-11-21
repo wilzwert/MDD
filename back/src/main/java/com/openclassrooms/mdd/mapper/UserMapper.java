@@ -17,11 +17,6 @@ public interface UserMapper {
 
     UserDto userToUserDto(User user);
 
-    @Named("userToUserDtoWithoutSubscriptions")
-    @UserWithoutSubscriptions
-    @Mapping( target = "subscriptions", ignore = true)
-    UserDto userToUserDtoWithoutSubscriptions(User user);
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)

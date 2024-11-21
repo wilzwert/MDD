@@ -3,8 +3,6 @@ package com.openclassrooms.mdd.mapper;
 
 import com.openclassrooms.mdd.dto.request.RegisterUserDto;
 import com.openclassrooms.mdd.dto.response.UserDto;
-import com.openclassrooms.mdd.model.Subscription;
-import com.openclassrooms.mdd.model.Topic;
 import com.openclassrooms.mdd.model.User;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -13,8 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -41,15 +37,6 @@ public class UserMapperTest {
     }
 
     @Test
-    public void testNullUserToDtoWithoutSubscription() {
-        User user = null;
-
-        UserDto userDto = userMapper.userToUserDtoWithoutSubscriptions(user);
-
-        assertThat(userDto).isNull();
-    }
-
-    @Test
     public void testUserToDto() {
         LocalDateTime now = LocalDateTime.now();
 
@@ -60,12 +47,6 @@ public class UserMapperTest {
                 .setCreatedAt(now)
                 .setUpdatedAt(now);
 
-        Topic topic1 = new Topic().setId(1);
-        Topic topic2 = new Topic().setId(2);
-        Subscription subscription1 = new Subscription().setUser(user).setTopic(topic1);
-        Subscription subscription2 = new Subscription().setUser(user).setTopic(topic2);
-        user.setSubscriptions(Arrays.asList(subscription1, subscription2));
-
         UserDto userDto = userMapper.userToUserDto(user);
 
         assertThat(userDto).isNotNull();
@@ -73,36 +54,6 @@ public class UserMapperTest {
         assertThat(userDto.getUserName()).isEqualTo("testuser");
         assertThat(userDto.getCreatedAt()).isEqualTo(now);
         assertThat(userDto.getUpdatedAt()).isEqualTo(now);
-        assertThat(userDto.getSubscriptions()).hasSize(2);
-        assertThat(userDto.getSubscriptions().getFirst().getTopic().getId()).isEqualTo(1);
-        assertThat(userDto.getSubscriptions().get(1).getTopic().getId()).isEqualTo(2);
-    }
-
-    @Test
-    public void testUserToDtoWithoutParticipations() {
-        LocalDateTime now = LocalDateTime.now();
-
-        User user = new User()
-                .setId(1)
-                .setUserName("testuser")
-                .setEmail("test@example.com")
-                .setCreatedAt(now)
-                .setUpdatedAt(now);
-
-        Topic topic1 = new Topic().setId(1);
-        Topic topic2 = new Topic().setId(2);
-        Subscription subscription1 = new Subscription().setUser(user).setTopic(topic1);
-        Subscription subscription2 = new Subscription().setUser(user).setTopic(topic2);
-        user.setSubscriptions(Arrays.asList(subscription1, subscription2));
-
-        UserDto userDto = userMapper.userToUserDtoWithoutSubscriptions(user);
-
-        assertThat(userDto).isNotNull();
-        assertThat(userDto.getId()).isEqualTo(1);
-        assertThat(userDto.getUserName()).isEqualTo("testuser");
-        assertThat(userDto.getCreatedAt()).isEqualTo(now);
-        assertThat(userDto.getUpdatedAt()).isEqualTo(now);
-        assertThat(userDto.getSubscriptions()).isNull();
     }
 
     @Test
