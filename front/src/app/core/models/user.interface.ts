@@ -1,4 +1,4 @@
-import { U } from "@angular/cdk/keycodes";
+import { Subscription } from "./subscription.interface";
 
 export interface User {
   id: number;
@@ -6,4 +6,5 @@ export interface User {
   userName: string;
   createdAt: Date;
   updatedAt?: Date;
+  subscriptions: Subscription[]
 }
