@@ -8,7 +8,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { Subscription } from '../../../../core/models/subscription.interface';
 import { CurrentUserService } from '../../../../core/services/current-user.service';
 import { SessionService } from '../../../../core/services/session.service';
-import { FilterByTopicPipe } from '../../../../core/pipe/filter-by';
+import { FilterByTopicPipe } from '../../../../core/pipes/filter-by';
 
 
 @Component({
