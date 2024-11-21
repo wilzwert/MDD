@@ -1,10 +1,13 @@
 package com.openclassrooms.mdd.controller;
 
 
+import com.openclassrooms.mdd.dto.response.SubscriptionDto;
 import com.openclassrooms.mdd.dto.response.UserDto;
+import com.openclassrooms.mdd.mapper.SubscriptionMapper;
 import com.openclassrooms.mdd.mapper.UserMapper;
+import com.openclassrooms.mdd.model.Subscription;
 import com.openclassrooms.mdd.model.User;
-import com.openclassrooms.mdd.security.service.JwtService;
+import com.openclassrooms.mdd.repository.SubscriptionRepository;
 import com.openclassrooms.mdd.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,8 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,10 +40,12 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
+    private final SubscriptionMapper subscriptionMapper;
 
-    public UserController(UserService userService, UserMapper userMapper) {
+    public UserController(UserService userService, UserMapper userMapper, SubscriptionMapper subscriptionMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.subscriptionMapper = subscriptionMapper;
     }
 
     @Operation(summary = "Get current user", description = "Get current user")
@@ -54,6 +59,20 @@ public class UserController {
         log.info("Get current user {} info", principal.getName());
         User user = userService.findUserByEmail(principal.getName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return userMapper.userToUserDto(user);
+    }
+
+    @Operation(summary = "Get current user subscriptions", description = "Get current user subscriptions list")
+    @GetMapping("/me/subscriptions")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User info", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserDto.class))
+            })
+    })
+    public List<SubscriptionDto> subscriptions(Principal principal) {
+        log.info("Get current user subscriptions {} info", principal.getName());
+        User user = userService.findUserByEmail(principal.getName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        List<Subscription> subscriptions = userService.getSubscriptionsByUser(user);
+        return subscriptionMapper.subscriptionToSubscriptionDto(subscriptions);
     }
 
     @Operation(summary = "Delete current user", description = "Deletes current user account and info")

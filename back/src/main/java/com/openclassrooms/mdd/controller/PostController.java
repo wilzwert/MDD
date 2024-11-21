@@ -133,13 +133,13 @@ public class PostController {
         return postMapper.postToPostDto(post);
     }
 
-    @Operation(summary = "Create a comment", description = "Create a comment for a post")
+    @Operation(summary = "Create a comments", description = "Create a comment for a post")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Comment created", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class))
             })
     })
-    @PostMapping(value = "{id}/comment", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "{id}/comments", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public CommentDto createComment(@PathVariable("id") String id, @Valid @RequestBody CreateOrUpdateCommentDto createCommentDto, Principal principal) {
         log.info("Create a comment for post {} from user {}", id, principal.getName());
         try {
@@ -164,7 +164,7 @@ public class PostController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class))
             })
     })
-    @GetMapping(value = "{id}/comment", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "{id}/comments", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CommentDto> getComment(@PathVariable("id") String id) {
         log.info("Get comments for post {} ", id);
 
