@@ -83,7 +83,6 @@ public class PostMapperTest {
         assertThat(postDto.getUpdatedAt()).isEqualTo(now);
         assertThat(postDto.getAuthor().getId()).isEqualTo(1);
         assertThat(postDto.getAuthor().getUserName()).isEqualTo("testuser");
-        assertThat(postDto.getAuthor().getSubscriptions()).isNull();
 
     }
 
@@ -117,13 +116,8 @@ public class PostMapperTest {
         assertThat(postDtos).extracting(PostDto::getUpdatedAt).containsExactly(now, now);
         assertThat(postDtos.getFirst().getAuthor().getId()).isEqualTo(1);
         assertThat(postDtos.getFirst().getAuthor().getUserName()).isEqualTo("testuser1");
-        // check that userToUserDtoWithoutSubscriptions is used to map User
-        assertThat(postDtos.getFirst().getAuthor().getSubscriptions()).isNull();
         assertThat(postDtos.get(1).getAuthor().getId()).isEqualTo(2);
         assertThat(postDtos.get(1).getAuthor().getUserName()).isEqualTo("testuser2");
-        // check that userToUserDtoWithoutSubscriptions is used to map User
-        assertThat(postDtos.get(1).getAuthor().getSubscriptions()).isNull();
-
     }
 
     @Test

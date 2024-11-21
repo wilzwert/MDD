@@ -5,6 +5,7 @@ import com.openclassrooms.mdd.model.Subscription;
 import com.openclassrooms.mdd.model.User;
 import org.springframework.security.core.AuthenticationException;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,4 +22,5 @@ public interface UserService {
     void deleteUser(User user);
     Subscription subscribe(User user, int topicId);
     void unSubscribe(User user, int topicId);
+    List<Subscription> getSubscriptionsByUser(User user);
 }

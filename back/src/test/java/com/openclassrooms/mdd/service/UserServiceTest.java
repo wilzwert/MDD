@@ -22,9 +22,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -69,7 +68,7 @@ public class UserServiceTest {
     }
 
     @Nested
-    class GetUser {
+    class GetUserTest {
         @Test
         public void shouldReturnEmptyOptionalWhenUserNotFoundByEmail() {
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
@@ -245,6 +244,37 @@ public class UserServiceTest {
 
             verify(topicRepository).findById(1);
             verify(subscriptionRepository).delete(subscription);
+        }
+    }
+
+    @Nested
+    class GetUserSubscriptionsTest {
+        @Test
+        public void shouldThrowNullPointerExceptionWhenUserIsNull() {
+            assertThrows(NullPointerException.class, () -> userService.getSubscriptionsByUser(null));
+        }
+
+        @Test
+        public void shouldReturnEmptyListWhenUserHasNoSubscriptions() {
+            User user = new User().setId(1).setEmail("test@example.com").setSubscriptions(new ArrayList<>());
+            assertThat(userService.getSubscriptionsByUser(user)).hasSize(0);
+        }
+
+        @Test
+        public void shouldReturnSubscriptionsList() {
+            User user = new User().setId(1).setEmail("test@example.com");
+            Topic topic1 = new Topic().setId(1).setTitle("Topic title");
+            Topic topic2 = new Topic().setId(2).setTitle("Topic title2");
+            Subscription subscription1 = new Subscription().setUser(user).setTopic(topic1).setCreatedAt(LocalDateTime.now());
+            Subscription subscription2 = new Subscription().setUser(user).setTopic(topic2).setCreatedAt(LocalDateTime.now());
+            user.setSubscriptions(Arrays.asList(subscription1, subscription2));
+
+            List<Subscription> subscriptions = userService.getSubscriptionsByUser(user);
+            assertThat(subscriptions).hasSize(2);
+            assertThat(subscriptions.get(0).getUser()).isEqualTo(user);
+            assertThat(subscriptions.get(0).getTopic()).isEqualTo(topic1);
+            assertThat(subscriptions.get(1).getUser()).isEqualTo(user);
+            assertThat(subscriptions.get(1).getTopic()).isEqualTo(topic2);
         }
     }
 }

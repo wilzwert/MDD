@@ -250,10 +250,10 @@ public class TopicControllerIT {
             assertThat(responsePosts).extracting(PostDto::getCreatedAt).containsExactly(now, now);
             assertThat(responsePosts).extracting(PostDto::getUpdatedAt).containsExactly(now, now);
             assertThat(responsePosts).extracting(PostDto::getAuthor).asInstanceOf(LIST)
-                    .extracting("id", "userName", "email", "subscriptions")
+                    .extracting("id", "userName", "email")
                     .containsExactly(
-                            Tuple.tuple(1,  "test", "test@example.com", null),
-                            Tuple.tuple(1,  "test", "test@example.com", null)
+                            Tuple.tuple(1,  "test", "test@example.com"),
+                            Tuple.tuple(1,  "test", "test@example.com")
                     );
         }
     }
