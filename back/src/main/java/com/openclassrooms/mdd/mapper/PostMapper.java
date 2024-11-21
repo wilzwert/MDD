@@ -19,7 +19,6 @@ import java.util.List;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = UserMapper.class)
 public interface PostMapper {
 
-    @Mapping(source = "author", target = "author", qualifiedByName = "userToUserDtoWithoutSubscriptions")
     PostDto postToPostDto(Post post);
 
     List<PostDto> postToPostDto(List<Post> posts);

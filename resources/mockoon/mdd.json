@@ -205,7 +205,7 @@
         },
         {
           "uuid": "2accac71-b052-4efe-9819-06dde4e5c8e9",
-          "body": "{\n  \"id\": 1,\n\t\"userName\": \"test\",\n\t\"email\": \"test@test.com\",\n\t\"createdAt\": \"2022/02/02\",\n\t\"updatedAt\": \"2022/08/02\" ,\n\t\"subscriptions\": [\n\t  {\n\t    \"userId\": 1,\n\t    \"topic\": {\n\t      \"id\": 1,\n\t      \"title\": \"Test topic\"\n\t    },\n\t    \"createdAt\": \"2024/11/12\"\n\t  }\n\t ]\n}",
+          "body": "{\n  \"id\": 1,\n\t\"userName\": \"test\",\n\t\"email\": \"test@test.com\",\n\t\"createdAt\": \"2022/02/02\",\n\t\"updatedAt\": \"2022/08/02\" \n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -270,6 +270,13 @@
               "value": "Bearer refreshed_jwt",
               "invert": false,
               "operator": "equals"
+            },
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer jwt",
+              "invert": true,
+              "operator": "equals"
             }
           ],
           "rulesOperator": "OR",
@@ -295,7 +302,7 @@
               "target": "header",
               "modifier": "Authorization",
               "value": "Bearer jwt",
-              "invert": true,
+              "invert": false,
               "operator": "equals"
             }
           ],
@@ -763,6 +770,84 @@
       ],
       "responseMode": null,
       "type": "http"
+    },
+    {
+      "uuid": "599df377-093a-4712-9e71-81f30dc1e349",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "user/me/subscriptions",
+      "responses": [
+        {
+          "uuid": "e8049a1b-bd1a-496e-b4fb-a28d97e364ef",
+          "body": "{\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer jwt",
+              "invert": true,
+              "operator": "equals"
+            },
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer refreshed_jwt",
+              "invert": true,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "fc119bc3-2f7f-4527-a68c-be88d4d75f7f",
+          "body": "[\n\t  {\n\t    \"userId\": 1,\n\t    \"topic\": {\n\t      \"id\": 1,\n\t      \"title\": \"Test topic\"\n\t    },\n\t    \"createdAt\": \"2024/11/12\"\n\t  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer refreshed_jwt",
+              "invert": false,
+              "operator": "equals"
+            },
+            {
+              "target": "header",
+              "modifier": "Authorisation",
+              "value": "Bearer jwt",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,
@@ -826,6 +911,10 @@
     {
       "type": "route",
       "uuid": "0a5f3820-6b8d-469a-a371-f83a81f0ef9a"
+    },
+    {
+      "type": "route",
+      "uuid": "599df377-093a-4712-9e71-81f30dc1e349"
     },
     {
       "type": "route",

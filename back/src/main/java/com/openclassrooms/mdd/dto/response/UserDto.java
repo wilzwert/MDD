@@ -1,11 +1,8 @@
 package com.openclassrooms.mdd.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -29,8 +26,4 @@ public class UserDto {
 
     @Schema(description = "User update date")
     private LocalDateTime updatedAt;
-
-    @Schema(description = "User subscriptions")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<SubscriptionDto> subscriptions;
 }

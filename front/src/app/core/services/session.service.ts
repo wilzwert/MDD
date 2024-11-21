@@ -4,6 +4,7 @@ import { SessionInformation } from '../models/sessionInformation.interface';
 import { TokenStorageService } from './token-storage.service';
 import { User } from '../models/user.interface';
 import { RefreshTokenResponse } from '../models/refreshTokenResponse.interface';
+import { CurrentUserService } from './current-user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,8 @@ export class SessionService {
 
   private isLoggedSubject = new BehaviorSubject<boolean>(this.isLogged);
 
-  constructor(private tokenStorageService: TokenStorageService) {
+  constructor(private tokenStorageService: TokenStorageService, private userService: CurrentUserService) {
     if(this.tokenStorageService.getToken() != null) {
-      console.log('isLogged');
       this.isLogged = true;
       this.next();
     }
@@ -37,10 +37,6 @@ export class SessionService {
     return this.tokenStorageService.getRefreshToken();
   }
 
-  public getUser() :User | null {
-    return this.tokenStorageService.getUser();
-  }
-
   public $isLogged(): Observable<boolean> {
     return this.isLoggedSubject.asObservable();
   }
@@ -56,6 +52,7 @@ export class SessionService {
   }
 
   public logOut(): void {
+    console.log('sessionService::logOut');
     this.tokenStorageService.clearSessionInformation();
     this.isLogged = false;
     this.next();
