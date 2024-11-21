@@ -24,7 +24,7 @@ public class PostDto {
     @Schema(description = "Post title")
     private String title;
 
-    @Schema(description = "Topic content")
+    @Schema(description = "Post content")
     private String content;
 
     @Schema(description = "Post creation date")
@@ -35,4 +35,7 @@ public class PostDto {
 
     @Schema(description = "The post author")
     private UserDto author;
+
+    @Schema(description = "The post topic")
+    private TopicDto topic;
 }

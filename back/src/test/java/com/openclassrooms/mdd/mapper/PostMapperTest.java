@@ -4,6 +4,7 @@ package com.openclassrooms.mdd.mapper;
 import com.openclassrooms.mdd.dto.request.CreatePostDto;
 import com.openclassrooms.mdd.dto.response.PostDto;
 import com.openclassrooms.mdd.model.Post;
+import com.openclassrooms.mdd.model.Topic;
 import com.openclassrooms.mdd.model.User;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -49,7 +50,8 @@ public class PostMapperTest {
                 .setTitle("test post")
                 .setContent("this is a test post")
                 .setCreatedAt(now)
-                .setUpdatedAt(now);
+                .setUpdatedAt(now)
+                .setTopic(new Topic().setId(1).setTitle("test topic").setDescription("test topic description"));
 
         PostDto postDto = postMapper.postToPostDto(post);
 
@@ -71,7 +73,8 @@ public class PostMapperTest {
                 .setContent("this is a test post")
                 .setAuthor(new User().setId(1).setUserName("testuser"))
                 .setCreatedAt(now)
-                .setUpdatedAt(now);
+                .setUpdatedAt(now)
+                .setTopic(new Topic().setId(1).setTitle("test topic").setDescription("test topic description"));
 
         PostDto postDto = postMapper.postToPostDto(post);
 
@@ -83,6 +86,7 @@ public class PostMapperTest {
         assertThat(postDto.getUpdatedAt()).isEqualTo(now);
         assertThat(postDto.getAuthor().getId()).isEqualTo(1);
         assertThat(postDto.getAuthor().getUserName()).isEqualTo("testuser");
+        assertThat(postDto.getTopic().getTitle()).isEqualTo("test topic");
 
     }
 
@@ -102,8 +106,9 @@ public class PostMapperTest {
         User user2 = new User().setId(2).setUserName("testuser2");
 
         Post post1 = new Post().setId(1).setTitle("test post1").setContent("this is a test post1").setCreatedAt(now).setUpdatedAt(now).setAuthor(user1);
+        post1.setTopic(new Topic().setId(1).setTitle("test topic").setDescription("test topic description"));
         Post post2 = new Post().setId(2).setTitle("test post2").setContent("this is a test post2").setCreatedAt(now).setUpdatedAt(now).setAuthor(user2);
-
+        post2.setTopic(new Topic().setId(2).setTitle("second test topic").setDescription("second test topic description"));
         List<PostDto> postDtos = postMapper.postToPostDto(Arrays.asList(post1, post2));
 
         assertThat(postDtos).isNotNull();
@@ -116,8 +121,15 @@ public class PostMapperTest {
         assertThat(postDtos).extracting(PostDto::getUpdatedAt).containsExactly(now, now);
         assertThat(postDtos.getFirst().getAuthor().getId()).isEqualTo(1);
         assertThat(postDtos.getFirst().getAuthor().getUserName()).isEqualTo("testuser1");
+        assertThat(postDtos.getFirst().getTopic().getId()).isEqualTo(1);
+        assertThat(postDtos.getFirst().getTopic().getTitle()).isEqualTo("test topic");
+        assertThat(postDtos.getFirst().getTopic().getDescription()).isEqualTo("test topic description");
+
         assertThat(postDtos.get(1).getAuthor().getId()).isEqualTo(2);
         assertThat(postDtos.get(1).getAuthor().getUserName()).isEqualTo("testuser2");
+        assertThat(postDtos.get(1).getTopic().getId()).isEqualTo(2);
+        assertThat(postDtos.get(1).getTopic().getTitle()).isEqualTo("second test topic");
+        assertThat(postDtos.get(1).getTopic().getDescription()).isEqualTo("second test topic description");
     }
 
     @Test
@@ -132,8 +144,10 @@ public class PostMapperTest {
     @Test
     public void testCreateDtoToPost() {
         CreatePostDto postDto = new CreatePostDto();
+        postDto.setTopicId(1);
         postDto.setTitle("Test post");
         postDto.setContent("Test content");
+
         Post post = postMapper.createPostDtoToPost(postDto);
 
         assertThat(post).isNotNull();
