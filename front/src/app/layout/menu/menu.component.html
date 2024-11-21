@@ -2,7 +2,8 @@
     <span routerLink="">MDD</span>
     @if ($isLogged() | async) {
     <div>
-      <span routerLink="topics" class="link">Topics</span>
+      <span routerLink="posts" class="link">Articles</span>
+      <span routerLink="topics" class="link">Thèmes</span>
       <span routerLink="me" class="link">Account</span>
       <span (click)="logout()" class="link">Logout</span>
     </div>

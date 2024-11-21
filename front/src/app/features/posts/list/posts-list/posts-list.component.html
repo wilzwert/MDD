@@ -1,0 +1,7 @@
+<p>TODO : display only posts published in topics subscribed by the user !</p>
+@for (post of posts$ | async ; track $index) {
+    <app-post
+        [post]="post"
+    
+    ></app-post>
+}

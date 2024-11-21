@@ -5,6 +5,7 @@ import { LoginComponent } from './features/login/login.component';
 import { MeComponent } from './features/me/me.component';
 import { RegisterComponent } from './features/register/register.component';
 import { TopicsListComponent } from './features/topics/list/topics-list/topics-list.component';
+import { PostsListComponent } from './features/posts/list/posts-list/posts-list.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -12,6 +13,7 @@ export const routes: Routes = [
     {path: 'register', component: RegisterComponent},
     {path: 'me', component: MeComponent},
     {path: 'topics', component: TopicsListComponent},
+    {path: 'posts', component: PostsListComponent},
     {path: '404', component: NotFoundComponent},
     {path: '**', redirectTo: '404'}
 ];
