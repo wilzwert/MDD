@@ -5,7 +5,6 @@ import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { TopicComponent } from '../topics/list/topic/topic.component';
 import { Subscription } from '../../core/models/subscription.interface';
-import { FilterByTopicPipe } from '../../core/pipe/filter-by';
 
 @Component({
   selector: 'app-me',
