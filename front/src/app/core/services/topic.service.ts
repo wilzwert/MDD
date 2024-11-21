@@ -15,6 +15,24 @@ export class TopicService {
 
   constructor(private httpClient: HttpClient) { }
 
+  getAllTopics(): BehaviorSubject<Topic[]> {    
+    this.httpClient.get<Topic[]>(this.apiPath).pipe(
+      tap((topics) =>  this.topicsSubject.next(topics)),
+      catchError((error) => {
+        console.error('Erreur lors de la récupération des topics', error);
+        return throwError(() => new Error('Erreur lors de la récupération des topics'))
+      })
+    ).subscribe(); 
+    /*
+    result.subscribe((topics: Topic[]) => {
+      this.topicsSubject.next(topics);
+    })
+    */
+    return this.topicsSubject;
+}
+
+
+
   getAll(): Observable<Topic[]> {    
       const result: Observable<Topic[]> = this.httpClient.get<Topic[]>(this.apiPath).pipe(
         catchError((error) => {

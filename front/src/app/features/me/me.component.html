@@ -1,4 +1,4 @@
-@if ( user != undefined) {
+@if ( user$ | async; as user) {
     <p>{{ user.userName }}</p>
 }
 @else {

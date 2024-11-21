@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { TopicService } from '../../../../core/services/topic.service';
-import { BehaviorSubject, forkJoin, map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, map, Observable } from 'rxjs';
 import { Topic } from '../../../../core/models/topic.interface';
 import { TopicComponent } from "../topic/topic.component";
 import { AsyncPipe } from '@angular/common';
@@ -8,7 +8,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { AppNotification } from '../../../../core/models/app-notification.interface';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { Subscription } from '../../../../core/models/subscription.interface';
-import { UserService } from '../../../../core/services/user.service';
+import { CurrentUserService } from '../../../../core/services/current-user.service';
 import { ExtendedTopic } from '../../../../core/models/extended-topic.interface';
 
 
@@ -34,7 +34,7 @@ export class TopicsListComponent implements OnInit{
   // for now we use our own behaviorsubject
   public topics$: BehaviorSubject<ExtendedTopic[]> = new BehaviorSubject<ExtendedTopic[]>([]);
 
-  constructor(private notificationService: NotificationService, private userService: UserService){}
+  constructor(private notificationService: NotificationService, private userService: CurrentUserService){}
 
   /* 
   onTopicDelete(topicId: number) : void {
@@ -59,6 +59,7 @@ export class TopicsListComponent implements OnInit{
 
   ngOnInit(): void {
     // initial data
+    /*
     forkJoin({
       topics: this.topicService.getAll(),
       user: this.userService.getCurrentUser()
@@ -66,6 +67,16 @@ export class TopicsListComponent implements OnInit{
       next: (results) => {        
         this.topics$.next(results.topics.map((t: Topic) => ({...t, subscription: results.user.subscriptions.find(s => s.topic.id == t.id)})));
       }
-    })
+    })*/
+
+    combineLatest({
+        topics: this.topicService.getAllTopics(),
+        user: this.userService.getCurrentUser()
+    }).subscribe({  
+      next: (results) => {        
+        console.log(results);
+        // this.topics$.next(results.topics.map((t: Topic) => ({...t, subscription: results.user.subscriptions.find(s => s.topic.id == t.id)})));
+      }
+    });
   }
 }
