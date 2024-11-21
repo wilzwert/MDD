@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { User } from '../models/user.interface';
 import { Subscription } from '../models/subscription.interface';
 
@@ -12,13 +12,13 @@ export class CurrentUserService {
   private apiPath = '/api/user';
 
   private user$: BehaviorSubject<User | null> = new BehaviorSubject<User |null>(null);
-  private subscriptions$: BehaviorSubject<Subscription[] |null> = new BehaviorSubject<Subscription[] |null>(null);
+  private userSubscriptions$: BehaviorSubject<Subscription[] |null> = new BehaviorSubject<Subscription[] |null>(null);
 
   constructor(private httpClient: HttpClient) { }
 
   public getCurrentUser() : Observable<User>{
     return this.user$.pipe(
-      switchMap((user) => {
+      switchMap((user: User | null) => {
         if (user) {
           // send current user if already present
           return of(user);
@@ -37,8 +37,8 @@ export class CurrentUserService {
   }
 
   public getCurrentUserSubscriptions() : Observable<Subscription[]>{
-    return this.subscriptions$.pipe(
-      switchMap((subscriptions) => {
+    return this.userSubscriptions$.pipe(
+      switchMap((subscriptions: Subscription[] | null) => {
         if (subscriptions) {
           // send current subscriptions if already present
           return of(subscriptions);
@@ -47,7 +47,7 @@ export class CurrentUserService {
           return this.httpClient.get<Subscription[]>(`${this.apiPath}/me/subscriptions`).pipe(
             shareReplay(1), // Share result to avoid simultaneous requests
             switchMap((fetchedSubscriptions: Subscription[]) => {
-              this.subscriptions$.next(fetchedSubscriptions); // update BehaviorSubject
+              this.userSubscriptions$.next(fetchedSubscriptions); // update BehaviorSubject
               return of(fetchedSubscriptions);
             })
           );
@@ -56,9 +56,27 @@ export class CurrentUserService {
     );
   }
 
+  subscribe(topicId: number): Observable<Subscription> {
+    return this.httpClient.post<Subscription>(`/api/topics/${topicId}/subscription`, '').pipe(
+      map((t: Subscription) => {
+        this.userSubscriptions$.next(this.userSubscriptions$.getValue() != null ? [...this.userSubscriptions$.getValue() as Subscription[], t] : [t]);
+        return t;
+      }),
+    );
+  }
+
+  unSubscribe(topicId: number): Observable<any> {
+    return this.httpClient.delete<void>(`/api/topics/${topicId}/subscription`).pipe(
+      map(() => {
+        this.userSubscriptions$.next(this.userSubscriptions$.getValue() != null ? this.userSubscriptions$.getValue()!.filter(s => s.topic.id != topicId) : []);
+        return of(null);
+      }),
+    );
+  }
+
   public logout(): void {
     this.user$.next(null);
-    this.subscriptions$.next(null);
+    this.userSubscriptions$.next(null);
   }
   
   updateUserProfile(updatedUser: User): void {

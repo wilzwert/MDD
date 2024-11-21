@@ -2,6 +2,8 @@
     @for (topic of topics$ | async ; track $index) {
         <app-topic
             [topic]="topic"
+            [subscription]="subscriptions$ | async | filterByTopic:topic"
+            [loggedIn]="loggedIn$ | async"
             (subscribe)="onSubscribe($event)"
             (unSubscribe)="onUnsubscribe($event)"
         >

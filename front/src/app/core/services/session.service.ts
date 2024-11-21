@@ -52,6 +52,7 @@ export class SessionService {
   }
 
   public logOut(): void {
+    console.log('sessionService::logOut');
     this.tokenStorageService.clearSessionInformation();
     this.isLogged = false;
     this.next();

@@ -1,5 +1,18 @@
 @if ( user$ | async; as user) {
     <p>{{ user.userName }}</p>
+
+    @if (subscriptions$ | async; as subscriptions) {
+        @for (subscription of subscriptions; track $index) {
+            <app-topic
+                [topic]="subscription.topic"
+                [subscription]="subscription"
+                [loggedIn]="true"
+                (unSubscribe)="onUnsubscribe($event)"
+            >
+
+            </app-topic>
+        }
+    }
 }
 @else {
     <p>NOPE</p>
