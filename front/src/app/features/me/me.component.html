@@ -2,16 +2,19 @@
     <p>{{ user.userName }}</p>
 
     @if (subscriptions$ | async; as subscriptions) {
+        <mat-grid-list [cols]="cols" rowHeight="2:0.5" gutterSize="10px" (window:resize)="onResize($event)">
         @for (subscription of subscriptions; track $index) {
-            <app-topic
-                [topic]="subscription.topic"
-                [subscription]="subscription"
-                [loggedIn]="true"
-                (unSubscribe)="onUnsubscribe($event)"
-            >
-
-            </app-topic>
+            <mat-grid-tile>
+                <app-topic
+                    [topic]="subscription.topic"
+                    [subscription]="subscription"
+                    [loggedIn]="true"
+                    (unSubscribe)="onUnsubscribe($event)"
+                >
+                </app-topic>
+            </mat-grid-tile>
         }
+        </mat-grid-list>
     }
 }
 @else {

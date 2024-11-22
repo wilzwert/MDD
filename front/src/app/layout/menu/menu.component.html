@@ -1,18 +1,18 @@
-<mat-toolbar color="primary">
+<mat-toolbar>
     <span routerLink="">MDD</span>
     @if ($isLogged() | async) {
     <div>
-      <span routerLink="posts" class="link">Articles</span>
-      <span routerLink="topics" class="link">Thèmes</span>
-      <span routerLink="me" class="link">Account</span>
-      <span (click)="logout()" class="link">Logout</span>
+      <a routerLink="posts" class="link">Articles</a>
+      <a routerLink="topics" class="link">Thèmes</a>
+      <a routerLink="me" class="link">Account</a>
+      <a (click)="logout()" class="link">Logout</a>
     </div>
   }
   @else {    
       <div>
-        <span routerLink="topics" class="link">Thèmes</span>
-        <span routerLink="login" class="link">Login</span>
-        <span routerLink="register" class="link">Register</span>
+        <a routerLink="topics" class="link">Thèmes</a>
+        <a routerLink="login" class="link">Login</a>
+        <a routerLink="register" class="link">Register</a>
       </div>
   }
   </mat-toolbar>

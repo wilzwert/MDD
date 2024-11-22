@@ -9,12 +9,13 @@ import { Subscription } from '../../../../core/models/subscription.interface';
 import { CurrentUserService } from '../../../../core/services/current-user.service';
 import { SessionService } from '../../../../core/services/session.service';
 import { FilterByTopicPipe } from '../../../../core/pipes/filter-by';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 
 @Component({
   selector: 'app-topics-list',
   standalone: true,
-  imports: [TopicComponent, AsyncPipe, FilterByTopicPipe],
+  imports: [TopicComponent, AsyncPipe, FilterByTopicPipe, MatGridListModule],
   templateUrl: './topics-list.component.html',
   styleUrl: './topics-list.component.scss',
   animations: [
@@ -26,6 +27,8 @@ import { FilterByTopicPipe } from '../../../../core/pipes/filter-by';
   ]
 })
 export class TopicsListComponent implements OnInit {
+  public cols!:number;
+
   // keep a reference on an observable provided by topic service in case topics list is updated (this may happen in the future on topic deletion for example)
   // public topics$: Observable<Topic[]> = this.topicService.topics$;
   // for now we use our own behaviorsubject
@@ -51,7 +54,14 @@ export class TopicsListComponent implements OnInit {
       this.sessionService.logOut();
     }
 
+    onResize(event: any) {
+      this.cols = (event.target.innerWidth <= 400) ? 1 : 2;
+    }
+
     ngOnInit(): void {
+
+      this.cols = (window.innerWidth <= 400) ? 1 : 2;
+
       // get current user subscriptions only if user is logged in 
       this.loggedIn$.pipe(
         tap((v: boolean) => {

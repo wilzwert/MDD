@@ -1,9 +1,9 @@
 <p>{{ topic.title }}</p>
 @if (loggedIn) {
     @if (subscription) {
-        <a (click)="onUnsubscribe()">Unsubscribe</a>
+        <a mat-flat-button (click)="onUnsubscribe()">Unsubscribe</a>
     }
     @else {
-        <a (click)="onSubscribe()">Subscribe</a>
+        <a mat-flat-button (click)="onSubscribe()">Subscribe</a>
     }
 }

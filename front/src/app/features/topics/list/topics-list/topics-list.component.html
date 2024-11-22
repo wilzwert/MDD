@@ -1,13 +1,16 @@
-<ul>
+<mat-grid-list [cols]="cols" rowHeight="2:0.5" gutterSize="10px" (window:resize)="onResize($event)">
     @for (topic of topics$ | async ; track $index) {
-        <app-topic
-            [topic]="topic"
-            [subscription]="subscriptions$ | async | filterByTopic:topic"
-            [loggedIn]="loggedIn$ | async"
-            (subscribe)="onSubscribe($event)"
-            (unSubscribe)="onUnsubscribe($event)"
-        >
+        <mat-grid-tile>
+            <app-topic
+                [topic]="topic"
+                [subscription]="subscriptions$ | async | filterByTopic:topic"
+                [loggedIn]="loggedIn$ | async"
+                (subscribe)="onSubscribe($event)"
+                (unSubscribe)="onUnsubscribe($event)"
+            >
 
-        </app-topic>
+            </app-topic>
+        </mat-grid-tile>
+    
     }
-  </ul>
+</mat-grid-list>
