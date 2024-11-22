@@ -1,4 +1,5 @@
 <p>TODO : display only posts published in topics subscribed by the user !</p>
+<a [routerLink]="['create']">Create</a>
 @for (post of posts$ | async ; track $index) {
     <app-post
         [post]="post"

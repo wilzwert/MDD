@@ -4,11 +4,12 @@ import { Post } from '../../../../core/models/post.interface';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { PostComponent } from '../post/post.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-posts-list',
   standalone: true,
-  imports: [PostComponent, AsyncPipe],
+  imports: [PostComponent, AsyncPipe, RouterLink],
   templateUrl: './posts-list.component.html',
   styleUrl: './posts-list.component.scss'
 })

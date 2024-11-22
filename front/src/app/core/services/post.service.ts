@@ -31,5 +31,9 @@ export class PostService {
       }));
   }
 
+  getPostById(postId: string): Observable<Post> {
+    return this.httpClient.get<Post>(`${this.apiPath}/${postId}`);
+  }
+
   
 }
