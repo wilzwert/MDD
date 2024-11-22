@@ -16,7 +16,7 @@ import java.util.List;
  * Time:16:38
  */
 
-@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = UserMapper.class)
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface PostMapper {
 
     PostDto postToPostDto(Post post);
