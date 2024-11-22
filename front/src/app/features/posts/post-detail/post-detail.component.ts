@@ -45,11 +45,10 @@ export class PostDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
+      this.postId = params['id'];
       this.post$ = this.postService.getPostById(params['id']); // Access the 'id' parameter from the URL
       this.comments$ = this.commentService.getPostComments(params['id']); // Access the 'id' parameter from the URL
       this.initForm();
     });
-    this.post$.subscribe({next: (p) => this.postId = p.id});
-    this.comments$.subscribe({next: console.log});
   }
 }
