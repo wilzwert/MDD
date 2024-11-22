@@ -85,8 +85,6 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
         }
         List<Post> foundPosts = this.postService.getPostsByUserSubscriptions(foundUser.get());
-        log.info("First topic : {}", foundPosts.getFirst().getTopic());
-        log.info("Got all user posts {}", foundPosts);
         return postMapper.postToPostDto(foundPosts);
     }
 
