@@ -1,5 +1,10 @@
-<div>
-<p><a [routerLink]="[post.id]">{{ post.title }}</a></p>
-<p>Written by {{ post.author.userName }} in {{ post.topic.title}} </p>
-<div>{{ post.content }}</div>
-</div>
+
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+        <p><a [routerLink]="[post.id]">{{ post.title }}</a></p>
+        <p>{{ post.createdAt}} {{ post.author.userName }}</p>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content><div>{{ post.content }}</div></mat-card-content>
+</mat-card>

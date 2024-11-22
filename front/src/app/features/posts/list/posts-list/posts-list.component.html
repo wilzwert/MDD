@@ -2,9 +2,7 @@
 <mat-grid-list [cols]="cols" rowHeight="2:1" gutterSize="10px" (window:resize)="onResize($event)">
 @for (post of posts$ | async ; track $index) {
     <mat-grid-tile>
-        <app-post
-            [post]="post"
-        ></app-post>
+        <app-post [post]="post"></app-post>
     </mat-grid-tile>
 }
 </mat-grid-list>

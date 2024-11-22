@@ -12,7 +12,7 @@ export class GlobalErrorHandler extends ErrorHandler {
 
 
     override handleError(error: Error) {
-        console.log('hangleErrorBro '+error.message);
+        console.log('handleError '+error.message);
         // Custom error handling logic
         this.noticationService.handleNotification({type: 'error', 'message': error.message} as AppNotification);
         // TODO : should the error be thrown again ?
