@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -89,7 +90,7 @@ public class PostControllerIT {
             Post post2 = new Post().setId(2).setContent("Post content 2").setTitle("Post title 2").setTopic(topic2).setAuthor(user).setCreatedAt(date).setUpdatedAt(date);
 
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
-            when(postRepository.findByTopicIn(anyList())).thenReturn(Arrays.asList(post1, post2));
+            when(postRepository.findByTopicIn(anyList(), any(Sort.class))).thenReturn(Arrays.asList(post1, post2));
 
             MvcResult result = mockMvc.perform(get("/api/posts"))
                     .andExpect(status().isOk())
