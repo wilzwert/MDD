@@ -6,6 +6,7 @@ import com.openclassrooms.mdd.repository.CommentRepository;
 import com.openclassrooms.mdd.repository.PostRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,7 +55,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getPostsByUserSubscriptions(User user) {
-        return postRepository.findByTopicIn(user.getSubscriptions().stream().map(Subscription::getTopic).toList());
+        return postRepository.findByTopicIn(
+            user.getSubscriptions().stream().map(Subscription::getTopic).toList(),
+            Sort.by(Sort.Direction.DESC, "createdAt")
+        );
     }
 
     @Override

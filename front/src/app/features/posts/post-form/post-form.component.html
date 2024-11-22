@@ -1,1 +1,43 @@
-<p>post-form works!</p>
+<div class="form-creation">
+
+    <mat-card>
+        <mat-card-header >
+            <mat-card-title>Create a post</mat-card-title>
+        </mat-card-header>
+        @if (form) {
+            <form class="post-form" [formGroup]="form" (ngSubmit)="submit()">
+                <mat-card-content >
+                    @if(topics$ | async) {
+                        <p>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Topic</mat-label>
+                            <mat-select matInput ngDefaultControl formControlName="topicId">
+                                @for(topic of topics$ | async; track $index) {
+                                    <mat-option [value]="topic.id">
+                                        {{topic.title}}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                        </p>
+                    }
+                    <p>
+                        <mat-form-field>
+                            <input matInput placeholder="title" formControlName="title">
+                        </mat-form-field>
+                    </p>
+                    <p>
+                        <mat-form-field>
+                            <textarea matInput placeholder="content" formControlName="content"></textarea>
+                        </mat-form-field>
+                    </p>
+                </mat-card-content>
+                <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
+                @if (error) {
+                    <p class="error">An error occurred : {{error}}</p>
+                }
+            </form>
+        }
+    </mat-card>
+
+</div>
