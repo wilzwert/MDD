@@ -3,3 +3,17 @@
     <div> {{ post.content}} </div>
     <p>Posted by {{ post.author.userName}} {{ post.createdAt }} in {{ post.topic.title}}</p>
 }
+<hr>
+<p>Commentaires</p>
+@for (comment of comments$ | async; track $index) {
+    <p>{{ comment.content }}</p>
+    <p>Posted by {{ comment.author.userName}} {{ comment.createdAt }}</p>
+    <hr>
+}
+
+@if (form) {
+    <form class="comment-form" [formGroup]="form" (ngSubmit)="submit()">
+        <textarea formControlName="content"></textarea>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
+    </form>
+}
