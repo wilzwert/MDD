@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { Comment } from '../models/comment.interface';
 import { CreateCommentRequest } from '../models/create-comment-request.interface';
 
@@ -15,10 +15,32 @@ export class CommentService {
 
   constructor(private httpClient:HttpClient) { }
 
-  getPostComments(postId: number): Observable<Comment[]> {    
+  getPostComments(postId: number): Observable<Comment[]> {
+    return this.comments$.pipe(
+      switchMap((commments: Comment[] | null) => {
+        if (commments /*&& postId == this.postId*/) {
+          // send current posts if already present
+          return of(commments);
+        } else {
+          this.postId = postId;
+          return this.httpClient.get<Comment[]>(`${this.apiPath}/${postId}/comments`).pipe(
+            shareReplay(1),
+            switchMap((fetchedComments: Comment[]) => {
+              this.comments$.next(fetchedComments); // update BehaviorSubject
+              return of(fetchedComments);
+            })
+          );
+        }
+      }));  
+    return this.httpClient.get<Comment[]>(`${this.apiPath}/${postId}/comments`).pipe(
+      tap((c: Comment[]) => {console.log(c);this.comments$.next(c); })
+    );
+    // return this.httpClient.get<Comment[]>(`${this.apiPath}/${postId}/comments`);  
     return this.comments$.pipe(
       switchMap(() => {
-        return this.httpClient.get<Comment[]>(`${this.apiPath}/${postId}/comments`);
+        return this.httpClient.get<Comment[]>(`${this.apiPath}/${postId}/comments`)/*.pipe(
+          tap((c: Comment[]) => {console.log(c);this.comments$.next(c); })
+        )*/;
       })
     );
   }
