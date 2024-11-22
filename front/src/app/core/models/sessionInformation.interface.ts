@@ -1,7 +1,7 @@
 export interface SessionInformation {
     token: string,
     type: string,
-    refresh_token: string,
+    refreshToken: string,
     id: number,
     username: string 
 }

@@ -7,10 +7,7 @@ import com.openclassrooms.mdd.dto.request.CreateOrUpdateCommentDto;
 import com.openclassrooms.mdd.dto.request.CreatePostDto;
 import com.openclassrooms.mdd.dto.response.CommentDto;
 import com.openclassrooms.mdd.dto.response.PostDto;
-import com.openclassrooms.mdd.model.Comment;
-import com.openclassrooms.mdd.model.Post;
-import com.openclassrooms.mdd.model.Topic;
-import com.openclassrooms.mdd.model.User;
+import com.openclassrooms.mdd.model.*;
 import com.openclassrooms.mdd.repository.CommentRepository;
 import com.openclassrooms.mdd.repository.PostRepository;
 import com.openclassrooms.mdd.repository.TopicRepository;
@@ -77,14 +74,22 @@ public class PostControllerIT {
         }
 
         @Test
-        @WithMockUser
-        public void shouldGetAllPosts() throws Exception {
+        @WithMockUser(username = "test@example.com")
+        public void shouldGetAllPostsForUser() throws Exception {
             LocalDateTime date = LocalDateTime.parse("2024-11-08T10:00:00", DateTimeFormatter.ISO_DATE_TIME);
-            User user = new User().setId(1).setEmail("test@test.com").setUserName("test");
-            Post post1 = new Post().setId(1).setContent("Post content 1").setTitle("Post title 1").setAuthor(user).setCreatedAt(date).setUpdatedAt(date);
-            Post post2 = new Post().setId(2).setContent("Post content 2").setTitle("Post title 2").setAuthor(user).setCreatedAt(date).setUpdatedAt(date);
+            User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
+            Topic topic1 = new Topic().setId(1).setTitle("test topic").setDescription("test topic description");
+            Topic topic2 = new Topic().setId(2).setTitle("second test topic").setDescription("second test topic description");
+            Subscription subscription1 = new Subscription().setTopic(topic1).setUser(user);
+            Subscription subscription2 = new Subscription().setTopic(topic1).setUser(user);
+            List<Subscription> subscriptions = Arrays.asList(subscription1, subscription2);
+            user.setSubscriptions(subscriptions);
 
-            when(postRepository.findAll()).thenReturn(Arrays.asList(post1, post2));
+            Post post1 = new Post().setId(1).setContent("Post content 1").setTitle("Post title 1").setTopic(topic1).setAuthor(user).setCreatedAt(date).setUpdatedAt(date);
+            Post post2 = new Post().setId(2).setContent("Post content 2").setTitle("Post title 2").setTopic(topic2).setAuthor(user).setCreatedAt(date).setUpdatedAt(date);
+
+            when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+            when(postRepository.findByTopicIn(anyList())).thenReturn(Arrays.asList(post1, post2));
 
             MvcResult result = mockMvc.perform(get("/api/posts"))
                     .andExpect(status().isOk())
@@ -98,6 +103,8 @@ public class PostControllerIT {
             assertThat(responsePosts.getFirst().getUpdatedAt()).isEqualTo("2024-11-08T10:00:00");
             assertThat(responsePosts.getFirst().getAuthor().getId()).isEqualTo(1);
             assertThat(responsePosts.getFirst().getAuthor().getUserName()).isEqualTo("test");
+            assertThat(responsePosts.getFirst().getTopic().getId()).isEqualTo(1);
+            assertThat(responsePosts.getFirst().getTopic().getTitle()).isEqualTo("test topic");
 
             assertThat(responsePosts.get(1).getTitle()).isEqualTo("Post title 2");
             assertThat(responsePosts.get(1).getContent()).isEqualTo("Post content 2");
@@ -105,7 +112,8 @@ public class PostControllerIT {
             assertThat(responsePosts.get(1).getCreatedAt()).isEqualTo("2024-11-08T10:00:00");
             assertThat(responsePosts.get(1).getAuthor().getId()).isEqualTo(1);
             assertThat(responsePosts.get(1).getAuthor().getUserName()).isEqualTo("test");
-
+            assertThat(responsePosts.get(1).getTopic().getId()).isEqualTo(2);
+            assertThat(responsePosts.get(1).getTopic().getTitle()).isEqualTo("second test topic");
         }
 
         @Test

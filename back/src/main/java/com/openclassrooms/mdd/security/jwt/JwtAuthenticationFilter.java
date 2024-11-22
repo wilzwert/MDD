@@ -85,6 +85,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 log.info("Token handled, set security context authentication");
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
+
+            // security filter chain continues
+            filterChain.doFilter(request, response);
         }
         // send appropriate http status code and messages to request response
         catch(JwtException e) {
@@ -93,8 +96,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.getWriter().print("token_error");
         }
 
-        // security filter chain continues
-        filterChain.doFilter(request, response);
+
     }
 
     @Override

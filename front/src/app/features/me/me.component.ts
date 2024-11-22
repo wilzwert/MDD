@@ -5,16 +5,17 @@ import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { TopicComponent } from '../topics/list/topic/topic.component';
 import { Subscription } from '../../core/models/subscription.interface';
-import { FilterByTopicPipe } from '../../core/pipe/filter-by';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @Component({
   selector: 'app-me',
   standalone: true,
-  imports: [TopicComponent, AsyncPipe],
+  imports: [TopicComponent, AsyncPipe, MatGridListModule],
   templateUrl: './me.component.html',
   styleUrl: './me.component.scss'
 })
 export class MeComponent {
+  public cols!:number;
   public user$!: Observable<User>;
   public subscriptions$!: Observable<Subscription[]>;
 
@@ -25,5 +26,13 @@ export class MeComponent {
 
   public onUnsubscribe(topicId: number) :void {
     this.userService.unSubscribe(topicId).subscribe();
+  }
+
+  onResize(event: any) {
+    this.cols = (event.target.innerWidth <= 400) ? 1 : 2;
+  }
+
+  ngOnInit(): void {
+    this.cols = (window.innerWidth <= 400) ? 1 : 2;
   }
 }

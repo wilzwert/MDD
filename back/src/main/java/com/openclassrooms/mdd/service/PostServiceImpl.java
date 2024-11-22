@@ -1,10 +1,7 @@
 package com.openclassrooms.mdd.service;
 
 
-import com.openclassrooms.mdd.model.Comment;
-import com.openclassrooms.mdd.model.Post;
-import com.openclassrooms.mdd.model.Topic;
-import com.openclassrooms.mdd.model.User;
+import com.openclassrooms.mdd.model.*;
 import com.openclassrooms.mdd.repository.CommentRepository;
 import com.openclassrooms.mdd.repository.PostRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,7 +27,7 @@ public class PostServiceImpl implements PostService {
             final PostRepository postRepository,
             final CommentRepository commentRepository
             // TODO final AclService aclService
-    ) {
+        ) {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         // this.aclService = aclService;
@@ -53,6 +50,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getPostsByTopic(Topic topic) {
         return postRepository.findByTopic(topic);
+    }
+
+    @Override
+    public List<Post> getPostsByUserSubscriptions(User user) {
+        return postRepository.findByTopicIn(user.getSubscriptions().stream().map(Subscription::getTopic).toList());
     }
 
     @Override

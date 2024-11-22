@@ -19,6 +19,7 @@ public interface PostService {
     Post createPost(Post post);
     List<Post> getAllPosts();
     List<Post> getPostsByTopic(Topic topic);
+    List<Post> getPostsByUserSubscriptions(User user);
     Optional<Post> getPostById(final int id);
     Comment createComment(User user, int postId, Comment comment);
 }

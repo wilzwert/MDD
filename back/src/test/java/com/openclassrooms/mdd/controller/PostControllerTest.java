@@ -65,6 +65,9 @@ public class PostControllerTest {
     @Mock
     private CommentMapper commentMapper;
 
+    @Mock
+    private Principal principal;
+
     @Nested
     class PostControllerRetrievalTest {
         @Test
@@ -102,7 +105,18 @@ public class PostControllerTest {
         }
 
         @Test
-        public void shouldFindAll() {
+        public void shouldReturnUnAuthorizedWhenUserNotFound() {
+            when(principal.getName()).thenReturn("test@example.com");
+            when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.empty());
+
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> postController.findAll(principal));
+            assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        }
+
+        @Test
+        public void shouldFindAllForUser() {
+            User user = new User().setId(1).setUserName("testuser").setEmail("test@example.com");
+
             Post post1 = new Post().setId(1).setTitle("Test post");
             Post post2 = new Post().setId(2).setTitle("Other test post");
             List<Post> posts = Arrays.asList(post1, post2);
@@ -114,14 +128,19 @@ public class PostControllerTest {
             PostDto postDto2 = new PostDto();
             postDto2.setId(2);
             postDto2.setTitle("Other test post");
-
             List<PostDto> postDtos = Arrays.asList(postDto1, postDto2);
 
-            when(postService.getAllPosts()).thenReturn(posts);
+            when(principal.getName()).thenReturn("test@example.com");
+            when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
+            when(postService.getPostsByUserSubscriptions(user)).thenReturn(posts);
             when(postMapper.postToPostDto(posts)).thenReturn(postDtos);
 
-            List<PostDto> foundPostDtos = postController.findAll();
+            List<PostDto> foundPostDtos = postController.findAll(principal);
 
+            verify(principal).getName();
+            verify(userService).findUserByEmail("test@example.com");
+            verify(postService).getPostsByUserSubscriptions(user);
+            verify(postMapper).postToPostDto(posts);
             assertThat(foundPostDtos).isEqualTo(postDtos);
         }
     }

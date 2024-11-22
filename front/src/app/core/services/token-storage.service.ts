@@ -49,7 +49,7 @@ export class TokenStorageService {
   public saveSessionInformation(data : SessionInformation) :void {
     this.saveToken(data.token);
     this.saveTokenType(data.type);
-    this.saveRefreshToken(data.refresh_token);
+    this.saveRefreshToken(data.refreshToken);
   }
 
   public saveTokenAfterRefresh(data: RefreshTokenResponse): void {

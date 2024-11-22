@@ -17,4 +17,5 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findByTopic(Topic topic);
+    List<Post> findByTopicIn(List<Topic> topics);
 }

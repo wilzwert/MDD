@@ -70,17 +70,23 @@ public class PostController {
         this.commentService = commentService;
     }
 
-    @Operation(summary = "Retrieve all posts", description = "Retrieve all posts")
+    @Operation(summary = "Retrieve all user posts", description = "Retrieve all posts in topics subscribed by the user")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successfully retrieved", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema( schema = @Schema(implementation = PostDto.class)))
             })
     })
     @GetMapping()
-    public List<PostDto> findAll() {
-        log.info("Get all posts");
-        List<Post> foundPosts = this.postService.getAllPosts();
-        log.info("Got all posts {}", foundPosts);
+    public List<PostDto> findAll(Principal principal) {
+        log.info("Get all posts for {}", principal);
+        Optional<User> foundUser = userService.findUserByEmail(principal.getName());
+        if(foundUser.isEmpty()) {
+            log.warn("Retrieve user posts : couldn't get user info");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user info");
+        }
+        List<Post> foundPosts = this.postService.getPostsByUserSubscriptions(foundUser.get());
+        log.info("First topic : {}", foundPosts.getFirst().getTopic());
+        log.info("Got all user posts {}", foundPosts);
         return postMapper.postToPostDto(foundPosts);
     }
 

@@ -1,0 +1,5 @@
+@if (post$ | async; as post) {
+    <p>{{ post.title }}</p>
+    <div> {{ post.content}} </div>
+    <p>Posted by {{ post.author.userName}} {{ post.createdAt }} in {{ post.topic.title}}</p>
+}
