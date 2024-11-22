@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { SessionInformation } from '../models/sessionInformation.interface';
 import { TokenStorageService } from './token-storage.service';
 import { User } from '../models/user.interface';
-import { RefreshTokenResponse } from '../models/refreshTokenResponse.interface';
+import { RefreshTokenResponse } from '../models/refresh-token-response.interface';
 import { CurrentUserService } from './current-user.service';
 
 @Injectable({

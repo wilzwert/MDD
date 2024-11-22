@@ -3,8 +3,8 @@ import { Injectable } from "@angular/core";
 import { SessionService } from '../services/session.service';
 import { AuthService } from "../services/auth.service";
 import { BehaviorSubject, catchError, filter, switchMap, take, throwError } from "rxjs";
-import { RefreshTokenRequest } from "../models/refreshTokenRequest.interface";
-import { RefreshTokenResponse } from "../models/refreshTokenResponse.interface";
+import { RefreshTokenRequest } from "../models/refresh-token-request.interface";
+import { RefreshTokenResponse } from "../models/refresh-token-response.interface";
 
 
 @Injectable({ providedIn: 'root' })

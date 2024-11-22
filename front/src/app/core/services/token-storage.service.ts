@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SessionInformation } from '../models/sessionInformation.interface';
-import { RefreshTokenResponse } from '../models/refreshTokenResponse.interface';
+import { RefreshTokenResponse } from '../models/refresh-token-response.interface';
 
 const TOKEN_KEY = 'auth-token';
 const TOKEN_TYPE_KEY = 'auth-token-type';
