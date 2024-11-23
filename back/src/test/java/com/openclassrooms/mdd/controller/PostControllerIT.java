@@ -271,7 +271,7 @@ public class PostControllerIT {
             Comment comment1 = new Comment().setId(1).setContent("Comment content").setPost(post).setAuthor(user);
             Comment comment2 = new Comment().setId(2).setContent("Comment content 2").setPost(post).setAuthor(user);
             when(postRepository.findById(anyInt())).thenReturn(Optional.of(post));
-            when(commentRepository.findCommentsByPost(post)).thenReturn(Arrays.asList(comment1, comment2));
+            when(commentRepository.findCommentsByPost(any(Post.class), any(Sort.class))).thenReturn(Arrays.asList(comment1, comment2));
 
             MvcResult result = mockMvc.perform(get("/api/posts/{id}/comments", 1))
                     .andExpect(status().isOk())
