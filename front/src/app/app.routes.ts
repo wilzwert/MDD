@@ -10,15 +10,14 @@ import { PostDetailComponent } from './features/posts/post-detail/post-detail.co
 import { PostFormComponent } from './features/posts/post-form/post-form.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent },
-    { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
-    { path: 'me', component: MeComponent },
-    { path: 'topics', component: TopicsListComponent },
-    { path: 'posts', component: PostsListComponent },
-    { path: 'posts/create', title: 'Create a post', component: PostFormComponent },
-    { path: 'posts/:id', title: 'Posts - detail', component: PostDetailComponent },
-    { path: 'posts/:id/update', title: 'Post - update', component: PostFormComponent },
-    { path: '404', component: NotFoundComponent },
-    { path: '**', redirectTo: '404' }
+    { path: '', title: 'MDD - home',    component: HomeComponent },
+    { path: 'login', title: 'Connextion', component: LoginComponent, data: {goBackToRoute: ""} },
+    { path: 'register', title: 'Inscription', component: RegisterComponent, data: {goBackToRoute: ""} },
+    { path: 'me', title: 'Profil utilisateur', component: MeComponent, data: {goBackToRoute: "posts"} },
+    { path: 'topics', title: 'Liste des thèmes', component: TopicsListComponent },
+    { path: 'posts', title: 'Liste des articles', component: PostsListComponent },
+    { path: 'posts/create', title: 'Créer un nouvel article', component: PostFormComponent, data: {goBackToRoute: "posts"} },
+    { path: 'posts/:id', title: 'Détail de l\'article', component: PostDetailComponent, data: {goBackToRoute: "posts"} },
+    { path: '404', component: NotFoundComponent, data: {goBackToRoute: "posts"} },
+    { path: '**', title: 'Page introuvable', redirectTo: '404', data: {goBackToRoute: "topics"} }
 ];
