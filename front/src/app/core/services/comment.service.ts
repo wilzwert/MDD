@@ -18,7 +18,8 @@ export class CommentService {
   getPostComments(postId: number): Observable<Comment[]> {
     return this.comments$.pipe(
       switchMap((commments: Comment[] | null) => {
-        if (commments /*&& postId == this.postId*/) {
+        // we only send current value if we want to get comments for the same post
+        if (commments && postId == this.postId) {
           // send current posts if already present
           return of(commments);
         } else {
