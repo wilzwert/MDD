@@ -1,5 +1,6 @@
 package com.openclassrooms.mdd.controller;
 
+import com.openclassrooms.mdd.dto.request.UpdateUserDto;
 import com.openclassrooms.mdd.dto.response.SubscriptionDto;
 import com.openclassrooms.mdd.dto.response.TopicDto;
 import com.openclassrooms.mdd.dto.response.UserDto;
@@ -9,6 +10,7 @@ import com.openclassrooms.mdd.model.Subscription;
 import com.openclassrooms.mdd.model.Topic;
 import com.openclassrooms.mdd.model.User;
 import com.openclassrooms.mdd.service.UserService;
+import jakarta.persistence.EntityExistsException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -108,6 +110,64 @@ public class UserControllerTest {
             when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.empty());
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> userController.deleteCurrentUser(principal));
             assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
+
+        @Test
+        public void shouldThrowResponseStatusExceptionNotFoundOnUpdateWhenUserNotFound() {
+            UpdateUserDto requestUserUpdate = new UpdateUserDto();
+            requestUserUpdate.setUserName("testuser");
+            requestUserUpdate.setEmail("test@example.com");
+            Principal principal = mock(Principal.class);
+            when(principal.getName()).thenReturn("test@example.com");
+            when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.empty());
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> userController.update(requestUserUpdate, principal));
+            assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
+
+        @Test
+        public void shouldThrowResponseStatusExceptionConflictOnUpdateWhenUserNameOrEmailExists() {
+            UpdateUserDto requestUserUpdate = new UpdateUserDto();
+            requestUserUpdate.setUserName("testuser");
+            requestUserUpdate.setEmail("test@example.com");
+            User user = new User();
+            User updateUser = new User();
+            Principal principal = mock(Principal.class);
+            when(principal.getName()).thenReturn("test@example.com");
+            when(userMapper.updateUserDtoToUser(requestUserUpdate)).thenReturn(updateUser);
+            when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
+            when(userService.updateUser(user, updateUser)).thenThrow(EntityExistsException.class);
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> userController.update(requestUserUpdate, principal));
+            assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        }
+
+        @Test
+        public void shouldUpdateUser() {
+            UpdateUserDto requestUserUpdate = new UpdateUserDto();
+            requestUserUpdate.setUserName("othertestuser");
+            requestUserUpdate.setEmail("testother@example.com");
+            User user = new User();
+            User updateUser = new User();
+            Principal principal = mock(Principal.class);
+            UserDto responseUserDto = new UserDto();
+            responseUserDto.setId(1);
+            responseUserDto.setUserName("othertestuser");
+            responseUserDto.setEmail("testother@example.com");
+
+            when(principal.getName()).thenReturn("test@example.com");
+            when(userMapper.updateUserDtoToUser(requestUserUpdate)).thenReturn(updateUser);
+            when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
+            when(userService.updateUser(user, updateUser)).thenReturn(user);
+            when(userMapper.userToUserDto(user)).thenReturn(responseUserDto);
+
+            UserDto updateUserDto = userController.update(requestUserUpdate, principal);
+
+            verify(userMapper).updateUserDtoToUser(requestUserUpdate);
+            verify(userService).findUserByEmail("test@example.com");
+            verify(userService).updateUser(user, updateUser);
+            verify(userMapper).userToUserDto(user);
+
+            assertThat(updateUserDto.getEmail()).isEqualTo("testother@example.com");
+            assertThat(updateUserDto.getUserName()).isEqualTo("othertestuser");
         }
     }
 

@@ -3,6 +3,7 @@ package com.openclassrooms.mdd.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openclassrooms.mdd.dto.request.UpdateUserDto;
 import com.openclassrooms.mdd.dto.response.SubscriptionDto;
 import com.openclassrooms.mdd.dto.response.UserDto;
 import com.openclassrooms.mdd.model.Subscription;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -109,6 +111,99 @@ public class UserControllerIT {
             mockMvc.perform(delete(DELETE_URL)).andExpect(status().isNoContent());
             verify(userRepository, times(1)).findByEmail("test@example.com");
             verify(userRepository, times(1)).delete(user);
+        }
+
+        @Test
+        @WithMockUser(username = "test@example.com")
+        public void shouldReturnBadRequestOnUpdateWhenInvalidBody() throws Exception {
+            UpdateUserDto updateUserDto = new UpdateUserDto();
+            updateUserDto.setEmail("test@example.com");
+
+            when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+            mockMvc.perform(put(ME_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updateUserDto)))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @WithMockUser(username = "test@example.com")
+        public void shouldReturnNotFoundOnUpdateWhenUserNotFound() throws Exception {
+            UpdateUserDto updateUserDto = new UpdateUserDto();
+            updateUserDto.setUserName("username");
+            updateUserDto.setEmail("test@example.com");
+
+            when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+            mockMvc.perform(put(ME_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updateUserDto)))
+                    .andExpect(status().isNotFound());
+        }
+
+        @Test
+        @WithMockUser(username = "test@example.com")
+        public void shouldReturnConflictOnUpdateWhenUserNameExists() throws Exception {
+            User user = new User().setId(1).setUserName("username").setEmail("test@example.com");
+            User user2 = new User().setId(2).setUserName("otherusername").setEmail("othertest@example.com");
+
+            UpdateUserDto updateUserDto = new UpdateUserDto();
+            // change username
+            updateUserDto.setUserName("otherusername");
+            // update email
+            updateUserDto.setEmail("test@example.com");
+
+            // mock current authenticated user retrieval
+            when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+            // mock an other user with username sent in update request
+            when(userRepository.findByUserName("otherusername")).thenReturn(Optional.of(user2));
+
+            mockMvc.perform(put(ME_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updateUserDto)))
+                    .andExpect(status().isConflict());
+        }
+
+        @Test
+        @WithMockUser(username = "test@example.com")
+        public void shouldReturnConflictOnUpdateWhenEmailExists() throws Exception {
+            User user = new User().setId(1).setUserName("username").setEmail("test@example.com");
+            User user2 = new User().setId(2).setUserName("otherusername").setEmail("othertest@example.com");
+
+            UpdateUserDto updateUserDto = new UpdateUserDto();
+            // same username
+            updateUserDto.setUserName("username");
+            // change email
+            updateUserDto.setEmail("othertest@example.com");
+
+            // mock current authenticated user retrieval
+            when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+            // mock an other user with email sent in update request
+            when(userRepository.findByEmail("othertest@example.com")).thenReturn(Optional.of(user2));
+
+            mockMvc.perform(put(ME_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updateUserDto)))
+                    .andExpect(status().isConflict());
+        }
+
+        @Test
+        @WithMockUser(username = "test@example.com")
+        public void shouldReturnUpdatedUser() throws Exception {
+            User user = new User().setId(1).setUserName("username").setEmail("test@example.com");
+
+            UpdateUserDto updateUserDto = new UpdateUserDto();
+            // change username
+            updateUserDto.setUserName("otherusername");
+            // change email
+            updateUserDto.setEmail("othertest@example.com");
+
+            // mock current authenticated user retrieval
+            when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+            // username and email don't exist in db
+            when(userRepository.findByEmail("othertest@example.com")).thenReturn(Optional.empty());
+            when(userRepository.findByUserName("otherusername")).thenReturn(Optional.empty());
+            when(userRepository.save(user)).thenReturn(user);
+
+            MvcResult responseUser = mockMvc.perform(put(ME_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updateUserDto)))
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            UserDto userDto = objectMapper.readValue(responseUser.getResponse().getContentAsString(), UserDto.class);
+            assertThat(userDto.getId()).isEqualTo(1);
+            assertThat(userDto.getUserName()).isEqualTo("otherusername");
+            assertThat(userDto.getEmail()).isEqualTo("othertest@example.com");
         }
     }
     @Nested

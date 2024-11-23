@@ -197,13 +197,23 @@ public class AuthControllerIT {
         }
 
         @Test
-        public void shouldReturnBadRequestWhenUserAlreadyExists() throws Exception {
+        public void shouldReturnBadRequestWhenUserWithEmailAlreadyExists() throws Exception {
             User existingUser = new User();
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(existingUser));
 
             mockMvc.perform(post(REGISTER_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerUserDto)))
                     .andExpect(status().is(HttpStatus.CONFLICT.value()))
                     .andExpect(jsonPath("message").value("Email already exists"));
+        }
+
+        @Test
+        public void shouldReturnBadRequestWhenUserWithUserNameAlreadyExists() throws Exception {
+            User existingUser = new User();
+            when(userRepository.findByUserName("testuser")).thenReturn(Optional.of(existingUser));
+
+            mockMvc.perform(post(REGISTER_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerUserDto)))
+                    .andExpect(status().is(HttpStatus.CONFLICT.value()))
+                    .andExpect(jsonPath("message").value("Username already exists"));
         }
 
         @Test

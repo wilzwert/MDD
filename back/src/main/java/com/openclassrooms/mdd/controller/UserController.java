@@ -1,13 +1,13 @@
 package com.openclassrooms.mdd.controller;
 
 
+import com.openclassrooms.mdd.dto.request.UpdateUserDto;
 import com.openclassrooms.mdd.dto.response.SubscriptionDto;
 import com.openclassrooms.mdd.dto.response.UserDto;
 import com.openclassrooms.mdd.mapper.SubscriptionMapper;
 import com.openclassrooms.mdd.mapper.UserMapper;
 import com.openclassrooms.mdd.model.Subscription;
 import com.openclassrooms.mdd.model.User;
-import com.openclassrooms.mdd.repository.SubscriptionRepository;
 import com.openclassrooms.mdd.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,6 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityExistsException;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -59,6 +61,26 @@ public class UserController {
         log.info("Get current user {} info", principal.getName());
         User user = userService.findUserByEmail(principal.getName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return userMapper.userToUserDto(user);
+    }
+
+    @Operation(summary = "Update current user", description = "Update current user")
+    @PutMapping("/me")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User updated info", content = {
+            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserDto.class))
+    })
+    })
+    public UserDto update(@RequestBody @Valid UpdateUserDto updateUserDto, Principal principal) {
+        try {
+            log.info("Get current user {} info before update", principal.getName());
+            User user = userService.findUserByEmail(principal.getName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            User updateUser = userMapper.updateUserDtoToUser(updateUserDto);
+            return userMapper.userToUserDto(userService.updateUser(user, updateUser));
+        }
+        catch (EntityExistsException e) {
+            log.warn("Email or username {} {} already exists", updateUserDto.getEmail(), updateUserDto.getUserName());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
     }
 
     @Operation(summary = "Get current user subscriptions", description = "Get current user subscriptions list")
