@@ -5,6 +5,7 @@ import com.openclassrooms.mdd.model.Comment;
 import com.openclassrooms.mdd.model.Post;
 import com.openclassrooms.mdd.repository.CommentRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -29,6 +30,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getCommentsByPost(Post post) {
-        return commentRepository.findCommentsByPost(post);
+        return commentRepository.findCommentsByPost(post, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 }

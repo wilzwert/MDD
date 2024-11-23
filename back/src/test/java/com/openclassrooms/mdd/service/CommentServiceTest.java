@@ -10,9 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
+
 import java.util.Arrays;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,12 +44,12 @@ public class CommentServiceTest {
            Comment comment2 = new Comment().setId(2).setPost(post);
            List<Comment> comments = Arrays.asList(comment1, comment2);
 
-           when(commentRepository.findCommentsByPost(post)).thenReturn(comments);
+           when(commentRepository.findCommentsByPost(any(Post.class), any(Sort.class))).thenReturn(comments);
 
            List<Comment> foundComments = commentService.getCommentsByPost(post);
            assertThat(foundComments).isEqualTo(comments);
 
-           verify(commentRepository).findCommentsByPost(post);
+           verify(commentRepository).findCommentsByPost(any(Post.class), any(Sort.class));
         }
     }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { Post } from '../models/post.interface';
 import { HttpClient } from '@angular/common/http';
-import { CreatePostRequest } from '../models/createPostRequest.interface';
+import { CreatePostRequest } from '../models/create-post-request.interface';
 import { Topic } from '../models/topic.interface';
 
 @Injectable({
@@ -12,14 +12,14 @@ export class PostService {
 
   private apiPath:string = '/api/posts';
   private posts$: BehaviorSubject<Post[] |null> = new BehaviorSubject<Post[] | null >(null);
-
+  
   constructor(private httpClient: HttpClient) { }
 
   getAllPosts(): Observable<Post[]> {    
     return this.posts$.pipe(
       switchMap((posts: Post[] | null) => {
         if (posts) {
-          // send current topics if already present
+          // send current posts if already present
           return of(posts);
         } else {
           return this.httpClient.get<Post[]>(`${this.apiPath}`).pipe(

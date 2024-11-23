@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LoginRequest } from '../models/loginRequest.interface';
+import { LoginRequest } from '../models/login-request.interface';
 import { SessionInformation } from '../models/sessionInformation.interface';
 import { RegisterRequest } from '../models/registerRequest.interface';
-import { RefreshTokenRequest } from '../models/refreshTokenRequest.interface';
-import { RefreshTokenResponse } from '../models/refreshTokenResponse.interface';
+import { RefreshTokenRequest } from '../models/refresh-token-request.interface';
+import { RefreshTokenResponse } from '../models/refresh-token-response.interface';
 
 @Injectable({
   providedIn: 'root'

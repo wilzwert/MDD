@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { SessionService } from '../../core/services/session.service';
-import { LoginRequest } from '../../core/models/loginRequest.interface';
+import { LoginRequest } from '../../core/models/login-request.interface';
 import { AuthService } from '../../core/services/auth.service';
 import { SessionInformation } from '../../core/models/sessionInformation.interface';
 

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { PostService } from '../../../core/services/post.service';
-import { CreatePostRequest } from '../../../core/models/createPostRequest.interface';
+import { CreatePostRequest } from '../../../core/models/create-post-request.interface';
 import { Observable, take } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
