@@ -66,7 +66,20 @@ public class AuthControllerTest {
             registerUserDto.setEmail("test@example.com");
 
             when(userMapper.registerUserDtoToUser(registerUserDto)).thenReturn(new User().setUserName("test").setEmail("test@example.com"));
-            when(userService.registerUser(any(User.class))).thenThrow(new EntityExistsException("A user already registered with this email"));
+            when(userService.registerUser(any(User.class))).thenThrow(new EntityExistsException("Email already exists"));
+
+            ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> authController.register(registerUserDto));
+            assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        }
+
+        @Test
+        public void shouldThrowConflictResponseStatusExceptionOnRegisterWhenUserNameAlreadyExists() {
+            RegisterUserDto registerUserDto = new RegisterUserDto();
+            registerUserDto.setUserName("test");
+            registerUserDto.setEmail("test@example.com");
+
+            when(userMapper.registerUserDtoToUser(registerUserDto)).thenReturn(new User().setUserName("test").setEmail("test@example.com"));
+            when(userService.registerUser(any(User.class))).thenThrow(new EntityExistsException("Username already exists"));
 
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> authController.register(registerUserDto));
             assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);

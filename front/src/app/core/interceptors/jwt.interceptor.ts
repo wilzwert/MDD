@@ -67,7 +67,7 @@ export class JwtInterceptor implements HttpInterceptor {
   }
 
   private addTokenHeader(request: HttpRequest<any>, token: string): HttpRequest<any> {
-    console.log('adding bearer for '+request.url);
+    console.log('adding bearer '+token+' for '+request.method+' '+request.url);
     return request.clone({ headers: request.headers.set('Authorization', this.sessionService.getTokenType()!+' '+token) });
   }
 }

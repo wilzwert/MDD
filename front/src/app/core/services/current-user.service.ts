@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { User } from '../models/user.interface';
 import { Subscription } from '../models/subscription.interface';
+import { UpdateUserRequest } from '../models/update-user-request';
+import { SessionInformation } from '../models/sessionInformation.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,16 @@ export class CurrentUserService {
           );
         }
       })
+    );
+  }
+
+  public updateCurrentUser(updateUserRequest: UpdateUserRequest): Observable<SessionInformation> {
+    // load from backend otherwise
+    return this.httpClient.put<SessionInformation>(`${this.apiPath}/me`, updateUserRequest).pipe(
+      /*switchMap((sessionInfo: SessionInformation) => {
+        this.user$.next(null); // reset BehaviorSubject
+        return of(sessionInfo);
+      })*/
     );
   }
 
@@ -77,10 +89,6 @@ export class CurrentUserService {
   public logout(): void {
     this.user$.next(null);
     this.userSubscriptions$.next(null);
-  }
-  
-  updateUserProfile(updatedUser: User): void {
-    this.user$.next(updatedUser);
   }
 
 }

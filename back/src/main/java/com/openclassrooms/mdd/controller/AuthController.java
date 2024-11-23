@@ -76,8 +76,8 @@ public class AuthController {
             return new JwtResponse(token, "Bearer", refreshTokenService.getOrCreateRefreshToken(user).getToken(), user.getId(), user.getUserName());
         }
         catch (EntityExistsException e) {
-            log.warn("Email {} already exists", registerUserDto.getEmail());
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
+            log.warn("Email or username {} {} already exists", registerUserDto.getEmail(), registerUserDto.getUserName());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 

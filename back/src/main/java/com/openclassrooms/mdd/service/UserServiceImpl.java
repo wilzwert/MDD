@@ -55,9 +55,36 @@ public class UserServiceImpl implements UserService {
     public User registerUser(User user) {
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
         if(existingUser.isPresent()) {
-            throw new EntityExistsException("A user already registered with this email");
+            throw new EntityExistsException("Email already exists");
+        }
+        existingUser = userRepository.findByUserName(user.getUserName());
+        if(existingUser.isPresent()) {
+            throw new EntityExistsException("Username already exists");
         }
         user.setPassword(encodePassword(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(User user, User updateUser) throws EntityExistsException {
+        // user wants to change email
+        if(!user.getEmail().equals(updateUser.getEmail())) {
+            Optional<User> existingUser = userRepository.findByEmail(updateUser.getEmail());
+            if (existingUser.isPresent()) {
+                throw new EntityExistsException("Email already exists");
+            }
+        }
+        // user wants to change username
+        if(!user.getUserName().equals(updateUser.getUserName())) {
+            log.info("Username changes");
+            Optional<User> existingUser = userRepository.findByUserName(updateUser.getUserName());
+            if (existingUser.isPresent()) {
+                throw new EntityExistsException("Username already exists");
+            }
+        }
+
+        user.setUserName(updateUser.getUserName());
+        user.setEmail(updateUser.getEmail());
         return userRepository.save(user);
     }
 

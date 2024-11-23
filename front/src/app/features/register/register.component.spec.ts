@@ -10,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RegisterRequest } from '../../core/models/registerRequest.interface';
+import { RegisterRequest } from '../../core/models/register-request.interface';
 import { of, throwError } from 'rxjs';
 
 describe('RegisterComponent', () => {

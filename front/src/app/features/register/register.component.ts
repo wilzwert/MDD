@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../core/services/auth.service';
-import { RegisterRequest } from '../../core/models/registerRequest.interface';
+import { RegisterRequest } from '../../core/models/register-request.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { take } from 'rxjs';
 import { Router } from '@angular/router';
