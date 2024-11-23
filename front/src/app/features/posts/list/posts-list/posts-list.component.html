@@ -1,4 +1,8 @@
 <a [routerLink]="['create']">Create</a>
+<a (click)="sortByPostCreation('asc')">Trier par date ascendante</a>
+<a (click)="sortByPostCreation('desc')">Trier par date descendante</a>
+<a (click)="sortByAuthor('asc')">Trier par auteur ascendant</a>
+<a (click)="sortByAuthor('desc')">Trier par auteur descendant</a>
 <mat-grid-list [cols]="cols" rowHeight="2:1" gutterSize="10px" (window:resize)="onResize($event)">
 @for (post of posts$ | async ; track $index) {
     <mat-grid-tile>
