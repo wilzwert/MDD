@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoginRequest } from '../models/login-request.interface';
 import { SessionInformation } from '../models/sessionInformation.interface';
-import { RegisterRequest } from '../models/registerRequest.interface';
+import { RegisterRequest } from '../models/register-request.interface';
 import { RefreshTokenRequest } from '../models/refresh-token-request.interface';
 import { RefreshTokenResponse } from '../models/refresh-token-response.interface';
 

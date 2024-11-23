@@ -1,5 +1,22 @@
 @if ( user$ | async; as user) {
+
     <p>{{ user.userName }}</p>
+    <p>{{ user.email }}</p>
+
+    <form class="login-form" [formGroup]="form" (ngSubmit)="updateCurrentUser()">
+        <mat-card-content >
+            <mat-form-field>
+                <input matInput placeholder="Email" formControlName="email">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Username" formControlName="userName">
+            </mat-form-field>
+        </mat-card-content>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
+       
+    </form>
+
+    <hr>
 
     @if (subscriptions$ | async; as subscriptions) {
         <mat-grid-list [cols]="cols" rowHeight="2:0.5" gutterSize="10px" (window:resize)="onResize($event)">
@@ -18,5 +35,5 @@
     }
 }
 @else {
-    <p>NOPE</p>
+    <p></p>
 }

@@ -4,11 +4,14 @@ package com.openclassrooms.mdd.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.mdd.dto.request.UpdateUserDto;
+import com.openclassrooms.mdd.dto.response.JwtResponse;
 import com.openclassrooms.mdd.dto.response.SubscriptionDto;
 import com.openclassrooms.mdd.dto.response.UserDto;
+import com.openclassrooms.mdd.model.RefreshToken;
 import com.openclassrooms.mdd.model.Subscription;
 import com.openclassrooms.mdd.model.Topic;
 import com.openclassrooms.mdd.model.User;
+import com.openclassrooms.mdd.repository.RefreshTokenRepository;
 import com.openclassrooms.mdd.repository.UserRepository;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -26,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -45,6 +49,10 @@ public class UserControllerIT {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private RefreshTokenRepository refreshTokenRepository;
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -180,7 +188,7 @@ public class UserControllerIT {
 
         @Test
         @WithMockUser(username = "test@example.com")
-        public void shouldReturnUpdatedUser() throws Exception {
+        public void shouldReturnJwtResponseWhenUserUpdated() throws Exception {
             User user = new User().setId(1).setUserName("username").setEmail("test@example.com");
 
             UpdateUserDto updateUserDto = new UpdateUserDto();
@@ -195,15 +203,18 @@ public class UserControllerIT {
             when(userRepository.findByEmail("othertest@example.com")).thenReturn(Optional.empty());
             when(userRepository.findByUserName("otherusername")).thenReturn(Optional.empty());
             when(userRepository.save(user)).thenReturn(user);
+            when(refreshTokenRepository.findByToken(anyString())).thenReturn(Optional.empty());
+            when(refreshTokenRepository.save(any(RefreshToken.class))).thenAnswer(i -> i.getArgument(0));
 
             MvcResult responseUser = mockMvc.perform(put(ME_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updateUserDto)))
                     .andExpect(status().isOk())
                     .andReturn();
 
-            UserDto userDto = objectMapper.readValue(responseUser.getResponse().getContentAsString(), UserDto.class);
-            assertThat(userDto.getId()).isEqualTo(1);
-            assertThat(userDto.getUserName()).isEqualTo("otherusername");
-            assertThat(userDto.getEmail()).isEqualTo("othertest@example.com");
+            JwtResponse jwtResponse = objectMapper.readValue(responseUser.getResponse().getContentAsString(), JwtResponse.class);
+            assertThat(jwtResponse.getToken()).isNotEmpty();
+            assertThat(jwtResponse.getUsername()).isEqualTo("otherusername");
+            assertThat(jwtResponse.getRefreshToken()).isNotEmpty();
+            assertThat(jwtResponse.getId()).isEqualTo(1);
         }
     }
     @Nested
