@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Post } from '../../../core/models/post.interface';
 import { PostService } from '../../../core/services/post.service';
 import { AsyncPipe } from '@angular/common';
@@ -8,6 +8,7 @@ import { CommentService } from '../../../core/services/comment.service';
 import { Comment } from '../../../core/models/comment.interface';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateCommentRequest } from '../../../core/models/create-comment-request.interface';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-post-detail',
@@ -23,7 +24,7 @@ export class PostDetailComponent implements OnInit {
   private postId!: number;
 
 
-  constructor(private activatedRoute: ActivatedRoute, private postService: PostService, private commentService: CommentService, private fb: FormBuilder) {
+  constructor(private activatedRoute: ActivatedRoute, private postService: PostService, private commentService: CommentService, private fb: FormBuilder, private title: Title) {
   }
 
   private initForm() :void {
@@ -45,9 +46,14 @@ export class PostDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
+      // Access the 'id' parameter from the URL
       this.postId = params['id'];
-      this.post$ = this.postService.getPostById(params['id']); // Access the 'id' parameter from the URL
-      this.comments$ = this.commentService.getPostComments(params['id']); // Access the 'id' parameter from the URL
+      this.post$ = this.postService.getPostById(params['id']).pipe(
+        // set page title once the post is available
+        tap((post: Post) =>{this.title.setTitle(`Article - ${post.title}`)})
+      );
+      // load post comments 
+      this.comments$ = this.commentService.getPostComments(params['id']); 
       this.initForm();
     });
   }
