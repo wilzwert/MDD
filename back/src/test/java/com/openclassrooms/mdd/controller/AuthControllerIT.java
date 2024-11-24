@@ -105,6 +105,7 @@ public class AuthControllerIT {
                     .setUserName("testuser");
 
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+            when(userRepository.findById(1)).thenReturn(Optional.of(user));
             when(refreshTokenRepository.save(any(RefreshToken.class))).thenAnswer(i -> i.getArgument(0));
 
             MvcResult result = mockMvc.perform(post(LOGIN_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(loginRequest)))

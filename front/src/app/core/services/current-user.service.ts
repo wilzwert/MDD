@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { User } from '../models/user.interface';
 import { Subscription } from '../models/subscription.interface';
 import { UpdateUserRequest } from '../models/update-user-request';
-import { SessionInformation } from '../models/sessionInformation.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -38,13 +37,13 @@ export class CurrentUserService {
     );
   }
 
-  public updateCurrentUser(updateUserRequest: UpdateUserRequest): Observable<SessionInformation> {
+  public updateCurrentUser(updateUserRequest: UpdateUserRequest): Observable<User> {
     // load from backend otherwise
-    return this.httpClient.put<SessionInformation>(`${this.apiPath}/me`, updateUserRequest).pipe(
-      /*switchMap((sessionInfo: SessionInformation) => {
-        this.user$.next(null); // reset BehaviorSubject
-        return of(sessionInfo);
-      })*/
+    return this.httpClient.put<User>(`${this.apiPath}/me`, updateUserRequest).pipe(
+      switchMap((updatedUser: User) => {
+        this.user$.next(updatedUser); // reset BehaviorSubject
+        return of(updatedUser);
+      })
     );
   }
 

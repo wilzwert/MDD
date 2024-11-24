@@ -72,10 +72,10 @@ public class JwtService {
     }
 
     public String generateToken(User user) {
-        log.info("Generating JWT token for user {}", user.getEmail());
+        log.info("Generating JWT token for user {} {}", user.getEmail(), user.getId());
         return Jwts
                 .builder()
-                .subject(user.getEmail())
+                .subject(String.valueOf(user.getId()))
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSignInKey())

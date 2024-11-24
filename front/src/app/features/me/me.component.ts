@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CurrentUserService } from '../../core/services/current-user.service';
 import { User } from '../../core/models/user.interface';
-import { BehaviorSubject, map, Observable, take, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { TopicComponent } from '../topics/list/topic/topic.component';
 import { Subscription } from '../../core/models/subscription.interface';
@@ -10,11 +10,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { UpdateUserRequest } from '../../core/models/update-user-request';
-import { SessionService } from '../../core/services/session.service';
-import { SessionInformation } from '../../core/models/sessionInformation.interface';
 
 @Component({
   selector: 'app-me',
@@ -38,20 +35,10 @@ export class MeComponent implements OnInit{
   public subscriptions$!: Observable<Subscription[]>;
   public form!: FormGroup;
 
-  constructor(private userService: CurrentUserService, private fb: FormBuilder, private sessionService:SessionService) {
-    
-  }
+  constructor(private userService: CurrentUserService, private fb: FormBuilder) {}
 
   public updateCurrentUser() :void {
-    this.userService.updateCurrentUser(this.form.value as UpdateUserRequest).subscribe({
-      next: (sessionInfo: SessionInformation) => {
-        console.log('new session info with token '+sessionInfo.token);
-        this.sessionService.logIn(sessionInfo);
-        this.userService.logout();
-        console.log('getting new /me');
-        this.userService.getCurrentUser().pipe(take(1)).subscribe();
-      }
-    });
+    this.userService.updateCurrentUser(this.form.value as UpdateUserRequest).subscribe();
   }
 
   public onUnsubscribe(topicId: number) :void {
