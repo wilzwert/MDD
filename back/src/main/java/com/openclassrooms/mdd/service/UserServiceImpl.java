@@ -126,6 +126,7 @@ public class UserServiceImpl implements UserService {
     public User authenticateUser(String email, String password) throws AuthenticationException {
         Optional<User> user = findUserByEmail(email);
         if(user.isEmpty()) {
+            log.info("User not found");
             throw new AuthenticationException("User not found") {
                 @Override
                 public String getMessage() {
@@ -133,8 +134,9 @@ public class UserServiceImpl implements UserService {
                 }
             };
         }
+        log.info("User has been found, let's pass to authenticationManager");
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
+                new UsernamePasswordAuthenticationToken(user.get().getId(), password)
         );
         return user.get();
     }

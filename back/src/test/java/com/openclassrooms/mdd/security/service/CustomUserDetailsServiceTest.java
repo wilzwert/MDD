@@ -33,10 +33,15 @@ public class CustomUserDetailsServiceTest {
     private CustomUserDetailsService customUserDetailsService;
 
     @Test
+    public void shouldThrowNumberFormatExceptionWHenUserNotFound() {
+        assertThrows(NumberFormatException.class, () -> customUserDetailsService.loadUserByUsername("test@example.com"));
+    }
+
+    @Test
     public void shouldThrowUsernameNotFoundExceptionWHenUserNotFound() {
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
-        assertThrows(UsernameNotFoundException.class, () -> customUserDetailsService.loadUserByUsername("test@example.com"));
-        verify(userRepository).findByEmail("test@example.com");
+        when(userRepository.findById(1)).thenReturn(Optional.empty());
+        assertThrows(UsernameNotFoundException.class, () -> customUserDetailsService.loadUserByUsername("1"));
+        verify(userRepository).findById(1);
     }
 
     @Test
@@ -47,9 +52,9 @@ public class CustomUserDetailsServiceTest {
                 .setUserName("Username")
                 .setPassword("password");
 
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) customUserDetailsService.loadUserByUsername("test@example.com");
+        UserDetailsImpl userDetails = (UserDetailsImpl) customUserDetailsService.loadUserByUsername("1");
 
         assertThat(userDetails).isNotNull();
         assertThat(userDetails.getId()).isEqualTo(1L);

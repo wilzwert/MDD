@@ -9,8 +9,6 @@ import com.openclassrooms.mdd.mapper.SubscriptionMapper;
 import com.openclassrooms.mdd.mapper.UserMapper;
 import com.openclassrooms.mdd.model.Subscription;
 import com.openclassrooms.mdd.model.User;
-import com.openclassrooms.mdd.security.service.JwtService;
-import com.openclassrooms.mdd.security.service.RefreshTokenService;
 import com.openclassrooms.mdd.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -45,20 +43,14 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
-    private final JwtService jwtService;
-    private final RefreshTokenService refreshTokenService;
     private final SubscriptionMapper subscriptionMapper;
 
     public UserController(
             UserService userService,
             UserMapper userMapper,
-            JwtService jwtService,
-            RefreshTokenService refreshTokenService,
             SubscriptionMapper subscriptionMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
-        this.jwtService = jwtService;
-        this.refreshTokenService = refreshTokenService;
         this.subscriptionMapper = subscriptionMapper;
     }
 
@@ -82,16 +74,17 @@ public class UserController {
             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = JwtResponse.class))
         })
     })
-    public JwtResponse update(@RequestBody @Valid UpdateUserDto updateUserDto, Principal principal) {
+    public UserDto update(@RequestBody @Valid UpdateUserDto updateUserDto, Principal principal) {
         try {
             log.info("Get current user {} info before update", principal.getName());
             User user = userService.findUserByEmail(principal.getName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
             User updateUser = userMapper.updateUserDtoToUser(updateUserDto);
             User updatedUser =  userService.updateUser(user, updateUser);
             // return a new JWT token so that the client app
-            String token = jwtService.generateToken(user);
+            // String token = jwtService.generateToken(user);
             log.info("User  {} updated", user.getId());
-            return new JwtResponse(token, "Bearer", refreshTokenService.getOrCreateRefreshToken(user).getToken(), user.getId(), user.getUserName());
+            return userMapper.userToUserDto(updatedUser);
+            // return new JwtResponse(token, "Bearer", refreshTokenService.getOrCreateRefreshToken(user).getToken(), user.getId(), user.getUserName());
 
         }
         catch (EntityExistsException e) {

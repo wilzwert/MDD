@@ -69,11 +69,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // extract JWT Token and included email and try to authenticate the user
             JwtToken jwtToken = token.get();
-            String userEmail = jwtToken.getClaims().getSubject();
-            log.info("User email: {}", userEmail);
+            String userId = jwtToken.getClaims().getSubject();
+            log.info("User id: {}", userId);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (userEmail != null && authentication == null) {
-                UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(userEmail);
+            if (userId != null && authentication == null) {
+                UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(userId);
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

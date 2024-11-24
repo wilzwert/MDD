@@ -4,7 +4,6 @@ package com.openclassrooms.mdd.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.mdd.dto.request.UpdateUserDto;
-import com.openclassrooms.mdd.dto.response.JwtResponse;
 import com.openclassrooms.mdd.dto.response.SubscriptionDto;
 import com.openclassrooms.mdd.dto.response.UserDto;
 import com.openclassrooms.mdd.model.RefreshToken;
@@ -29,7 +28,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -188,7 +186,7 @@ public class UserControllerIT {
 
         @Test
         @WithMockUser(username = "test@example.com")
-        public void shouldReturnJwtResponseWhenUserUpdated() throws Exception {
+        public void shouldReturnUserDtoWhenUserUpdated() throws Exception {
             User user = new User().setId(1).setUserName("username").setEmail("test@example.com");
 
             UpdateUserDto updateUserDto = new UpdateUserDto();
@@ -210,11 +208,9 @@ public class UserControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            JwtResponse jwtResponse = objectMapper.readValue(responseUser.getResponse().getContentAsString(), JwtResponse.class);
-            assertThat(jwtResponse.getToken()).isNotEmpty();
-            assertThat(jwtResponse.getUsername()).isEqualTo("otherusername");
-            assertThat(jwtResponse.getRefreshToken()).isNotEmpty();
-            assertThat(jwtResponse.getId()).isEqualTo(1);
+            UserDto responseUserDto = objectMapper.readValue(responseUser.getResponse().getContentAsString(), UserDto.class);
+            assertThat(responseUserDto.getEmail()).isEqualTo("othertest@example.com");
+            assertThat(responseUserDto.getUserName()).isEqualTo("otherusername");
         }
     }
     @Nested

@@ -1,18 +1,14 @@
 package com.openclassrooms.mdd.controller;
 
 import com.openclassrooms.mdd.dto.request.UpdateUserDto;
-import com.openclassrooms.mdd.dto.response.JwtResponse;
 import com.openclassrooms.mdd.dto.response.SubscriptionDto;
 import com.openclassrooms.mdd.dto.response.TopicDto;
 import com.openclassrooms.mdd.dto.response.UserDto;
 import com.openclassrooms.mdd.mapper.SubscriptionMapper;
 import com.openclassrooms.mdd.mapper.UserMapper;
-import com.openclassrooms.mdd.model.RefreshToken;
 import com.openclassrooms.mdd.model.Subscription;
 import com.openclassrooms.mdd.model.Topic;
 import com.openclassrooms.mdd.model.User;
-import com.openclassrooms.mdd.security.service.JwtService;
-import com.openclassrooms.mdd.security.service.RefreshTokenService;
 import com.openclassrooms.mdd.service.UserService;
 import jakarta.persistence.EntityExistsException;
 import org.junit.jupiter.api.Nested;
@@ -49,12 +45,6 @@ public class UserControllerTest {
 
     @Mock
     private UserService userService;
-
-    @Mock
-    private JwtService jwtService;
-
-    @Mock
-    private RefreshTokenService refreshTokenService;
 
     @Mock
     private UserMapper userMapper;
@@ -158,24 +148,25 @@ public class UserControllerTest {
             User user = new User();
             User updateUser = new User();
             Principal principal = mock(Principal.class);
+            UserDto userDto = new UserDto();
+            userDto.setId(1);
+            userDto.setUserName("othertestuser");
+            userDto.setEmail("testother@example.com");
 
             when(principal.getName()).thenReturn("test@example.com");
             when(userMapper.updateUserDtoToUser(requestUserUpdate)).thenReturn(updateUser);
             when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
             when(userService.updateUser(user, updateUser)).thenReturn(user);
-            when(jwtService.generateToken(user)).thenReturn("jwt_token");
-            when(refreshTokenService.getOrCreateRefreshToken(user)).thenReturn(new RefreshToken().setId(1).setToken("refresh_token"));
+            when(userMapper.userToUserDto(user)).thenReturn(userDto);
 
-            JwtResponse jwtResponse = userController.update(requestUserUpdate, principal);
+            UserDto responseUserDto = userController.update(requestUserUpdate, principal);
 
             verify(userMapper).updateUserDtoToUser(requestUserUpdate);
             verify(userService).findUserByEmail("test@example.com");
             verify(userService).updateUser(user, updateUser);
-            verify(jwtService).generateToken(user);
-            verify(refreshTokenService).getOrCreateRefreshToken(user);
+            verify(userMapper).userToUserDto(user);
 
-            assertThat(jwtResponse.getToken()).isEqualTo("jwt_token");
-            assertThat(jwtResponse.getRefreshToken()).isEqualTo("refresh_token");
+            assertThat(responseUserDto).isEqualTo(userDto);
         }
     }
 

@@ -117,9 +117,10 @@ public class JwtAuthenticationFilterTest {
 
     @Test
     public void shouldAuthenticateUser() throws Exception {
-        when(customUserDetailsService.loadUserByUsername("test@example.com")).thenReturn(new User("test@example.com", "password", Collections.emptyList()));
-        Claims claims = Jwts.claims().subject("test@example.com").build();
-        JwtToken jwtToken = new JwtToken("test@example.com", claims);
+        when(customUserDetailsService.loadUserByUsername("1")).thenReturn(new User("1", "password", Collections.emptyList()));
+
+        Claims claims = Jwts.claims().subject("1").build();
+        JwtToken jwtToken = new JwtToken("1", claims);
         when(jwtService.extractTokenFromRequest(request)).thenReturn(Optional.of(jwtToken));
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
@@ -130,8 +131,8 @@ public class JwtAuthenticationFilterTest {
 
     @Test
     public void shouldNotAuthenticateUserWhenAuthenticationNotNull() throws Exception {
-        Claims claims = Jwts.claims().subject("test@example.com").build();
-        JwtToken jwtToken = new JwtToken("test@example.com", claims);
+        Claims claims = Jwts.claims().subject("1").build();
+        JwtToken jwtToken = new JwtToken("1", claims);
         when(jwtService.extractTokenFromRequest(request)).thenReturn(Optional.of(jwtToken));
 
         SecurityContextHolder.getContext().setAuthentication(new Authentication() {
@@ -180,7 +181,7 @@ public class JwtAuthenticationFilterTest {
     @Test
     public void shouldNotAuthenticateUserWhenUserNotFoundInClaims() throws Exception {
         Claims claims = Jwts.claims().subject(null).build();
-        JwtToken jwtToken = new JwtToken("test@example.com", claims);
+        JwtToken jwtToken = new JwtToken("", claims);
         when(jwtService.extractTokenFromRequest(request)).thenReturn(Optional.of(jwtToken));
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);

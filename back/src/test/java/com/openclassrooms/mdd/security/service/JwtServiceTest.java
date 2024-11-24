@@ -166,8 +166,8 @@ public class JwtServiceTest {
 
             assertThat(token).isNotBlank();
             assertThat(jwtToken).isPresent();
-            assertThat(jwtToken.get().getSubject()).isEqualTo("test@example.com");
-            assertThat(jwtToken.get().getClaims().getSubject()).isEqualTo("test@example.com");
+            assertThat(jwtToken.get().getSubject()).isEqualTo("1");
+            assertThat(jwtToken.get().getClaims().getSubject()).isEqualTo("1");
         }
     }
 }
