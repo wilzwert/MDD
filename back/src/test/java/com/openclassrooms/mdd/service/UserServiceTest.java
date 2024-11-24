@@ -97,9 +97,28 @@ public class UserServiceTest {
 
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
 
-            assertThrows(EntityExistsException.class, () -> userService.registerUser(user));
+            EntityExistsException exception = assertThrows(EntityExistsException.class, () -> userService.registerUser(user));
 
             verify(userRepository).findByEmail("test@example.com");
+
+            assertThat(exception).isNotNull();
+            assertThat(exception).hasMessage("Email already exists");
+        }
+
+        @Test
+        public void shouldThrowEntityExistsExceptionWhenUserNameAlreadyExists() {
+            User user = new User().setEmail("test@example.com").setUserName("testuser");
+
+            when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
+            when(userRepository.findByUserName("testuser")).thenReturn(Optional.of(user));
+
+            EntityExistsException exception = assertThrows(EntityExistsException.class, () -> userService.registerUser(user));
+
+            verify(userRepository).findByEmail("test@example.com");
+            verify(userRepository).findByUserName("testuser");
+
+            assertThat(exception).isNotNull();
+            assertThat(exception).hasMessage("Username already exists");
         }
 
         @Test
@@ -117,6 +136,60 @@ public class UserServiceTest {
             verify(userRepository).save(user);
 
             assertThat(registeredUser).isNotNull().isEqualTo(user);
+
+        }
+    }
+
+    @Nested
+    class UpdateUserTest {
+        @Test
+        public void shouldThrowEntityExistsExceptionWhenEmailAlreadyExists() {
+            User user = new User().setEmail("test@example.com");
+            User updateUser = new User().setEmail("othertest@example.com");
+
+            when(userRepository.findByEmail("othertest@example.com")).thenReturn(Optional.of(new User().setEmail("othertest@example.com")));
+
+            EntityExistsException exception = assertThrows(EntityExistsException.class, () -> userService.updateUser(user, updateUser));
+
+            verify(userRepository).findByEmail("othertest@example.com");
+
+            assertThat(exception).isNotNull();
+            assertThat(exception).hasMessage("Email already exists");
+        }
+
+        @Test
+        public void shouldThrowEntityExistsExceptionWhenUserNameAlreadyExists() {
+            User user = new User().setEmail("test@example.com").setUserName("testuser");
+            User updateUser = new User().setEmail("test@example.com").setUserName("othertestuser");
+
+            when(userRepository.findByUserName("othertestuser")).thenReturn(Optional.of(new User().setEmail("othertest@example.com")));
+
+            EntityExistsException exception = assertThrows(EntityExistsException.class, () -> userService.updateUser(user, updateUser));
+
+            verify(userRepository).findByUserName("othertestuser");
+
+            assertThat(exception).isNotNull();
+            assertThat(exception).hasMessage("Username already exists");
+        }
+
+        @Test
+        public void shouldUpdateUser() {
+            User user = new User().setEmail("test@example.com").setUserName("testuser");
+            User updateUser = new User().setEmail("othertest@example.com").setUserName("othertestuser");
+
+            when(userRepository.findByEmail("othertest@example.com")).thenReturn(Optional.empty());
+            when(userRepository.findByUserName("othertestuser")).thenReturn(Optional.empty());
+            when(userRepository.save(user)).thenReturn(user);
+
+            User updatedUser =  userService.updateUser(user, updateUser);
+
+            verify(userRepository).findByEmail("othertest@example.com");
+            verify(userRepository).findByUserName("othertestuser");
+            verify(userRepository).save(user);
+
+            assertThat(updatedUser).isNotNull();
+            assertThat(updatedUser.getEmail()).isEqualTo("othertest@example.com");
+            assertThat(updatedUser.getUserName()).isEqualTo("othertestuser");
 
         }
     }
