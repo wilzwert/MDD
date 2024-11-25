@@ -16,7 +16,7 @@ export class NotificationComponent {
   ngOnInit(): void {
     this.notificationService.notification$.subscribe((notification: AppNotification | null) => {
         if(notification != null) {
-          this.matSnackBar.open(notification.message, 'Close');
+          this.matSnackBar.open(notification.message, 'Close', {duration: 3000});
         }
     });
   }

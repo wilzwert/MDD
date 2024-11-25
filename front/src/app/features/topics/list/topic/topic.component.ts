@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { Topic } from '../../../../core/models/topic.interface';
 import { Subscription } from '../../../../core/models/subscription.interface';
 import {MatButtonModule} from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-topic',
   standalone: true,
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, MatCardModule],
   templateUrl: './topic.component.html',
   styleUrl: './topic.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

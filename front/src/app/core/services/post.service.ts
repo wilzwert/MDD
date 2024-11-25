@@ -32,12 +32,15 @@ export class PostService {
             authorOrder = (authorOrder === -1 ? 1 : authorOrder === 0 ? 0 : -1);
           }
         }
-        if(sortData.sortByPost) {
+
+        // no need to check if user explicitly asked to sort by post, as post creation dates must always be used for sorting
+        // event when user asked for a sort by author  
+        // if(sortData.sortByPost) {
           postOrder = a.createdAt.localeCompare(b.createdAt);
           if(sortData.orderByPostAscending === false) {
             postOrder = (postOrder === -1 ? 1 : postOrder === 0 ? 0 : -1);
           }
-        }
+        // }
         return authorOrder || postOrder;
       });
   }

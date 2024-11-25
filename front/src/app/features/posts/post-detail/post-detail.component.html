@@ -1,19 +1,50 @@
 @if (post$ | async; as post) {
-    <p>{{ post.title }}</p>
-    <div> {{ post.content}} </div>
-    <p>Posted by {{ post.author.userName}} {{ post.createdAt }} in {{ post.topic.title}}</p>
-}
-<hr>
-<p>Commentaires</p>
-@for (comment of comments$ | async; track $index) {
-    <p>{{ comment.content }}</p>
-    <p>Posted by {{ comment.author.userName}} {{ comment.createdAt }}</p>
-    <hr>
-}
+    <article class="element-detail">
+        <header>
+            <h1>{{ post.title }}</h1>
+        </header>
+        <section class="element-info">
+            <span>{{ post.createdAt | date:'dd/MM/YYYY'}}</span> <span> {{ post.author.userName}} </span>  <span> {{ post.topic.title}}</span>
+        </section>
+        <section class="element-content">
+            <div> {{ post.content}} </div>
+        </section>
 
-@if (form) {
-    <form class="comment-form" [formGroup]="form" (ngSubmit)="submit()">
-        <textarea formControlName="content"></textarea>
-        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
-    </form>
+    @if(comments$ | async) {    
+        <section class="element-comments">
+        <h2>Commentaires</h2>
+        <ul class="comments-list">
+        @for (comment of comments$ | async; track $index) {
+            <li>
+                <article class="element-comment">
+                    <section class="comment-author">
+                        {{ comment.author.userName}}
+                    </section>
+                    <section class="comment-content">
+                        {{ comment.content }}
+                    </section>
+                </article>
+            </li>
+        }
+        </ul>
+
+        @if (form) {
+            <form class="comment-form" [formGroup]="form" (ngSubmit)="submit()">   
+                <div class="form-comment-content">
+                    <mat-form-field>
+                        <textarea matInput formControlName="content"></textarea>
+                    </mat-form-field>
+                </div>             
+                <div class="form-comment-submit">
+                    <button mat-icon-button  type="submit" [disabled]="form.invalid"><mat-icon svgIcon="send">Envoyer</mat-icon></button>
+                </div>
+            </form>
+        }
+
+            </section>
+        }
+
+
+    
+    </article>
 }

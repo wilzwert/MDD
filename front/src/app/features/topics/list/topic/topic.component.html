@@ -1,9 +1,18 @@
-<p>{{ topic.title }}</p>
-@if (loggedIn) {
-    @if (subscription) {
-        <a mat-flat-button (click)="onUnsubscribe()">Unsubscribe</a>
-    }
-    @else {
-        <a mat-flat-button (click)="onSubscribe()">Subscribe</a>
-    }
-}
+<article>
+    <header>
+        <h2>{{ topic.title }}</h2>
+    </header>
+    <section class="element-content">
+        {{ topic.description }}
+    </section>
+    <section class="element-actions">
+        @if (loggedIn) {
+            @if (subscription) {
+                <a mat-flat-button (click)="onUnsubscribe()">Unsubscribe</a>
+            }
+            @else {
+                <a mat-flat-button (click)="onSubscribe()">Subscribe</a>
+            }
+        }
+    </section>
+</article>

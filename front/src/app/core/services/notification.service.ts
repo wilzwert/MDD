@@ -12,6 +12,14 @@ export class NotificationService {
 
   constructor() { }
 
+  error(errorMessage: string) :void {
+    this.handleNotification({type: 'error', message: errorMessage} as AppNotification);
+  }
+
+  confirmation(confirmationMessage: string) :void {
+    this.handleNotification({type: 'confirmation', message: confirmationMessage} as AppNotification);
+  }
+
   handleNotification(notification: AppNotification) :void {
     this.notificationSubject.next(notification);
   }

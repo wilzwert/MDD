@@ -1,12 +1,15 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject, filter, Subject, takeUntil } from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-back-button',
   standalone: true,
-  imports: [],
+  imports: [MatIconModule, MatButtonModule, MatTooltipModule],
   templateUrl: './back-button.component.html',
   styleUrl: './back-button.component.scss'
 })

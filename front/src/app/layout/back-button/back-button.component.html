@@ -1,3 +1,3 @@
-@if (goBackToRoute) {
-    <a (click)="goBack()">&lt;-</a>
+@if (goBackToRoute !== undefined) {
+    <a (click)="goBack()" aria-label="Retour" matTooltip="Retour" matTooltipPosition="below"><mat-icon svgIcon="arrow-left"></mat-icon></a>
 }

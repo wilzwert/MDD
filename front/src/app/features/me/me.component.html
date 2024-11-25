@@ -12,26 +12,25 @@
                 <input matInput placeholder="Username" formControlName="userName">
             </mat-form-field>
         </mat-card-content>
-        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
-       
+        <button mat-flat-button type="submit" [disabled]="form.invalid">Submit</button>
     </form>
+
+    <a (click)="logout()">Me déconnecter</a>
 
     <hr>
 
     @if (subscriptions$ | async; as subscriptions) {
-        <mat-grid-list [cols]="cols" rowHeight="2:0.5" gutterSize="10px" (window:resize)="onResize($event)">
-        @for (subscription of subscriptions; track $index) {
-            <mat-grid-tile>
-                <app-topic
-                    [topic]="subscription.topic"
-                    [subscription]="subscription"
-                    [loggedIn]="true"
-                    (unSubscribe)="onUnsubscribe($event)"
-                >
-                </app-topic>
-            </mat-grid-tile>
+        <div class="responsive-grid">
+        @for (subscription of subscriptions; track $index) {            
+            <app-topic
+                [topic]="subscription.topic"
+                [subscription]="subscription"
+                [loggedIn]="true"
+                (unSubscribe)="onUnsubscribe($event)"
+            >
+            </app-topic>            
         }
-        </mat-grid-list>
+        </div>
     }
 }
 @else {

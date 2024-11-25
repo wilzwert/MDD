@@ -1,18 +1,13 @@
 <mat-toolbar>
-    <span routerLink="">MDD</span>
+    <a class="home" routerLink=""><img src="assets/images/logo.png"></a>
+    <span class="spacer"></span>
     @if ($isLogged() | async) {
-    <div>
-      <a routerLink="posts" class="link">Articles</a>
-      <a routerLink="topics" class="link">Thèmes</a>
-      <a routerLink="me" class="link">Account</a>
-      <a (click)="logout()" class="link">Logout</a>
-    </div>
+    <nav>
+      <ul>
+        <li><a routerLink="posts" class="link">Articles</a></li>
+        <li><a routerLink="topics" class="link">Thèmes</a></li>
+        <li><a routerLink="me" class="account" aria-label="Mon compte"><mat-icon svgIcon="user"></mat-icon></a></li>
+      </ul>
+    </nav>
   }
-  @else {    
-      <div>
-        <a routerLink="topics" class="link">Thèmes</a>
-        <a routerLink="login" class="link">Login</a>
-        <a routerLink="register" class="link">Register</a>
-      </div>
-  }
-  </mat-toolbar>
+</mat-toolbar>

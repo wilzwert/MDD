@@ -1,10 +1,12 @@
 
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>
-        <p><a [routerLink]="[post.id]">{{ post.title }}</a></p>
-        <p>{{ post.createdAt}} {{ post.author.userName }}</p>
-        </mat-card-title>
-    </mat-card-header>
-    <mat-card-content><div>{{ post.content }}</div></mat-card-content>
-</mat-card>
+<article [routerLink]="[post.id]" aria-label="Lire l'article">
+    <header>
+        <h2>{{ post.title }}</h2>
+        <div class="element-info">
+            <span>{{ post.createdAt | date:'dd/MM/yyyy'}}</span><span> {{ post.author.userName }}</span>
+        </div>
+    </header>
+    <section class="element-content">
+        {{ post.content }}
+    </section>
+</article>

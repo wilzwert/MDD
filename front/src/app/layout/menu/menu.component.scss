@@ -1,0 +1,41 @@
+mat-toolbar {
+    font-family: inherit; /* Hérite de la police définie dans <html> */
+    font-size: inherit; /* Hérite également de la taille de police */
+}
+
+.home {
+    flex: 0 0 20%;
+    img {
+        display: block;
+        max-width: 100%;
+    }
+}
+
+
+ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+
+    li {
+        list-style: none;
+        display: inline-block;
+        margin: auto .5em;
+        a {
+            text-decoration: none;
+            font-size: 1.6rem;
+        }
+    }
+
+    .account {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #D9D9D9;
+    }
+}
+

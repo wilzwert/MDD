@@ -3,17 +3,21 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { Post } from '../../../core/models/post.interface';
 import { PostService } from '../../../core/services/post.service';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { CommentService } from '../../../core/services/comment.service';
 import { Comment } from '../../../core/models/comment.interface';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateCommentRequest } from '../../../core/models/create-comment-request.interface';
 import { Title } from '@angular/platform-browser';
+import { MatIconModule } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [AsyncPipe, ReactiveFormsModule],
+  imports: [AsyncPipe, ReactiveFormsModule, DatePipe, MatIconModule, MatIconButton, MatFormFieldModule, MatInputModule],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.scss'
 })
@@ -30,7 +34,7 @@ export class PostDetailComponent implements OnInit {
   private initForm() :void {
     this.form = this.fb.group({
       content: [
-        '', 
+        'Écrivez ici votre commentaire', 
         [
           Validators.required,
           Validators.min(10)

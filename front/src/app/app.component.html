@@ -1,8 +1,10 @@
-<div class="app">
-  <app-menu></app-menu>
+<main class="app">
+  @if ( showMainMenu) {
+    <app-menu></app-menu>
+  }
   <app-back-button></app-back-button>
   <div>
     <router-outlet></router-outlet>
   </div>
   <app-notification></app-notification>
-</div>
+</main>
