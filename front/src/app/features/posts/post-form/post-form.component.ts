@@ -64,8 +64,7 @@ export class PostFormComponent implements OnInit {
       next: data => {
         this.notificationService.confirmation("Votre article a bien été créé")
         this.router.navigate(["/posts"])
-      },
-      error: err => {this.notificationService.error(err.message)}
+      }
     });
   }
 

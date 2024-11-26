@@ -4,4 +4,8 @@ article {
             font-size: var(--title-font-size);
         }       
     }
+
+    .element-content, .comment-content {
+        white-space: pre-wrap;
+    }
 }
