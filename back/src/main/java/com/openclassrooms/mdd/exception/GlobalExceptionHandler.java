@@ -84,4 +84,13 @@ public class GlobalExceptionHandler {
         ErrorResponseDto.setTime(new Date().toString());
         return new ResponseEntity<>(ErrorResponseDto, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> generateInternalErrorException(Exception ex) {
+        ErrorResponseDto ErrorResponseDto = new ErrorResponseDto();
+        ErrorResponseDto.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+        ErrorResponseDto.setMessage("Internal server error ");
+        ErrorResponseDto.setTime(new Date().toString());
+        return new ResponseEntity<>(ErrorResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
