@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { Post } from '../models/post.interface';
@@ -67,8 +68,7 @@ export class PostService {
   }
 
   public shouldReload(): boolean {
-    console.log('shouldReload ? ('+new Date().getTime()+'-'+this.cachedAt+') = '+(new Date().getTime() - this.cachedAt > 60000));
-    return new Date().getTime() - this.cachedAt > 60000;
+    return new Date().getTime() - this.cachedAt > environment.postServiceCacheMaxAgeMs;
   }
 
   getAllPosts(sortData?: PostSort): Observable<Post[]> {    
