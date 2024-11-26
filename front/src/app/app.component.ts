@@ -40,6 +40,10 @@ export class AppComponent implements OnInit, OnDestroy {
     ).addSvgIcon(
       'send',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/send_icon.svg')
+    )
+    .addSvgIcon(
+      'hamburger',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/hamburger_icon.svg')
     );
 
   }
@@ -52,13 +56,12 @@ export class AppComponent implements OnInit, OnDestroy {
       filter(event => event instanceof NavigationEnd)
     )
     .subscribe(() => {
-      console.log(this.router.url);
       this.showMainMenu = !this.router.url.match(/^\/$/);
     });
   }
 
   public ngOnDestroy(): void {
-    // emit to Subject to unsubscribe from olympic service observable
+    // emit to Subject to unsubscribe from observables
     this.destroy$.next(true);
   }
 }

@@ -1,13 +1,19 @@
 <mat-toolbar>
-    <a class="home" routerLink=""><img src="assets/images/logo.png"></a>
+    <a class="home" routerLink=""><img src="assets/images/logo.png" alt="MDD"></a>
     <span class="spacer"></span>
     @if ($isLogged() | async) {
-    <nav>
-      <ul>
-        <li><a routerLink="posts" class="link">Articles</a></li>
-        <li><a routerLink="topics" class="link">Thèmes</a></li>
-        <li><a routerLink="me" class="account" aria-label="Mon compte"><mat-icon svgIcon="user"></mat-icon></a></li>
-      </ul>
-    </nav>
+      <nav class="main-nav" [class.open]="isMobile && menuOpen">
+        <ul>
+          <li><a routerLink="posts" class="link">Articles</a></li>
+          <li><a routerLink="topics" class="link">Thèmes</a></li>
+          <li><a routerLink="me" class="account" aria-label="Mon compte"><mat-icon svgIcon="user"></mat-icon></a></li>
+        </ul>
+      </nav>
+      @if( isMobile) {
+        <a class="open-nav" (click)="openNav()" aria-label="Ouvrir le menu de navigation"><mat-icon svgIcon="hamburger"></mat-icon></a>
+        @if (menuOpen) {
+          <div class="overlay" (click)="closeNav()"></div>
+        }
+      }
   }
 </mat-toolbar>
