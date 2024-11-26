@@ -19,6 +19,7 @@ export class PostService {
   private cachedAt: number = 0;
   
   constructor(private httpClient: HttpClient, private userService: CurrentUserService) {
+    // locally cache current user subscriptions when they get updated
     this.userService.getCurrentUserSubscriptions().pipe(tap((s) => {
       this.clearCache(); 
       this.subscriptions = s
