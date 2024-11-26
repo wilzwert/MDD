@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { Post } from '../../../core/models/post.interface';
 import { PostService } from '../../../core/services/post.service';
 import { AsyncPipe, DatePipe } from '@angular/common';
@@ -13,6 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { NotificationService } from '../../../core/services/notification.service';
+import { ApiError } from '../../../core/errors/api-error';
 
 @Component({
   selector: 'app-post-detail',
@@ -28,24 +30,33 @@ export class PostDetailComponent implements OnInit {
   private postId!: number;
 
 
-  constructor(private activatedRoute: ActivatedRoute, private postService: PostService, private commentService: CommentService, private fb: FormBuilder, private title: Title) {
+  constructor(
+    private activatedRoute: ActivatedRoute, 
+    private postService: PostService, 
+    private commentService: CommentService, 
+    private notificationService: NotificationService,
+    private fb: FormBuilder, 
+    private title: Title) {
   }
 
   private initForm() :void {
     this.form = this.fb.group({
       content: [
-        'Écrivez ici votre commentaire', 
+        '', 
         [
           Validators.required,
-          Validators.min(10)
+          Validators.minLength(10)
         ]
       ],
     });
   }
 
   submit(): void {
-    console.log(this.form.value as CreateCommentRequest);
-    this.commentService.createPostComment(this.postId, this.form.value as CreateCommentRequest).subscribe();
+    this.commentService.createPostComment(this.postId, this.form.value as CreateCommentRequest)
+      .pipe(
+        tap(() => this.notificationService.confirmation("Merci pour votre commentaire !"))
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {

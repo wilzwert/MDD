@@ -48,11 +48,12 @@ export class JwtInterceptor implements HttpInterceptor {
             console.log('it seems we got a new token ', data);
             return next.handle(this.addTokenHeader(request, data.token));
           }),
-          catchError((err) => {
+          catchError((error) => {
             this.isRefreshing = false;
-            
-            this.sessionService.logOut();
-            return throwError(() => err);
+            if (error instanceof HttpErrorResponse && error.status === 401) {
+              this.sessionService.logOut();
+            }
+            return throwError(() => error);
           })
         );
       }

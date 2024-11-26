@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { UpdateUserRequest } from '../../core/models/update-user-request';
 import { SessionService } from '../../core/services/session.service';
 import { Router } from '@angular/router';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-me',
@@ -36,14 +37,16 @@ export class MeComponent implements OnInit{
   public subscriptions$!: Observable<Subscription[]>;
   public form!: FormGroup;
 
-  constructor(private userService: CurrentUserService, private fb: FormBuilder, private sessionService: SessionService, private router: Router) {}
+  constructor(private userService: CurrentUserService, private fb: FormBuilder, private sessionService: SessionService, private router: Router, private notificationService: NotificationService) {}
 
   public updateCurrentUser() :void {
-    this.userService.updateCurrentUser(this.form.value as UpdateUserRequest).subscribe();
+    this.userService.updateCurrentUser(this.form.value as UpdateUserRequest).pipe(
+      tap(() => this.notificationService.confirmation("Modifications enregistrées"))
+    ).subscribe();
   }
 
   public onUnsubscribe(topicId: number) :void {
-    this.userService.unSubscribe(topicId).subscribe();
+    this.userService.unSubscribe(topicId).pipe(tap(() => this.notificationService.confirmation("Désabonnement pris en compte"))).subscribe();
   }
 
   ngOnInit(): void {

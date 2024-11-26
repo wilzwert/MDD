@@ -3,7 +3,7 @@ import { AsyncPipe } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { SessionService } from '../../core/services/session.service';
 import { filter, Observable, Subject, takeUntil } from 'rxjs';
-import { NavigationEnd, Route, Router, RouterLink } from '@angular/router';
+import { NavigationEnd, NavigationSkipped, Route, Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { BreakpointObserver } from '@angular/cdk/layout';
 
@@ -55,11 +55,10 @@ export class MenuComponent implements OnInit, OnDestroy {
     });
 
     this.router.events.pipe(
-      takeUntil(this.destroy$)/*,
-      filter(event => event instanceof NavigationEnd)*/
+      takeUntil(this.destroy$),
+      filter(event => event instanceof NavigationEnd || event instanceof NavigationSkipped)
     )
       .subscribe(() => {
-        console.log('closeNav');
         this.closeNav();
     });
   }
