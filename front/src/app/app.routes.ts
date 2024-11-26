@@ -22,7 +22,7 @@ export const routes: Routes = [
         path: 'login',
         canActivate: [UnauthGuard], 
         component: LoginComponent,
-        title: 'Connextion',
+        title: 'Se connecter',
         data: {goBackToRoute: ""} 
     },
     { 

@@ -1,3 +1,11 @@
+:host {
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    width: 100%;
+    max-width: var(--app-max-width);
+  }
+
 mat-toolbar {
     font-family: inherit; /* Hérite de la police définie dans <html> */
     font-size: inherit; /* Hérite également de la taille de police */

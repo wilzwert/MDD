@@ -7,6 +7,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
+import { ApiError } from '../errors/api-error';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -15,7 +16,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       .pipe(
         catchError((error: HttpErrorResponse) => {
           // Handle the error
-          return throwError(() => new Error('Unable to load data.'));
+          return throwError(() => new ApiError(error));
         })
       );
   }

@@ -1,25 +1,26 @@
 @if ( user$ | async; as user) {
+    <div class="user-profile">
+        <h1>Profil utilisateur</h1>
 
-    <p>{{ user.userName }}</p>
-    <p>{{ user.email }}</p>
+        <form class="loggedin-form login-form" [formGroup]="form" (ngSubmit)="updateCurrentUser()">
+                <mat-form-field>
+                    <mat-label>Nom d'utilisateur</mat-label>
+                    <input matInput placeholder="Saisissez ici votre nouveau nom d'utilisateur" formControlName="userName">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input matInput placeholder="Saisissez ici votre nouvelle adresse email" formControlName="email">
+                </mat-form-field>
+            
+            <button mat-flat-button type="submit" [disabled]="form.invalid">Sauvegarder</button>
+        </form>
 
-    <form class="login-form" [formGroup]="form" (ngSubmit)="updateCurrentUser()">
-        <mat-card-content >
-            <mat-form-field>
-                <input matInput placeholder="Email" formControlName="email">
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput placeholder="Username" formControlName="userName">
-            </mat-form-field>
-        </mat-card-content>
-        <button mat-flat-button type="submit" [disabled]="form.invalid">Submit</button>
-    </form>
-
-    <a (click)="logout()">Me déconnecter</a>
-
-    <hr>
+        <a class="logout" (click)="logout()">Se déconnecter</a>
+    </div>
 
     @if (subscriptions$ | async; as subscriptions) {
+        <hr>
+        <h2>Abonnements</h2>
         <div class="responsive-grid">
         @for (subscription of subscriptions; track $index) {            
             <app-topic

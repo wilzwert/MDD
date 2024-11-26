@@ -4,20 +4,25 @@
 
 // Customize the entire app. Change :root to your selector if you want to scope the styles.
 :root {
+  --ui-font-size: 1.6rem;
+  --content-font-size: 1.4rem;
+  --app-max-width: 835px;
+  --title-font-size: 2.4rem;
+  --form-max-width: 420px;
+  --main-color: #7763C5;
+
   @include mat.button-overrides((
-    container-color: #7763C5,
+    container-color: var(--main-color),
     label-text-color: #fff,
+    outline-color: #000
   ));
 
   @include mat.toolbar-overrides((
     container-background-color: #fff,
-    container-text-color: #7763C5,
+    container-text-color: var(--main-color),
   ));
 
-  --ui-font-size: 1.6rem;
-  --content-font-size: 1.4rem;
-  --app-max-width: 835px;
-  --article-title-font-size: 2.4rem;
+
 }
 
 html {
@@ -44,15 +49,9 @@ a {
   
 }
 
-app-menu {
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  max-width: var(--app-max-width);
-}
-
 mat-form-field {
     width: 100%;
+    padding: .75em  0;
 }
 
 .spacer {
@@ -191,4 +190,12 @@ mat-form-field {
       }
     }
   }
+}
+
+.loggedin-form {
+  @include mat.form-field-overrides((
+    focus-outline-color: var(--main-color),
+    outline-color: var(--main-color),
+    hover-outline-color: var(--main-color)
+  ));
 }
