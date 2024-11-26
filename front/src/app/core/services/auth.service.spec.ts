@@ -1,11 +1,11 @@
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AuthService } from './auth.service';
-import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@angular/common/http/testing';
-import { LoginRequest } from '../interfaces/loginRequest.interface';
-import { RegisterRequest } from '../interfaces/registerRequest.interface';
-import { SessionInformation } from 'src/app/interfaces/sessionInformation.interface';
+import { HttpTestingController, provideHttpClientTesting, TestRequest } from '@angular/common/http/testing';
+import { LoginRequest } from '../models/login-request.interface';
+import { RegisterRequest } from '../models/register-request.interface';
+import { SessionInformation } from '../models/session-information.interface';
 
 describe("AuthService unit tests", () =>  {
     let service: AuthService;
@@ -13,10 +13,14 @@ describe("AuthService unit tests", () =>  {
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
-            providers: [AuthService],
-            imports: [
-                HttpClientTestingModule            
-            ]
+            providers: [
+                AuthService,
+                provideHttpClient(),
+                provideHttpClientTesting()
+            ],
+            imports: [],
+            
+
         });
     
         service = TestBed.inject(AuthService);
@@ -28,7 +32,7 @@ describe("AuthService unit tests", () =>  {
       })
 
       it('should post login request and return session information as an observable', (done) => {
-        const mockSessionInfo: SessionInformation = {id: 1, username: "johndoe", admin: false, firstName: "John", lastName: "Doe", token: "token123", type: "Bearer"};
+        const mockSessionInfo: SessionInformation = {id: 1, username: "johndoe", token: "token123", type: "Bearer", refreshToken: "refresh_token"};
         const loginRequest: LoginRequest = {email: "john.doe@example.com", password: "testpassword"};
         
         service.login(loginRequest).subscribe(
@@ -47,7 +51,7 @@ describe("AuthService unit tests", () =>  {
 
       
       it('should post register request and return void as an observable', (done) => {
-        const registerRequest: RegisterRequest = {email: "john.doe@example.com", password: "testpassword", firstName: "John", "lastName": "Doe"};
+        const registerRequest: RegisterRequest = {email: "john.doe@example.com", password: "testpassword", userName: "username"};
         service.register(registerRequest).subscribe(response => {
             expect(response).toBeNull();
             done()
@@ -85,7 +89,7 @@ describe("AuthService unit tests", () =>  {
         // Create mock ProgressEvent with type `error`, raised when something goes wrong
        // at network level. e.g. Connection timeout, DNS error, offline, etc.
        const mockError = new ProgressEvent('error');
-       const registerRequest: RegisterRequest = {email: "john.doe@example.com", password: "testpassword", firstName: "John", "lastName": "Doe"};
+       const registerRequest: RegisterRequest = {email: "john.doe@example.com", password: "testpassword", userName: "username"};
         service.register(registerRequest).subscribe({
             next: response => fail('should have failed with http error'),
             error: (error: HttpErrorResponse) => {

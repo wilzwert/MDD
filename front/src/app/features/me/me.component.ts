@@ -75,6 +75,5 @@ export class MeComponent implements OnInit{
 
   public logout(): void {
     this.sessionService.logOut();
-    this.router.navigate(['']);
   }
 }

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { SessionService } from '../../core/services/session.service';
 import { LoginRequest } from '../../core/models/login-request.interface';
 import { AuthService } from '../../core/services/auth.service';
-import { SessionInformation } from '../../core/models/sessionInformation.interface';
+import { SessionInformation } from '../../core/models/session-information.interface';
 
 
 @Component({

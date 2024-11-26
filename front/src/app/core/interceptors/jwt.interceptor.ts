@@ -21,13 +21,18 @@ export class JwtInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError(error => {
-        if (error instanceof HttpErrorResponse && error.status === 401 && !request.url.includes('auth/login')) {
+        console.log('got an error on request', error);
+        if (this.shouldTryToRefreshToken(request, error)) {
           return this.tryToRefreshToken(request, next);
         }
 
         return throwError(() => error);
       })
     );
+  }
+
+  private shouldTryToRefreshToken(request: HttpRequest<any>, error: HttpErrorResponse) :boolean {
+    return error instanceof HttpErrorResponse && error.status === 401 && !request.url.includes('auth/login') && !request.url.includes('auth/refreshToken')
   }
 
   private tryToRefreshToken(request: HttpRequest<any>, next: HttpHandler) {
@@ -50,6 +55,7 @@ export class JwtInterceptor implements HttpInterceptor {
           }),
           catchError((error) => {
             this.isRefreshing = false;
+            console.log('got error', error);
             if (error instanceof HttpErrorResponse && error.status === 401) {
               this.sessionService.logOut();
             }

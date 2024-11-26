@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoginRequest } from '../models/login-request.interface';
-import { SessionInformation } from '../models/sessionInformation.interface';
+import { SessionInformation } from '../models/session-information.interface';
 import { RegisterRequest } from '../models/register-request.interface';
 import { RefreshTokenRequest } from '../models/refresh-token-request.interface';
 import { RefreshTokenResponse } from '../models/refresh-token-response.interface';
@@ -17,7 +17,6 @@ export class AuthService {
   constructor(private httpClient: HttpClient) { }
 
   public register(registerRequest: RegisterRequest): Observable<void> {
-    console.log('registering ?');
     return this.httpClient.post<void>(`${this.pathService}/register`, registerRequest);
   }
 

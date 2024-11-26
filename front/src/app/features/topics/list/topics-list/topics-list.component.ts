@@ -56,11 +56,7 @@ export class TopicsListComponent implements OnInit {
         tap(() => this.notificationService.confirmation("Désabonnement pris en compte"))
       ).subscribe();
     }
-
-    testLogout() {
-      this.sessionService.logOut();
-    }
-
+    
     ngOnInit(): void {
 
       // get current user subscriptions only if user is logged in 
