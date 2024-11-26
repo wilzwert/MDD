@@ -16,6 +16,7 @@ import { AsyncPipe } from '@angular/common';
 import { Topic } from '../../../core/models/topic.interface';
 import { TopicService } from '../../../core/services/topic.service';
 import { MatSelectModule } from '@angular/material/select';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-post-form',
@@ -46,7 +47,7 @@ export class PostFormComponent implements OnInit {
     private topicService:TopicService,
     private router: Router,
     private fb: FormBuilder,
-    private matSnackBar: MatSnackBar,
+    private notificationService: NotificationService,
   ) {
     this.topics$ = this.topicService.getAllTopics();
   }
@@ -61,10 +62,10 @@ export class PostFormComponent implements OnInit {
     .pipe(take(1))
     .subscribe({
       next: data => {
-        this.matSnackBar.open("Your post has been created.", 'Close', { duration: 3000 })
+        this.notificationService.confirmation("Votre article a bien été créé")
         this.router.navigate(["/posts"])
       },
-      error: err => {this.error = err.error?.message}
+      error: err => {this.notificationService.error(err.message)}
     });
   }
 

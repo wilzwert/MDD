@@ -12,6 +12,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UpdateUserRequest } from '../../core/models/update-user-request';
+import { SessionService } from '../../core/services/session.service';
+import { Router } from '@angular/router';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-me',
@@ -30,28 +33,23 @@ import { UpdateUserRequest } from '../../core/models/update-user-request';
   styleUrl: './me.component.scss'
 })
 export class MeComponent implements OnInit{
-  public cols!:number;
   public user$!: Observable<User>;
   public subscriptions$!: Observable<Subscription[]>;
   public form!: FormGroup;
 
-  constructor(private userService: CurrentUserService, private fb: FormBuilder) {}
+  constructor(private userService: CurrentUserService, private fb: FormBuilder, private sessionService: SessionService, private router: Router, private notificationService: NotificationService) {}
 
   public updateCurrentUser() :void {
-    this.userService.updateCurrentUser(this.form.value as UpdateUserRequest).subscribe();
+    this.userService.updateCurrentUser(this.form.value as UpdateUserRequest).pipe(
+      tap(() => this.notificationService.confirmation("Modifications enregistrées"))
+    ).subscribe();
   }
 
   public onUnsubscribe(topicId: number) :void {
-    this.userService.unSubscribe(topicId).subscribe();
-  }
-
-  onResize(event: any) {
-    this.cols = (event.target.innerWidth <= 400) ? 1 : 2;
+    this.userService.unSubscribe(topicId).pipe(tap(() => this.notificationService.confirmation("Désabonnement pris en compte"))).subscribe();
   }
 
   ngOnInit(): void {
-    this.cols = (window.innerWidth <= 400) ? 1 : 2;
-
     this.user$ = this.userService.getCurrentUser().pipe(
       tap((user: User) =>  {
         this.form = this.fb.group({
@@ -73,8 +71,10 @@ export class MeComponent implements OnInit{
       }
     ));
     this.subscriptions$ = this.userService.getCurrentUserSubscriptions();
+  }
 
-    
-    
+  public logout(): void {
+    this.sessionService.logOut();
+    this.router.navigate(['']);
   }
 }

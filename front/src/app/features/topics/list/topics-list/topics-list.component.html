@@ -1,7 +1,6 @@
 @let subscriptions = subscriptions$ | async;
-<mat-grid-list [cols]="cols" rowHeight="2:0.5" gutterSize="10px" (window:resize)="onResize($event)">
+<div class="responsive-grid">
     @for (topic of topics$ | async ; track $index) {
-        <mat-grid-tile>
             <app-topic
                 [topic]="topic"
                 [subscription]="subscriptions  | filterByTopic:topic"
@@ -9,9 +8,7 @@
                 (subscribe)="onSubscribe($event)"
                 (unSubscribe)="onUnsubscribe($event)"
             >
-
             </app-topic>
-        </mat-grid-tile>
     
     }
-</mat-grid-list>
+</div>

@@ -1,43 +1,38 @@
-<div class="form-creation">
 
-    <mat-card>
-        <mat-card-header >
-            <mat-card-title>Create a post</mat-card-title>
-        </mat-card-header>
-        @if (form) {
-            <form class="post-form" [formGroup]="form" (ngSubmit)="submit()">
-                <mat-card-content >
-                    @if(topics$ | async) {
-                        <p>
-                        <mat-form-field appearance="outline">
-                            <mat-label>Topic</mat-label>
-                            <mat-select matInput ngDefaultControl formControlName="topicId">
-                                @for(topic of topics$ | async; track $index) {
-                                    <mat-option [value]="topic.id">
-                                        {{topic.title}}
-                                    </mat-option>
-                                }
-                            </mat-select>
-                        </mat-form-field>
-                        </p>
-                    }
-                    <p>
-                        <mat-form-field>
-                            <input matInput placeholder="title" formControlName="title">
-                        </mat-form-field>
-                    </p>
-                    <p>
-                        <mat-form-field>
-                            <textarea matInput placeholder="content" formControlName="content"></textarea>
-                        </mat-form-field>
-                    </p>
-                </mat-card-content>
-                <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
-                @if (error) {
-                    <p class="error">An error occurred : {{error}}</p>
-                }
-            </form>
+
+    <h1>Créer un article</h1>
+    @if (form) {
+    <form class="loggedin-form post-form" [formGroup]="form" (ngSubmit)="submit()">
+            @if(topics$ | async) {
+                <p>
+                <mat-form-field>
+                    <mat-label>Thème</mat-label>
+                    <mat-select matInput ngDefaultControl formControlName="topicId">
+                        @for(topic of topics$ | async; track $index) {
+                            <mat-option [value]="topic.id">
+                                {{topic.title}}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                </p>
+            }
+            <p>
+                <mat-form-field>
+                    <mat-label>Titre</mat-label>
+                    <input matInput placeholder="Saisissez le titre de votre article" formControlName="title">
+                </mat-form-field>
+            </p>
+            <p>
+                <mat-form-field>
+                    <mat-label>Contenu</mat-label>
+                    <textarea matInput placeholder="Saisissez le contenu de votre article" formControlName="content"></textarea>
+                </mat-form-field>
+            </p>
+        
+        <button mat-raised-button type="submit" [disabled]="form.invalid">Submit</button>
+        @if (error) {
+            <p class="error">An error occurred : {{error}}</p>
         }
-    </mat-card>
-
-</div>
+    </form>
+}

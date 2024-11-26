@@ -1,5 +1,17 @@
-/*app-post {
-    display: block;
-    width: 100%;
-    padding: 10px;
-}*/
+.posts-list-actions, .sort-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.posts-list-actions {
+    margin-bottom: 2rem;
+}
+
+@media screen and (max-width: 400px) {
+    .list-actions, .sort-actions {
+        flex: 0 0 100%;
+        text-align: center;
+    } 
+}

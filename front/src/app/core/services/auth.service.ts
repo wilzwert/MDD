@@ -17,6 +17,7 @@ export class AuthService {
   constructor(private httpClient: HttpClient) { }
 
   public register(registerRequest: RegisterRequest): Observable<void> {
+    console.log('registering ?');
     return this.httpClient.post<void>(`${this.pathService}/register`, registerRequest);
   }
 

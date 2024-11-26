@@ -1,4 +1,5 @@
-p {
-    width: 100%;
-    text-align: left;
+.element-content  {
+    -webkit-line-clamp: 3;
+    max-height: 3.75em;
+    height: 3.75em;
 }

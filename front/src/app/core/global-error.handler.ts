@@ -6,15 +6,13 @@ import { AppNotification } from './models/app-notification.interface';
 export class GlobalErrorHandler extends ErrorHandler {
 
     constructor(private noticationService: NotificationService) {
-        console.log('construct');
         super();
     }
 
 
     override handleError(error: Error) {
-        console.log('handleError '+error.message);
         // Custom error handling logic
-        this.noticationService.handleNotification({type: 'error', 'message': error.message} as AppNotification);
+        this.noticationService.error(error.message);
         // TODO : should the error be thrown again ?
         // throw error;
     }

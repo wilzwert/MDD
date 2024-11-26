@@ -10,6 +10,7 @@ import { CurrentUserService } from '../../../../core/services/current-user.servi
 import { SessionService } from '../../../../core/services/session.service';
 import { FilterByTopicPipe } from '../../../../core/pipes/filter-by';
 import {MatGridListModule} from '@angular/material/grid-list';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 
 @Component({
@@ -27,7 +28,6 @@ import {MatGridListModule} from '@angular/material/grid-list';
   ]
 })
 export class TopicsListComponent implements OnInit {
-  public cols!:number;
 
   // keep a reference on an observable provided by topic service in case topics list is updated (this may happen in the future on topic deletion for example)
   // public topics$: Observable<Topic[]> = this.topicService.topics$;
@@ -36,31 +36,32 @@ export class TopicsListComponent implements OnInit {
   public subscriptions$!: Observable<Subscription[]>;
   public loggedIn$: Observable<boolean>;
 
-  constructor(private topicService: TopicService, private userService: CurrentUserService, private sessionService:SessionService){
+  constructor(private topicService: TopicService, private userService: CurrentUserService, private sessionService:SessionService, private notificationService: NotificationService){
     this.topics$ = this.topicService.getAllTopics();
     this.sessionService = sessionService;
     this.loggedIn$ = sessionService.$isLogged();
   }
  
     public onSubscribe(topicId: number) :void {
-        this.userService.subscribe(topicId).pipe(take(1)).subscribe();
+        this.userService.subscribe(topicId).pipe(
+          take(1),
+          tap(() => this.notificationService.confirmation("Abonnement pris en compte"))
+        )
+        .subscribe();
     }
 
     public onUnsubscribe(topicId: number) :void {
-      this.userService.unSubscribe(topicId).pipe(take(1)).subscribe();
+      this.userService.unSubscribe(topicId).pipe(
+        take(1),
+        tap(() => this.notificationService.confirmation("Désabonnement pris en compte"))
+      ).subscribe();
     }
 
     testLogout() {
       this.sessionService.logOut();
     }
 
-    onResize(event: any) {
-      this.cols = (event.target.innerWidth <= 400) ? 1 : 2;
-    }
-
     ngOnInit(): void {
-
-      this.cols = (window.innerWidth <= 400) ? 1 : 2;
 
       // get current user subscriptions only if user is logged in 
       this.loggedIn$.pipe(

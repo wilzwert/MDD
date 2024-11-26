@@ -26,7 +26,7 @@ public class Post {
     @Column
     private String title;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @CreatedDate
