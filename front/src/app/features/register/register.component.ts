@@ -70,7 +70,7 @@ export class RegisterComponent {
       catchError(
         (error: ApiError) => {
           return throwError(() => new Error(
-            'Impossible de créer votre compte'+(error.httpStatus == 409 ? " : "+error.message : '')));
+            'Impossible de créer votre compte'+error.message));
         }
     ))
     .subscribe({

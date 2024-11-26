@@ -35,7 +35,7 @@ public class Topic {
     @Column
     private String title;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @CreatedDate

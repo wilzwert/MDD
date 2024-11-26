@@ -21,10 +21,6 @@ export class TopicComponent {
   @Output() subscribe = new EventEmitter<number>();
   @Output() unSubscribe = new EventEmitter<number>();
 
-  isSubscribed(topic: Topic) :boolean {
-    return this.subscriptions !== null && this.subscriptions.some(s => s.topic.id == topic.id);
-  }
-
   onDelete() {
     this.delete.emit(this.topic);
   }
