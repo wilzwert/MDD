@@ -4,6 +4,8 @@ import { BehaviorSubject, map, Observable, of, shareReplay, switchMap } from 'rx
 import { User } from '../models/user.interface';
 import { Subscription } from '../models/subscription.interface';
 import { UpdateUserRequest } from '../models/update-user-request';
+import { PostService } from './post.service';
+import { Post } from '../models/post.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,7 @@ export class CurrentUserService {
 
   private user$: BehaviorSubject<User | null> = new BehaviorSubject<User |null>(null);
   private userSubscriptions$: BehaviorSubject<Subscription[] |null> = new BehaviorSubject<Subscription[] |null>(null);
-
+  
   constructor(private httpClient: HttpClient) { }
 
   public getCurrentUser() : Observable<User>{
