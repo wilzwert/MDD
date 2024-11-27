@@ -28,8 +28,8 @@ export class TopicService {
 
   getAllTopics(): Observable<Topic[]> {    
     return this.getTopicsSubject().pipe(
-      // map topics to null if reloading needed
-      map((topics: Topic[] | null) => {
+      // map topics to null no topics present or reloading needed
+      map((topics: Topic[] | null) =>  {
         if(topics) {
           if(!this.shouldReload()) {
             return topics;
@@ -44,8 +44,10 @@ export class TopicService {
           // send current topics if already present
           return of(topics);
         } else {
+          // fetch from backend
           return this.httpClient.get<Topic[]>(`${this.apiPath}`).pipe(
             switchMap((fetchedTopics: Topic[]) => {
+              this.cachedAt = new Date().getTime();
               this.getTopicsSubject().next(fetchedTopics); // update BehaviorSubject
               return of(fetchedTopics);
             })
