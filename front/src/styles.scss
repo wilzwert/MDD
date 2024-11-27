@@ -20,6 +20,8 @@
   @include mat.toolbar-overrides((
     container-background-color: #fff,
     container-text-color: var(--main-color),
+    standard-height: 94px,
+    mobile-height: 62px
   ));
 
 
@@ -32,7 +34,7 @@ html {
 
 body {
   margin: 0;
-  padding-top: calc(var(--mat-toolbar-standard-height) + 2rem);
+  padding-top: calc(var(--mat-toolbar-standard-height) + 6rem);
   padding-bottom: 2rem;
 }
 
@@ -46,12 +48,30 @@ main {
 a {
   cursor: pointer;
   font-size: var(--content-font-size);
-  
+}
+
+p {
+  font-size: var(--content-font-size);
 }
 
 mat-form-field {
     width: 100%;
     padding: .75em  0;
+}
+mat-icon.input-invalid {
+  fill: #D32F2F;
+}
+
+mat-icon.input-valid {
+  fill: #3CB371;
+}
+
+button mat-icon[svgIcon="send"] {
+  stroke: var(--main-color);
+}
+
+button:disabled mat-icon[svgIcon="send"] {
+  stroke: #999;
 }
 
 .spacer {

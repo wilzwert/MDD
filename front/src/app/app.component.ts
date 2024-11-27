@@ -44,6 +44,14 @@ export class AppComponent implements OnInit, OnDestroy {
     .addSvgIcon(
       'hamburger',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/hamburger_icon.svg')
+    )
+    .addSvgIcon(
+      'valid',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/check_icon.svg')
+    )
+    .addSvgIcon(
+      'invalid',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/invalid_icon.svg')
     );
 
   }

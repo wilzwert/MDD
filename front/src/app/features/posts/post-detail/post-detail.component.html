@@ -33,6 +33,18 @@
                 <div class="form-comment-content">
                     <mat-form-field>
                         <textarea matInput placeholder="Écrivez ici votre commentaire" formControlName="content"></textarea>
+                        <mat-hint align="start">
+                            @if(content?.value.length < 5) {
+                                <span>Votre commentaire doit comporter au moins 5 caractères</span>
+                            }
+                        </mat-hint>
+                        <mat-hint align="end">
+                            @if(content?.invalid) {
+                                <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
+                            } 
+                            @else {
+                                <mat-icon class="input-valid"  svgIcon="valid">Valide</mat-icon>
+                            }</mat-hint>
                     </mat-form-field>
                 </div>             
                 <div class="form-comment-submit">

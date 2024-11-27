@@ -53,7 +53,9 @@ export class SessionService {
   }
 
   public logOut(): void {
+    // clear user and session related data from storage
     this.tokenStorageService.clearSessionInformation();
+    // clear other user-related data cache
     this.cacheService.clearCache();
     this.isLogged = false;
     this.next();

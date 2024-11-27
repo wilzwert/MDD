@@ -1,8 +1,10 @@
+@let posts = posts$ | async;
 <div class="posts-list-actions">
     <div class="list-actions">
         <a mat-flat-button [routerLink]="['create']" aria-label="Créer un article" matTooltip="Créer un article" matTooltipPosition="below">Créer un article</a>
     </div>
     <span class="spacer"></span>
+    @if(posts?.length) {
     <div class="sort-actions">
         <a [matMenuTriggerFor]="menu" aria-label="Trier">
             Trier
@@ -21,9 +23,16 @@
            <mat-icon [svgIcon]="orderAscending ? 'arrow-down' : 'arrow-up'"></mat-icon>
         </a>
     </div>
+    }
 </div>
-<div class="responsive-grid">
-@for (post of posts$ | async ; track $index) {
-        <app-post [post]="post"></app-post>
+@if(posts?.length) {
+  <div class="responsive-grid">
+  @for (post of posts ; track $index) {
+          <app-post [post]="post"></app-post>
+  }
+  </div>
 }
-</div>
+@else {
+  <p>Aucun article pour le moment.</p>
+  <p><a class="topics" routerLink="/topics"> Cliquez ici</a> pour accéder aux thèmes et vous abonner !</p>
+}

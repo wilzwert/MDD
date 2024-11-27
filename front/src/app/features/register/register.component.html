@@ -4,18 +4,39 @@
         <mat-form-field>
         <mat-label>Email</mat-label>                
         <input matInput formControlName="email" placeholder="Entrez votre email">
+        <mat-hint align="end">
+            @if(email?.invalid) {
+                <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
+            } 
+            @else {
+                <mat-icon class="input-valid"  svgIcon="valid">Valide</mat-icon>
+            }</mat-hint>
         </mat-form-field>
     
         <mat-form-field>
         <mat-label>Nom d'utilisateur</mat-label>
-        <input matInput #userName minlength="5" formControlName="userName" placeholder="Entrez votre nom d'utilisateur">
+        <input matInput minlength="5" formControlName="userName" placeholder="Entrez votre nom d'utilisateur">
         <mat-hint align="start">Min. 5 caractères</mat-hint>
+        <mat-hint align="end">
+        @if(userName?.invalid) {
+            <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
+        } 
+        @else {
+            <mat-icon class="input-valid"  svgIcon="valid">Valide</mat-icon>
+        }</mat-hint>
         </mat-form-field>
     
         <mat-form-field>
         <mat-label>Mot de passe</mat-label>
         <input matInput type="password" formControlName="password" placeholder="Entrez votre mot de passe">
         <mat-hint align="start">Min. 8 caractères donc 1 minuscule, 1 majuscule, 1 chiffre et 1 caractère spécial</mat-hint>
+        <mat-hint align="end">
+            @if(password?.invalid) {
+                <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
+            } 
+            @else {
+                <mat-icon class="input-valid"  svgIcon="valid">Valide</mat-icon>
+            }</mat-hint>
         
         </mat-form-field>
 

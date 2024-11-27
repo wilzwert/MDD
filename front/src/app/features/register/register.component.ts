@@ -62,6 +62,19 @@ export class RegisterComponent {
     });
   }
 
+  get email() {
+    return this.form.get('email');
+  }
+
+  get userName() {
+    return this.form.get('userName');
+  }
+
+  get password() {
+    return this.form.get('password');
+  }
+
+
   submit() :void {
     this.error = null;
     this.authService.register(this.form.value as RegisterRequest)
@@ -70,12 +83,13 @@ export class RegisterComponent {
       catchError(
         (error: ApiError) => {
           return throwError(() => new Error(
-            'Impossible de créer votre compte'+error.message));
+            'Impossible de créer votre compte. '+(error.httpStatus === 409 ? "Email ou nom d'utilisateur déjà utilisé" : 'Une erreur est survenue')
+          ));
         }
     ))
     .subscribe({
       next: data => {
-        this.matSnackBar.open("Your account has been created, please login now.", 'Close', { duration: 3000 })
+        this.matSnackBar.open("Votre inscription a bien été enregistrée, vous pouvez maintenant vous connecter", 'Close', { duration: 3000 })
         this.router.navigate(["/login"])
       }
     });
