@@ -63,7 +63,7 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
-                // insert our custom filter, which will authenticate user from token if provided in the request
+                // insert our custom filter, which will authenticate user from token if provided in the request headers
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

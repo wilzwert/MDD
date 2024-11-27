@@ -9,7 +9,7 @@ import { CreateCommentRequest } from '../models/create-comment-request.interface
 })
 export class CommentService {
 
-  private apiPath:string = '/api/posts';
+  private apiPath:string = 'api/posts';
   private comments$: BehaviorSubject<Comment[] |null> = new BehaviorSubject<Comment[] | null >(null);
   private postId!: number;
 
@@ -25,30 +25,19 @@ export class CommentService {
         } else {
           this.postId = postId;
           return this.httpClient.get<Comment[]>(`${this.apiPath}/${postId}/comments`).pipe(
-            shareReplay(1),
             switchMap((fetchedComments: Comment[]) => {
               this.comments$.next(fetchedComments); // update BehaviorSubject
               return of(fetchedComments);
             })
           );
         }
-      }));  
-    return this.httpClient.get<Comment[]>(`${this.apiPath}/${postId}/comments`).pipe(
-      tap((c: Comment[]) => {console.log(c);this.comments$.next(c); })
-    );
-    // return this.httpClient.get<Comment[]>(`${this.apiPath}/${postId}/comments`);  
-    return this.comments$.pipe(
-      switchMap(() => {
-        return this.httpClient.get<Comment[]>(`${this.apiPath}/${postId}/comments`)/*.pipe(
-          tap((c: Comment[]) => {console.log(c);this.comments$.next(c); })
-        )*/;
-      })
-    );
+      }));
   }
 
   createPostComment(postId: number, createCommentRequest: CreateCommentRequest) : Observable<Comment>{
     return this.httpClient.post<Comment>(`${this.apiPath}/${postId}/comments`, createCommentRequest).pipe(
       map((c: Comment) => {
+        // we do not check whether postId has changed because all comments are created only from the post detail page
         this.comments$.next(this.comments$.getValue() != null ? [c, ...this.comments$.getValue() as Comment[]] : [c]);
         return c;
       }),

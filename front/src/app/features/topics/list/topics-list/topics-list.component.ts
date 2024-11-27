@@ -11,6 +11,7 @@ import { SessionService } from '../../../../core/services/session.service';
 import { FilterByTopicPipe } from '../../../../core/pipes/filter-by';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { CurrentUserSubscriptionService } from '../../../../core/services/current-user-subscription.service';
 
 
 @Component({
@@ -36,14 +37,14 @@ export class TopicsListComponent implements OnInit {
   public subscriptions$!: Observable<Subscription[]>;
   public loggedIn$: Observable<boolean>;
 
-  constructor(private topicService: TopicService, private userService: CurrentUserService, private sessionService:SessionService, private notificationService: NotificationService){
+  constructor(private topicService: TopicService, private userSubscriptionService: CurrentUserSubscriptionService, private sessionService:SessionService, private notificationService: NotificationService){
     this.topics$ = this.topicService.getAllTopics();
     this.sessionService = sessionService;
     this.loggedIn$ = sessionService.$isLogged();
   }
  
     public onSubscribe(topicId: number) :void {
-        this.userService.subscribe(topicId).pipe(
+        this.userSubscriptionService.subscribe(topicId).pipe(
           take(1),
           tap(() => this.notificationService.confirmation("Abonnement pris en compte"))
         )
@@ -51,14 +52,10 @@ export class TopicsListComponent implements OnInit {
     }
 
     public onUnsubscribe(topicId: number) :void {
-      this.userService.unSubscribe(topicId).pipe(
+      this.userSubscriptionService.unSubscribe(topicId).pipe(
         take(1),
         tap(() => this.notificationService.confirmation("Désabonnement pris en compte"))
       ).subscribe();
-    }
-
-    testLogout() {
-      this.sessionService.logOut();
     }
 
     ngOnInit(): void {
@@ -67,7 +64,7 @@ export class TopicsListComponent implements OnInit {
       this.loggedIn$.pipe(
         tap((v: boolean) => {
           if(v) {
-            this.subscriptions$ = this.userService.getCurrentUserSubscriptions();
+            this.subscriptions$ = this.userSubscriptionService.getCurrentUserSubscriptions();
           }
           else {
             this.subscriptions$ = of([]);

@@ -22,16 +22,13 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    // TODO private final AclService aclService;
 
     public PostServiceImpl(
             final PostRepository postRepository,
             final CommentRepository commentRepository
-            // TODO final AclService aclService
         ) {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
-        // this.aclService = aclService;
     }
 
     @Override
@@ -39,7 +36,6 @@ public class PostServiceImpl implements PostService {
         log.info("Create Post {}", post.getTitle());
         Post newPost = postRepository.save(post);
         log.info("Post {} saved", post.getTitle());
-        // TODO aclService.grantOwnerPermissions(post);
         return newPost;
     }
 

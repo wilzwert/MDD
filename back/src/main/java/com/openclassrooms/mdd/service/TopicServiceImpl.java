@@ -17,14 +17,11 @@ import java.util.Optional;
 @Slf4j
 public class TopicServiceImpl implements TopicService {
     private final TopicRepository topicRepository;
-    // TODO private final AclService aclService;
 
     public TopicServiceImpl(
             final TopicRepository topicRepository
-            // TODO final AclService aclService
     ) {
         this.topicRepository = topicRepository;
-        // this.aclService = aclService;
     }
 
     @Override
@@ -32,7 +29,6 @@ public class TopicServiceImpl implements TopicService {
         log.info("Create Topic {}", topic.getTitle());
         Topic newTopic = topicRepository.save(topic);
         log.info("Topic {} saved", topic.getTitle());
-        // TODO aclService.grantOwnerPermissions(topic);
         return newTopic;
     }
 

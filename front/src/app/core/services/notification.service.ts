@@ -7,24 +7,25 @@ import { AppNotification } from '../models/app-notification.interface';
 })
 export class NotificationService {
 
-  private notificationSubject = new Subject<AppNotification | null>();
-  notification$: Observable<AppNotification | null> = this.notificationSubject.asObservable();
+  private notificationSubject$ = new Subject<AppNotification | null>();
+  public notification$: Observable<AppNotification | null> = this.notificationSubject$.asObservable();
 
   constructor() { }
 
-  error(errorMessage: string) :void {
+  public error(errorMessage: string) :void {
     this.handleNotification({type: 'error', message: errorMessage} as AppNotification);
   }
 
-  confirmation(confirmationMessage: string) :void {
+  public confirmation(confirmationMessage: string) :void {
     this.handleNotification({type: 'confirmation', message: confirmationMessage} as AppNotification);
   }
 
-  handleNotification(notification: AppNotification) :void {
-    this.notificationSubject.next(notification);
+  private handleNotification(notification: AppNotification) :void {
+    console.log('handlenotif');
+    this.notificationSubject$.next(notification);
   }
 
   reset(): void {
-    this.notificationSubject.next(null);
+    this.notificationSubject$.next(null);
   }
 }

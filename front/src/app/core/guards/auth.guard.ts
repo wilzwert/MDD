@@ -10,17 +10,11 @@ export class AuthGuard implements CanActivate {
 
   constructor(private router: Router, private sessionService: SessionService) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): MaybeAsync<GuardResult> {
-    return this.sessionService.$isLogged().pipe(
-      map((loggedIn: boolean) => {
-        if(!loggedIn) {
-            this.router.navigate([""]);
-        }
-        return loggedIn;
-      })
-    );
+  canActivate(): boolean {
+    if(!this.sessionService.isLogged) {
+      this.router.navigate([""]);
+    }
+    return this.sessionService.isLogged;
   }
   
 }

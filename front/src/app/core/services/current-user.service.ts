@@ -1,36 +1,52 @@
+import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { User } from '../models/user.interface';
 import { Subscription } from '../models/subscription.interface';
 import { UpdateUserRequest } from '../models/update-user-request';
-import { PostService } from './post.service';
-import { Post } from '../models/post.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CurrentUserService {
 
-  private apiPath = '/api/user';
+  private apiPath = 'api/user';
 
-  private user$: BehaviorSubject<User | null> = new BehaviorSubject<User |null>(null);
-  private userSubscriptions$: BehaviorSubject<Subscription[] |null> = new BehaviorSubject<Subscription[] |null>(null);
+  private user$: BehaviorSubject<User | null> | null = null;
+  private cachedAt: number = 0;
+  private isReloading: boolean = false;
   
   constructor(private httpClient: HttpClient) { }
 
-  public getCurrentUser() : Observable<User>{
-    return this.user$.pipe(
+  private getUserSubject() : BehaviorSubject<User | null> {
+    if(this.user$ === null) {
+      this.user$ = new BehaviorSubject<User | null>(null);
+    }
+    return this.user$;
+  }
+
+  public shouldReload(): boolean {
+    console.log('shouldReload ? ', !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs);
+    return !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
+  }
+
+  public getCurrentUser() : Observable<User> {
+    
+    return this.getUserSubject().pipe(
       switchMap((user: User | null) => {
-        if (user) {
+        if (user && !this.shouldReload()) {
           // send current user if already present
           return of(user);
         } else {
+          console.log('reloading user from API');
           // load from backend otherwise
+          this.isReloading = true;
           return this.httpClient.get<User>(`${this.apiPath}/me`).pipe(
-            shareReplay(1), // Share result to avoid simultaneous requests
             switchMap((fetchedUser: User) => {
-              this.user$.next(fetchedUser); // update BehaviorSubject
+              this.cachedAt = new Date().getTime();
+              this.isReloading = false;
+              this.getUserSubject().next(fetchedUser); // update BehaviorSubject
               return of(fetchedUser);
             })
           );
@@ -43,53 +59,14 @@ export class CurrentUserService {
     // load from backend otherwise
     return this.httpClient.put<User>(`${this.apiPath}/me`, updateUserRequest).pipe(
       switchMap((updatedUser: User) => {
-        this.user$.next(updatedUser); // reset BehaviorSubject
+        this.cachedAt = new Date().getTime();
+        this.isReloading = false;
+        this.getUserSubject().next(updatedUser); // reset BehaviorSubject
         return of(updatedUser);
       })
     );
   }
-
-  public getCurrentUserSubscriptions() : Observable<Subscription[]>{
-    return this.userSubscriptions$.pipe(
-      switchMap((subscriptions: Subscription[] | null) => {
-        if (subscriptions) {
-          // send current subscriptions if already present
-          return of(subscriptions);
-        } else {
-          // load from backend otherwise
-          return this.httpClient.get<Subscription[]>(`${this.apiPath}/me/subscriptions`).pipe(
-            shareReplay(1), // Share result to avoid simultaneous requests
-            switchMap((fetchedSubscriptions: Subscription[]) => {
-              this.userSubscriptions$.next(fetchedSubscriptions); // update BehaviorSubject
-              return of(fetchedSubscriptions);
-            })
-          );
-        }
-      })
-    );
+  public clearCache(): void {
+    this.user$ = null;
   }
-
-  subscribe(topicId: number): Observable<Subscription> {
-    return this.httpClient.post<Subscription>(`/api/topics/${topicId}/subscription`, '').pipe(
-      map((t: Subscription) => {
-        this.userSubscriptions$.next(this.userSubscriptions$.getValue() != null ? [...this.userSubscriptions$.getValue() as Subscription[], t] : [t]);
-        return t;
-      }),
-    );
-  }
-
-  unSubscribe(topicId: number): Observable<any> {
-    return this.httpClient.delete<void>(`/api/topics/${topicId}/subscription`).pipe(
-      map(() => {
-        this.userSubscriptions$.next(this.userSubscriptions$.getValue() != null ? this.userSubscriptions$.getValue()!.filter(s => s.topic.id != topicId) : []);
-        return of(null);
-      }),
-    );
-  }
-
-  public logout(): void {
-    this.user$.next(null);
-    this.userSubscriptions$.next(null);
-  }
-
 }

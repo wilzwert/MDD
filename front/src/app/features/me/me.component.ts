@@ -15,6 +15,7 @@ import { UpdateUserRequest } from '../../core/models/update-user-request';
 import { SessionService } from '../../core/services/session.service';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../core/services/notification.service';
+import { CurrentUserSubscriptionService } from '../../core/services/current-user-subscription.service';
 
 @Component({
   selector: 'app-me',
@@ -37,7 +38,7 @@ export class MeComponent implements OnInit{
   public subscriptions$!: Observable<Subscription[]>;
   public form!: FormGroup;
 
-  constructor(private userService: CurrentUserService, private fb: FormBuilder, private sessionService: SessionService, private router: Router, private notificationService: NotificationService) {}
+  constructor(private userService: CurrentUserService, private userSubscriptionService: CurrentUserSubscriptionService, private fb: FormBuilder, private sessionService: SessionService, private notificationService: NotificationService) {}
 
   public updateCurrentUser() :void {
     this.userService.updateCurrentUser(this.form.value as UpdateUserRequest).pipe(
@@ -46,7 +47,7 @@ export class MeComponent implements OnInit{
   }
 
   public onUnsubscribe(topicId: number) :void {
-    this.userService.unSubscribe(topicId).pipe(tap(() => this.notificationService.confirmation("Désabonnement pris en compte"))).subscribe();
+    this.userSubscriptionService.unSubscribe(topicId).pipe(tap(() => this.notificationService.confirmation("Désabonnement pris en compte"))).subscribe();
   }
 
   ngOnInit(): void {
@@ -70,11 +71,10 @@ export class MeComponent implements OnInit{
         });
       }
     ));
-    this.subscriptions$ = this.userService.getCurrentUserSubscriptions();
+    this.subscriptions$ = this.userSubscriptionService.getCurrentUserSubscriptions();
   }
 
   public logout(): void {
     this.sessionService.logOut();
-    this.router.navigate(['']);
   }
 }

@@ -7,36 +7,41 @@ import { CreatePostRequest } from '../models/create-post-request.interface';
 import { PostSort } from '../models/post-sort.interface';
 import { CurrentUserService } from './current-user.service';
 import { Subscription } from '../models/subscription.interface';
+import { CurrentUserSubscriptionService } from './current-user-subscription.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
 
-  private apiPath:string = '/api/posts';
-  private posts$: BehaviorSubject<Post[] |null> = new BehaviorSubject<Post[] | null >(null);
-  private subscriptions: Subscription[] = [];
+  private apiPath:string = 'api/posts';
+  private posts$: BehaviorSubject<Post[] |null> | null = null;
+  private userSubscriptions$: Observable<Subscription[] | null> | null = null;
   private cachedAt: number = 0;
+  private isReloading: boolean = false;
   
-  constructor(private httpClient: HttpClient, private userService: CurrentUserService) {
-    // locally cache current user subscriptions when they get updated
-    this.userService.getCurrentUserSubscriptions().pipe(tap((s) => {
-      this.clearCache(); 
-      this.subscriptions = s
-    })).subscribe();
+  constructor(private httpClient: HttpClient, private subscriptionService: CurrentUserSubscriptionService) {
    }
 
-  clearCache(): void {
-    if(this.posts$.getValue() !== null) {
-      this.posts$.next(null);
+   private getPostsSubject() : BehaviorSubject<Post[] | null> {
+    // cache local cache to force reload on further posts retrieval when current user subscriptions get updated
+    if(this.userSubscriptions$ === null) {
+      this.userSubscriptions$ = this.subscriptionService.getCurrentUserSubscriptions().pipe(tap((s) => {        
+        if(this.posts$ !== null) {
+          this.clearCache();
+        }
+      }));
+      this.userSubscriptions$.subscribe();
     }
+
+    if(this.posts$ === null) {
+      this.posts$ = new BehaviorSubject<Post[] | null>(null);
+    }
+    return this.posts$;
   }
 
-  // filter posts : return only posts in topics subscribed by the current user
-  filterPosts(posts: Post[]): Post[] {
-    return posts.filter((post: Post) => {
-      return this.subscriptions.some((subscription: Subscription) => subscription.topic.id == post.topic.id);
-    });
+  clearCache(): void {
+    this.posts$ = null;
   }
 
   // sort posts according to sort data
@@ -69,31 +74,34 @@ export class PostService {
   }
 
   public shouldReload(): boolean {
-    return new Date().getTime() - this.cachedAt > environment.postServiceCacheMaxAgeMs;
+    return !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
   }
 
-  getAllPosts(sortData?: PostSort): Observable<Post[]> {    
-    return this.posts$.pipe(
-      map((posts: Post[] | null) => {
+  getAllPosts(sortData?: PostSort): Observable<Post[]> {
+    // map posts to null when no posts present or reloading needed
+    return this.getPostsSubject().pipe(
+      /*map((posts: Post[] | null) => {
         if(posts) {
           if(!this.shouldReload()) {
-            return this.sortPosts(this.filterPosts(posts), sortData);
+            return this.sortPosts(posts, sortData);
           }
           // force reload
           return null;
         }
         return posts;
-      }),
+      }),*/
       switchMap((posts: Post[] | null) => {
-        if (posts) {
+        if (posts && !this.shouldReload()) {
           // send current posts if already present
           return of(posts);
         } else {
+          console.log('reloading all posts from API');
+          this.isReloading = true;
           return this.httpClient.get<Post[]>(`${this.apiPath}`).pipe(
-            shareReplay(1),
             switchMap((fetchedPosts: Post[]) => {
               this.cachedAt = new Date().getTime();
-              this.posts$.next(fetchedPosts); // update BehaviorSubject
+              this.isReloading = false;
+              this.getPostsSubject().next(fetchedPosts); // update BehaviorSubject
               return of(fetchedPosts);
             })
           );
@@ -108,8 +116,9 @@ export class PostService {
   createPost(createPostRequest: CreatePostRequest) :Observable<Post> {
     return this.httpClient.post<Post>(`${this.apiPath}`, createPostRequest).pipe(
       map((p: Post) => {
-        console.log(this.posts$.getValue() != null ? [p, ...this.posts$.getValue() as Post[]] : [p]);
-        this.posts$.next(this.posts$.getValue() != null ? [p, ...this.posts$.getValue() as Post[]] : [p]);
+        if(this.getPostsSubject().getValue() != null) {
+          this.getPostsSubject().next([p, ...this.getPostsSubject().getValue() as Post[]]);
+        }
         return p;
       }),
     );

@@ -1,31 +1,73 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, combineLatest, forkJoin, map, mergeMap, Observable, of, shareReplay, switchMap, tap, throwError } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { Topic } from '../models/topic.interface';
 import { HttpClient } from '@angular/common/http';
-import { CurrentUserService } from './current-user.service';
-import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root'
 })
+/**
+   * Handles topics loading and caching through a BehaviorSubject
+  */
 export class TopicService {
-
   private apiPath:string = '/api/topics';
-  private topics$: BehaviorSubject<Topic[] |null> = new BehaviorSubject<Topic[] | null >(null);
+  private topics$: BehaviorSubject<Topic[] |null> | null = null;
+  private cachedAt: number = 0;
+  private isReloading: boolean = false;
 
-  constructor(private httpClient: HttpClient, private sessionService: SessionService, private userService: CurrentUserService) { }
+  constructor(private httpClient: HttpClient) { }
 
+  /**
+   * Creates or gets the existing BahaviorSubject used for local caching 
+   * @returns the BahaviorSubject 
+   */
+  private getTopicsSubject() : BehaviorSubject<Topic[] | null > {
+    if(this.topics$ === null) {
+      this.topics$ = new BehaviorSubject<Topic[] | null>(null);
+    }
+    return this.topics$;
+  }
+
+  /**
+   * 
+   * @returns true if reloading needed, false otherwise
+   */
+  public shouldReload(): boolean {
+    return !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
+  }
+
+  /**
+   * Retrieves the topics after reloading them from the backend if needed
+   * @returns the topics 
+   */
   getAllTopics(): Observable<Topic[]> {    
-    return this.topics$.pipe(
+    return this.getTopicsSubject().pipe(
+      // map topics to null when no topics present or reloading needed
+      /*
+      map((topics: Topic[] | null) =>  {
+        if(topics) {
+          if(!this.shouldReload()) {
+            return topics;
+          }
+          // force reload
+          return null;
+        }
+        return topics;
+      }),*/
       switchMap((topics: Topic[] | null) => {
-        if (topics) {
+        if (topics && !this.shouldReload()) {
           // send current topics if already present
           return of(topics);
         } else {
+          console.log('reloading all topics from API');
+          this.isReloading = true;
+          // fetch from backend
           return this.httpClient.get<Topic[]>(`${this.apiPath}`).pipe(
-            shareReplay(1),
             switchMap((fetchedTopics: Topic[]) => {
-              this.topics$.next(fetchedTopics); // update BehaviorSubject
+              this.cachedAt = new Date().getTime();
+              this.isReloading = false;
+              this.getTopicsSubject().next(fetchedTopics); // update BehaviorSubject
               return of(fetchedTopics);
             })
           );
@@ -33,16 +75,7 @@ export class TopicService {
       }));
   }
 
-  delete(topicId: number): Observable<any> {
-    return this.httpClient.delete(`${this.apiPath}/${topicId}`).pipe(
-      tap(() => {
-        const updatedTopics = this.topics$.getValue()?.filter((t: Topic) => t.id != topicId);
-        this.topics$.next(updatedTopics == undefined ? null : updatedTopics);
-      }
-    ),
-      catchError((error) => {
-        return throwError(() => new Error('Unable to delete topic'));
-      }
-    ));
+  clearCache(): void {
+    this.topics$ = null;
   }
 }
