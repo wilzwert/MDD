@@ -18,14 +18,11 @@ import java.util.List;
 @Slf4j
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
-    // TODO private final AclService aclService;
 
     public CommentServiceImpl(
-            final CommentRepository commentRepository
-            // TODO final AclService aclService
+        final CommentRepository commentRepository
     ) {
         this.commentRepository = commentRepository;
-        // this.aclService = aclService;
     }
 
     @Override

@@ -49,6 +49,8 @@ public class JwtService {
             JwtToken jwtToken = new JwtToken(claims.getSubject(), claims);
             return Optional.of(jwtToken);
         }
+        // we only catch different JwtException types to log warning messages
+        // the exceptions are then thrown again to be handled by the authentication filter
         catch (ExpiredJwtException e) {
             log.warn("Expired JWT token: {}", e.getMessage());
             throw e;

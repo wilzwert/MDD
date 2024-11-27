@@ -95,8 +95,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().print("token_error");
         }
-
-
     }
 
     @Override

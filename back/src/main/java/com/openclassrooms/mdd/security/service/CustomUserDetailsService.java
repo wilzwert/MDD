@@ -25,9 +25,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, NumberFormatException {
-        log.info("Loading User details for  {}", username);
+        // we use the id as jwt token subject, therefore we load the user by its id
         User foundUser = userRepository.findById(Integer.parseInt(username)).orElseThrow(() -> new UsernameNotFoundException(username));
-        log.info("User details service got {}", foundUser);
         return new UserDetailsImpl(foundUser.getId(), foundUser.getEmail(), foundUser.getPassword());
     }
 }

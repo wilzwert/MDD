@@ -33,22 +33,18 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    // TODO private final AclService aclService;
-
     public UserServiceImpl(
             final UserRepository userRepository,
             final TopicRepository topicRepository,
             final SubscriptionRepository subscriptionRepository,
             final PasswordEncoder passwordEncoder,
             final AuthenticationManager authenticationManager
-            // TODO final AclService aclService
     ) {
         this.userRepository = userRepository;
         this.topicRepository = topicRepository;
         this.subscriptionRepository = subscriptionRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
-        // this.aclService = aclService;
     }
 
     @Override
@@ -90,7 +86,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(User user) {
-        // TODO aclService.removeUser(user);
         userRepository.delete(user);
     }
 
