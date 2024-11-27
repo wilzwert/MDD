@@ -9,6 +9,10 @@
     margin-bottom: 2rem;
 }
 
+.topics {
+    color: var(--main-color);
+}
+
 @media screen and (max-width: 400px) {
     .list-actions, .sort-actions {
         flex: 0 0 100%;

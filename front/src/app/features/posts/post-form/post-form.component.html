@@ -14,6 +14,13 @@
                             </mat-option>
                         }
                     </mat-select>
+                    <mat-hint align="end">
+                        @if(topicId?.invalid) {
+                            <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
+                        } 
+                        @else {
+                            <mat-icon class="input-valid"  svgIcon="valid">Valide</mat-icon>
+                        }</mat-hint>
                 </mat-form-field>
                 </p>
             }
@@ -21,12 +28,26 @@
                 <mat-form-field>
                     <mat-label>Titre</mat-label>
                     <input matInput placeholder="Saisissez le titre de votre article" formControlName="title">
+                    <mat-hint align="end">
+                        @if(title?.invalid) {
+                            <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
+                        } 
+                        @else {
+                            <mat-icon class="input-valid"  svgIcon="valid">Valide</mat-icon>
+                        }</mat-hint>
                 </mat-form-field>
             </p>
             <p>
                 <mat-form-field>
                     <mat-label>Contenu</mat-label>
                     <textarea matInput placeholder="Saisissez le contenu de votre article" formControlName="content"></textarea>
+                    <mat-hint align="end">
+                        @if(content?.invalid) {
+                            <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
+                        } 
+                        @else {
+                            <mat-icon class="input-valid"  svgIcon="valid">Valide</mat-icon>
+                        }</mat-hint>
                 </mat-form-field>
             </p>
         

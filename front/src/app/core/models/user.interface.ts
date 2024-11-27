@@ -4,7 +4,6 @@ export interface User {
   id: number;
   email: string;
   userName: string;
-  createdAt: Date;
-  updatedAt?: Date;
-  subscriptions: Subscription[]
+  createdAt: string;
+  updatedAt?: string;
 }

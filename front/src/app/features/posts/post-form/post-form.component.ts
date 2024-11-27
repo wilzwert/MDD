@@ -68,6 +68,18 @@ export class PostFormComponent implements OnInit {
     });
   }
 
+  get topicId() {
+    return this.form?.get('topicId');
+  }
+
+  get title() {
+    return this.form?.get('title');
+  }
+
+  get content() {
+    return this.form?.get('content');
+  }
+
   private initForm(post?: Post): void {
     this.form = this.fb.group({
       topicId: [

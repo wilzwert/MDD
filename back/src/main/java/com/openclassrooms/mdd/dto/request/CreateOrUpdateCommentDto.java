@@ -3,6 +3,7 @@ package com.openclassrooms.mdd.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
@@ -16,6 +17,7 @@ import lombok.Data;
 public class CreateOrUpdateCommentDto {
 
     @NotBlank(message = "The content is required")
+    @Size(min = 5, message = "Content too short")
     @Schema(description = "Comment content")
     private String content;
 }

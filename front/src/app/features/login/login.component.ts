@@ -10,6 +10,8 @@ import { SessionService } from '../../core/services/session.service';
 import { LoginRequest } from '../../core/models/login-request.interface';
 import { AuthService } from '../../core/services/auth.service';
 import { SessionInformation } from '../../core/models/session-information.interface';
+import { catchError, throwError } from 'rxjs';
+import { ApiError } from '../../core/errors/api-error';
 
 
 @Component({
@@ -57,12 +59,21 @@ export class LoginComponent {
 
   public submit() :void {
       const loginRequest: LoginRequest = this.form.value as LoginRequest;
-      this.authService.login(loginRequest).subscribe({
-        next: (response: SessionInformation) => {
-          this.sessionService.logIn(response);
-          this.router.navigate(['/'])
-        },
-        error: error => this.onError = true,
-      })
+      this.authService.login(loginRequest)
+        .pipe(
+          catchError(
+            (error: ApiError) => {
+              return throwError(() => new Error(
+                'La connexion a échoué.'+(error.httpStatus === 401 ? ' Email ou mot de passe incorrect' : '')
+              ));
+            }
+          )
+        )
+        .subscribe(
+          (response: SessionInformation) => {
+            this.sessionService.logIn(response);
+            this.router.navigate(['/'])
+          }
+        )
   }
 }

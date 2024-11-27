@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Post } from '../../../core/models/post.interface';
 import { PostService } from '../../../core/services/post.service';
 import { AsyncPipe, DatePipe } from '@angular/common';
@@ -11,10 +11,9 @@ import { CreateCommentRequest } from '../../../core/models/create-comment-reques
 import { Title } from '@angular/platform-browser';
 import { MatIconModule } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
-import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NotificationService } from '../../../core/services/notification.service';
-import { ApiError } from '../../../core/errors/api-error';
 
 @Component({
   selector: 'app-post-detail',
@@ -45,7 +44,7 @@ export class PostDetailComponent implements OnInit {
         '', 
         [
           Validators.required,
-          Validators.minLength(10)
+          Validators.minLength(5)
         ]
       ],
     });
@@ -57,6 +56,10 @@ export class PostDetailComponent implements OnInit {
         tap(() => this.notificationService.confirmation("Merci pour votre commentaire !"))
       )
       .subscribe();
+  }
+
+  get content() {
+    return this.form.get('content');
   }
 
   ngOnInit(): void {
