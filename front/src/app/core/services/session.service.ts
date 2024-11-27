@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { SessionInformation } from '../models/session-information.interface';
 import { TokenStorageService } from './token-storage.service';
-import { User } from '../models/user.interface';
 import { RefreshTokenResponse } from '../models/refresh-token-response.interface';
 import { CurrentUserService } from './current-user.service';
 import { Router } from '@angular/router';
+import { CacheService } from './cache.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,10 @@ export class SessionService {
 
   private isLoggedSubject = new BehaviorSubject<boolean>(this.isLogged);
 
-  constructor(private tokenStorageService: TokenStorageService, private router: Router) {
+  constructor(
+    private tokenStorageService: TokenStorageService, 
+    private router: Router,
+    private cacheService: CacheService) {
     if(this.tokenStorageService.getToken() != null) {
       this.isLogged = true;
       this.next();
@@ -51,6 +54,7 @@ export class SessionService {
 
   public logOut(): void {
     this.tokenStorageService.clearSessionInformation();
+    this.cacheService.clearCache();
     this.isLogged = false;
     this.next();
     this.router.navigate(['']);

@@ -1,9 +1,8 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, combineLatest, forkJoin, map, mergeMap, Observable, of, shareReplay, switchMap, tap, throwError } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { Topic } from '../models/topic.interface';
 import { HttpClient } from '@angular/common/http';
-import { CurrentUserService } from './current-user.service';
-import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,21 +10,43 @@ import { SessionService } from './session.service';
 export class TopicService {
 
   private apiPath:string = '/api/topics';
-  private topics$: BehaviorSubject<Topic[] |null> = new BehaviorSubject<Topic[] | null >(null);
+  private topics$: BehaviorSubject<Topic[] |null> | null = null;
+  private cachedAt: number = 0;
 
-  constructor(private httpClient: HttpClient, private sessionService: SessionService, private userService: CurrentUserService) { }
+  constructor(private httpClient: HttpClient) { }
+
+  private getTopicsSubject() : BehaviorSubject<Topic[] | null > {
+    if(this.topics$ === null) {
+      this.topics$ = new BehaviorSubject<Topic[] | null>(null);
+    }
+    return this.topics$;
+  }
+
+  public shouldReload(): boolean {
+    return new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
+  }
 
   getAllTopics(): Observable<Topic[]> {    
-    return this.topics$.pipe(
+    return this.getTopicsSubject().pipe(
+      // map topics to null if reloading needed
+      map((topics: Topic[] | null) => {
+        if(topics) {
+          if(!this.shouldReload()) {
+            return topics;
+          }
+          // force reload
+          return null;
+        }
+        return topics;
+      }),
       switchMap((topics: Topic[] | null) => {
         if (topics) {
           // send current topics if already present
           return of(topics);
         } else {
           return this.httpClient.get<Topic[]>(`${this.apiPath}`).pipe(
-            shareReplay(1),
             switchMap((fetchedTopics: Topic[]) => {
-              this.topics$.next(fetchedTopics); // update BehaviorSubject
+              this.getTopicsSubject().next(fetchedTopics); // update BehaviorSubject
               return of(fetchedTopics);
             })
           );
@@ -33,16 +54,7 @@ export class TopicService {
       }));
   }
 
-  delete(topicId: number): Observable<any> {
-    return this.httpClient.delete(`${this.apiPath}/${topicId}`).pipe(
-      tap(() => {
-        const updatedTopics = this.topics$.getValue()?.filter((t: Topic) => t.id != topicId);
-        this.topics$.next(updatedTopics == undefined ? null : updatedTopics);
-      }
-    ),
-      catchError((error) => {
-        return throwError(() => new Error('Unable to delete topic'));
-      }
-    ));
+  clearCache(): void {
+    this.topics$ = null;
   }
 }

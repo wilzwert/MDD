@@ -6,6 +6,7 @@ import { HttpTestingController, provideHttpClientTesting, TestRequest } from '@a
 import { Comment } from '../models/comment.interface';
 import { User } from '../models/user.interface';
 import { take } from 'rxjs';
+import { CreateCommentRequest } from '../models/create-comment-request.interface';
 
 describe('CommentService', () => {
   let service: CommentService;
@@ -70,7 +71,7 @@ describe('CommentService', () => {
         done();
       }
     );
-    // comments should be available from local cache, no api request is thus made
+    // comments should be available from local cache, no api request should have been made
     mockHttpController.expectNone("api/posts/1/comments");
   });
 
@@ -108,7 +109,24 @@ describe('CommentService', () => {
   });
 
   it('should create comment', (done) => {
-    // TODO
+    const mockComment: Comment = {postId: 1, author: {userName: "testuser", email: "testuser@example.com"} as User, content: "Test comment"} as Comment;
+
+    service.createPostComment(1, {content: "Test comment"} as CreateCommentRequest).pipe(
+      take(1)
+    ).subscribe((comment: Comment) => {
+        expect(comment).toEqual(mockComment);
+        done();
+    });
+
+    // an API request should have been triggered
+    const testRequest: TestRequest = mockHttpController.expectOne("api/posts/1/comments");
+    expect(testRequest.request.method).toEqual("POST");
+    testRequest.flush(mockComment);
+    
+    // comments list should contain new Comment
+    service.getPostComments(1).subscribe((comments: Comment[]) => {
+      expect(comments).toContain(mockComment);
+    })
   });
 
 })

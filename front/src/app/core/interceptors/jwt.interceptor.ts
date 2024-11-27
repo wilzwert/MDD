@@ -5,6 +5,7 @@ import { AuthService } from "../services/auth.service";
 import { BehaviorSubject, catchError, filter, switchMap, take, throwError } from "rxjs";
 import { RefreshTokenRequest } from "../models/refresh-token-request.interface";
 import { RefreshTokenResponse } from "../models/refresh-token-response.interface";
+import { ApiError } from "../errors/api-error";
 
 
 @Injectable({ providedIn: 'root' })
@@ -55,8 +56,9 @@ export class JwtInterceptor implements HttpInterceptor {
           }),
           catchError((error) => {
             this.isRefreshing = false;
-            console.log('got error', error);
-            if (error instanceof HttpErrorResponse && error.status === 401) {
+            if (error instanceof HttpErrorResponse && error.status === 401 ||
+                error instanceof ApiError && error.httpStatus === 401
+            ) {
               this.sessionService.logOut();
             }
             return throwError(() => error);

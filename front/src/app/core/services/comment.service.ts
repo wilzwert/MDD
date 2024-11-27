@@ -25,7 +25,6 @@ export class CommentService {
         } else {
           this.postId = postId;
           return this.httpClient.get<Comment[]>(`${this.apiPath}/${postId}/comments`).pipe(
-            shareReplay(1),
             switchMap((fetchedComments: Comment[]) => {
               this.comments$.next(fetchedComments); // update BehaviorSubject
               return of(fetchedComments);
