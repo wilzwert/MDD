@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
    * Handles topics loading and caching through a BehaviorSubject
   */
 export class TopicService {
-  private apiPath:string = '/api/topics';
+  private apiPath:string = 'api/topics';
   private topics$: BehaviorSubject<Topic[] |null> | null = null;
   private cachedAt: number = 0;
   private isReloading: boolean = false;

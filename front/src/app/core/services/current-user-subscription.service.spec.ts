@@ -8,6 +8,7 @@ import { Subscription } from '../models/subscription.interface';
 describe('CurrentUserSubscriptionService', () => {
   let service: CurrentUserSubscriptionService;
   let mockHttpController: HttpTestingController;
+  let spyOnClearCache: any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -18,6 +19,7 @@ describe('CurrentUserSubscriptionService', () => {
     });
     service = TestBed.inject(CurrentUserSubscriptionService);
     mockHttpController = TestBed.inject(HttpTestingController);
+    spyOnClearCache = jest.spyOn(service, 'clearCache');
   });
 
   it('should be created', () => {
@@ -200,7 +202,41 @@ describe('CurrentUserSubscriptionService', () => {
     mockHttpController.expectNone("api/user/me/subscriptions");
   });
 
-  it('should clear local cache', (done) => {
+  it('should retrieve current user subscriptions from API when cache present but expired', (done) => {
+    const mockSubscriptions: Subscription[] = [
+      {userId: 1, createdAt: '2024-11-27T10:03', topic: {id: 1, title: 'Test topic', description: 'This is a test topic', createdAt: '2024-01-28T11:00:00', updatedAt: '2024-01-28T11:00:00'}},
+      {userId: 1, createdAt: '2024-11-27T10:03', topic: {id: 2, title: 'Other test topic', description: 'This is another test topic', createdAt: '2024-01-28T11:00:00', updatedAt: '2024-01-28T11:00:00'}}
+    ];
+
+    // first posts retrieval should trigger an API request and populate cache
+    service.getCurrentUserSubscriptions().subscribe(
+      (subscriptions: Subscription[]) => {
+        expect(subscriptions).toEqual(mockSubscriptions);
+      }
+    );
+    const retrievalRequest: TestRequest = mockHttpController.expectOne("api/user/me/subscriptions");
+    expect(retrievalRequest.request.method).toEqual("GET");
+    retrievalRequest.flush(mockSubscriptions);
+
+    let hasBeenCalled: boolean = false;
+    // shouldReload will return true one time only
+    const spyOnShouldReload = jest.spyOn(service, 'shouldReload').mockImplementation(() => {const res = hasBeenCalled ? false : true; hasBeenCalled = true; return res;});
+
+    // second posts retrieval when cache expired should trigger an API request and repopulate cache
+    service.getCurrentUserSubscriptions().subscribe(
+      (subscriptions: Subscription[]) => {
+        expect(subscriptions).toEqual(mockSubscriptions);
+        done();
+      }
+    );
+    const secondRetrievalRequest: TestRequest = mockHttpController.expectOne("api/user/me/subscriptions");
+    expect(secondRetrievalRequest.request.method).toEqual("GET");
+    secondRetrievalRequest.flush(mockSubscriptions);
+
+    expect(spyOnShouldReload).toHaveBeenCalled();
+  });
+
+  it('should clear local cache and trigger api request on next retrieval', (done) => {
     // to check if local cache reset works, we have to populate id by getting current user subscriptions
     // then clear local cache and check if further retrieval triggers requests
 
@@ -220,8 +256,14 @@ describe('CurrentUserSubscriptionService', () => {
     expect(subscriptionsRequest.request.method).toEqual("GET");
     subscriptionsRequest.flush(mockSubscriptions);
 
+    // cache has thus no reason to get cleared
+    expect(spyOnClearCache).not.toHaveBeenCalled();
+
     // let's clear local cache
     service.clearCache();
+    // clean up the spy to avoid previous invocation to interfere with further tests
+    spyOnClearCache.mockClear();
+
     // it makes sense to check that no API request has been made on cache clearing
     // as earlier versions of the user service did trigger requests because of a misuse of the local BehaviorSubject
     mockHttpController.expectNone("api/user/me/subscriptions");
@@ -236,5 +278,6 @@ describe('CurrentUserSubscriptionService', () => {
     const newSubscriptionsRequest: TestRequest = mockHttpController.expectOne("api/user/me/subscriptions");
     expect(newSubscriptionsRequest.request.method).toEqual("GET");
     newSubscriptionsRequest.flush(mockSubscriptions);
+    expect(spyOnClearCache).not.toHaveBeenCalled();
   });
 });

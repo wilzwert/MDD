@@ -44,7 +44,12 @@ export class PostService {
     this.posts$ = null;
   }
 
-  // sort posts according to sort data
+  /**
+   * Sort posts according to sort data
+   * @param posts 
+   * @param sortData 
+   * @returns sorted posts
+   */
   sortPosts(posts: Post[], sortData?: PostSort): Post[] {
     if(!sortData) {
       return posts;
@@ -65,7 +70,7 @@ export class PostService {
         // event when user asked for a sort by author  
         // if(sortData.sortByPost) {
           postOrder = a.createdAt.localeCompare(b.createdAt);
-          if(sortData.orderByPostAscending === false) {
+          if(sortData.orderByPostAscending === undefined || sortData.orderByPostAscending === false) {
             postOrder = (postOrder === -1 ? 1 : postOrder === 0 ? 0 : -1);
           }
         // }
@@ -77,6 +82,10 @@ export class PostService {
     return !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
   }
 
+  /**
+   * Retrieves the sorted posts after reloading them from the backend if needed
+   * @returns the posts 
+   */
   getAllPosts(sortData?: PostSort): Observable<Post[]> {
     // map posts to null when no posts present or reloading needed
     return this.getPostsSubject().pipe(
@@ -93,7 +102,7 @@ export class PostService {
       switchMap((posts: Post[] | null) => {
         if (posts && !this.shouldReload()) {
           // send current posts if already present
-          return of(posts);
+          return of(this.sortPosts(posts, sortData));
         } else {
           console.log('reloading all posts from API');
           this.isReloading = true;
