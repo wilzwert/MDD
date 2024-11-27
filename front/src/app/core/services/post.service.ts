@@ -7,6 +7,7 @@ import { CreatePostRequest } from '../models/create-post-request.interface';
 import { PostSort } from '../models/post-sort.interface';
 import { CurrentUserService } from './current-user.service';
 import { Subscription } from '../models/subscription.interface';
+import { CurrentUserSubscriptionService } from './current-user-subscription.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +20,13 @@ export class PostService {
   private cachedAt: number = 0;
   private isReloading: boolean = false;
   
-  constructor(private httpClient: HttpClient, private userService: CurrentUserService) {
+  constructor(private httpClient: HttpClient, private subscriptionService: CurrentUserSubscriptionService) {
    }
 
    private getPostsSubject() : BehaviorSubject<Post[] | null> {
     // cache local cache to force reload on further posts retrieval when current user subscriptions get updated
     if(this.userSubscriptions$ === null) {
-      this.userSubscriptions$ = this.userService.getCurrentUserSubscriptions().pipe(tap((s) => {        
+      this.userSubscriptions$ = this.subscriptionService.getCurrentUserSubscriptions().pipe(tap((s) => {        
         if(this.posts$ !== null) {
           this.clearCache();
         }

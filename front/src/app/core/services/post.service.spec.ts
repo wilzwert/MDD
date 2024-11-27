@@ -9,11 +9,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { CurrentUserService } from './current-user.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Subscription } from '../models/subscription.interface';
+import { CurrentUserSubscriptionService } from './current-user-subscription.service';
 
 describe('PostService', () => {
   let service: PostService;
   let mockHttpController: HttpTestingController;
-  let userService: CurrentUserService;
+  let subscriptionService: CurrentUserSubscriptionService;
   let mockSubscriptionsSubject: BehaviorSubject<Subscription[] | null> = new BehaviorSubject<Subscription[] | null>(null);
   const mockSubscriptions: Subscription[] = [
     {userId: 1, createdAt: '2024-11-27T10:03', topic: {id: 1, title: 'Test topic', description: 'This is a test topic', createdAt: '2024-01-28T11:00:00', updatedAt: '2024-01-28T11:00:00'}},
@@ -22,7 +23,7 @@ describe('PostService', () => {
   let spyOnClearCache: any;
 
   beforeEach(() => {
-    const mockUserService = {
+    const mockUserSubscriptionService = {
       getCurrentUserSubscriptions: jest.fn(() => {return mockSubscriptionsSubject.asObservable();}),
     };
 
@@ -30,12 +31,12 @@ describe('PostService', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        {provide: CurrentUserService, useValue: mockUserService}
+        {provide: CurrentUserSubscriptionService, useValue: mockUserSubscriptionService}
       ]
     });
     service = TestBed.inject(PostService);
     mockHttpController = TestBed.inject(HttpTestingController);
-    userService = TestBed.inject(CurrentUserService);
+    subscriptionService = TestBed.inject(CurrentUserSubscriptionService);
 
     spyOnClearCache = jest.spyOn(service, 'clearCache');
   });

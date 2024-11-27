@@ -14,7 +14,6 @@ export class CurrentUserService {
   private apiPath = 'api/user';
 
   private user$: BehaviorSubject<User | null> | null = null;
-  private userSubscriptions$: BehaviorSubject<Subscription[] |null> | null = null;
   private cachedAt: number = 0;
   private isReloading: boolean = false;
   
@@ -27,14 +26,8 @@ export class CurrentUserService {
     return this.user$;
   }
 
-  private getSubscriptionSubject() : BehaviorSubject<Subscription[] | null> {
-    if(this.userSubscriptions$ === null) {
-      this.userSubscriptions$ = new BehaviorSubject<Subscription[] | null>(null);
-    }
-    return this.userSubscriptions$;
-  }
-
   public shouldReload(): boolean {
+    console.log('shouldReload ? ', !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs);
     return !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
   }
 
@@ -66,57 +59,14 @@ export class CurrentUserService {
     // load from backend otherwise
     return this.httpClient.put<User>(`${this.apiPath}/me`, updateUserRequest).pipe(
       switchMap((updatedUser: User) => {
+        this.cachedAt = new Date().getTime();
+        this.isReloading = false;
         this.getUserSubject().next(updatedUser); // reset BehaviorSubject
         return of(updatedUser);
       })
     );
   }
-
-  public getCurrentUserSubscriptions() : Observable<Subscription[]>{
-    return this.getSubscriptionSubject().pipe(
-      switchMap((subscriptions: Subscription[] | null) => {
-        if (subscriptions) {
-          // send current subscriptions if already present
-          return of(subscriptions);
-        } else {
-          // load from backend otherwise
-          return this.httpClient.get<Subscription[]>(`${this.apiPath}/me/subscriptions`).pipe(
-            switchMap((fetchedSubscriptions: Subscription[]) => {
-              this.getSubscriptionSubject().next(fetchedSubscriptions); // update BehaviorSubject
-              return of(fetchedSubscriptions);
-            })
-          );
-        }
-      })
-    );
-  }
-
-  subscribe(topicId: number): Observable<Subscription> {
-    return this.httpClient.post<Subscription>(`api/topics/${topicId}/subscription`, '').pipe(
-      map((t: Subscription) => {
-        // do not populate local cache when it was empty because next subscriptions retrieval must make an API request
-        if(this.getSubscriptionSubject().getValue() != null) {
-          this.getSubscriptionSubject().next([...this.getSubscriptionSubject().getValue() as Subscription[], t]);
-        }
-        return t;
-      }),
-    );
-  }
-
-  unSubscribe(topicId: number): Observable<any> {
-    return this.httpClient.delete<void>(`api/topics/${topicId}/subscription`).pipe(
-      map(() => {
-        // do not populate local cache when it was empty because next subscriptions retrieval must make an API request
-        if(this.getSubscriptionSubject().getValue() != null) {
-          this.getSubscriptionSubject().next(this.getSubscriptionSubject().getValue()!.filter(s => s.topic.id != topicId));
-        }
-        return of(null);
-      }),
-    );
-  }
-
   public clearCache(): void {
     this.user$ = null;
-    this.userSubscriptions$ = null;
   }
 }

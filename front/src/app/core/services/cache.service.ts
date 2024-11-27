@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CurrentUserService } from './current-user.service';
 import { PostService } from './post.service';
 import { TopicService } from './topic.service';
+import { CurrentUserSubscriptionService } from './current-user-subscription.service';
 
 
 /*
@@ -13,10 +14,11 @@ import { TopicService } from './topic.service';
 })
 export class CacheService {
 
-  constructor(private userService: CurrentUserService, private postService: PostService) { }
+  constructor(private postService: PostService, private userService: CurrentUserService, private subscriptionService: CurrentUserSubscriptionService) { }
 
   public clearCache(): void {
     this.postService.clearCache();
     this.userService.clearCache();
+    this.subscriptionService.clearCache();
   }
 }
