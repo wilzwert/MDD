@@ -17,6 +17,7 @@ export class PostService {
   private posts$: BehaviorSubject<Post[] |null> | null = null;
   private userSubscriptions$: Observable<Subscription[] | null> | null = null;
   private cachedAt: number = 0;
+  private isReloading: boolean = false;
   
   constructor(private httpClient: HttpClient, private userService: CurrentUserService) {
    }
@@ -72,12 +73,13 @@ export class PostService {
   }
 
   public shouldReload(): boolean {
-    return new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
+    return !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
   }
 
   getAllPosts(sortData?: PostSort): Observable<Post[]> {
+    // map posts to null when no posts present or reloading needed
     return this.getPostsSubject().pipe(
-      map((posts: Post[] | null) => {
+      /*map((posts: Post[] | null) => {
         if(posts) {
           if(!this.shouldReload()) {
             return this.sortPosts(posts, sortData);
@@ -86,16 +88,18 @@ export class PostService {
           return null;
         }
         return posts;
-      }),
+      }),*/
       switchMap((posts: Post[] | null) => {
-        if (posts) {
+        if (posts && !this.shouldReload()) {
           // send current posts if already present
           return of(posts);
         } else {
           console.log('reloading all posts from API');
+          this.isReloading = true;
           return this.httpClient.get<Post[]>(`${this.apiPath}`).pipe(
             switchMap((fetchedPosts: Post[]) => {
               this.cachedAt = new Date().getTime();
+              this.isReloading = false;
               this.getPostsSubject().next(fetchedPosts); // update BehaviorSubject
               return of(fetchedPosts);
             })

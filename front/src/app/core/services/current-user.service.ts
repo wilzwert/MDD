@@ -1,11 +1,10 @@
+import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { User } from '../models/user.interface';
 import { Subscription } from '../models/subscription.interface';
 import { UpdateUserRequest } from '../models/update-user-request';
-import { PostService } from './post.service';
-import { Post } from '../models/post.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +15,8 @@ export class CurrentUserService {
 
   private user$: BehaviorSubject<User | null> | null = null;
   private userSubscriptions$: BehaviorSubject<Subscription[] |null> | null = null;
+  private cachedAt: number = 0;
+  private isReloading: boolean = false;
   
   constructor(private httpClient: HttpClient) { }
 
@@ -33,17 +34,25 @@ export class CurrentUserService {
     return this.userSubscriptions$;
   }
 
+  public shouldReload(): boolean {
+    return !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
+  }
+
   public getCurrentUser() : Observable<User> {
     
     return this.getUserSubject().pipe(
       switchMap((user: User | null) => {
-        if (user) {
+        if (user && !this.shouldReload()) {
           // send current user if already present
           return of(user);
         } else {
+          console.log('reloading user from API');
           // load from backend otherwise
+          this.isReloading = true;
           return this.httpClient.get<User>(`${this.apiPath}/me`).pipe(
             switchMap((fetchedUser: User) => {
+              this.cachedAt = new Date().getTime();
+              this.isReloading = false;
               this.getUserSubject().next(fetchedUser); // update BehaviorSubject
               return of(fetchedUser);
             })
