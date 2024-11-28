@@ -60,7 +60,7 @@ export class PostService {
       return sortedPosts.sort((a, b) => {
         let authorOrder, postOrder = 0;
         if(sortData.sortByAuthor) {
-          authorOrder = a.author.userName.localeCompare(b.author.userName);
+          authorOrder = a.author.username.localeCompare(b.author.username);
           if(sortData.orderByAuthorAscending === false) {
             authorOrder = (authorOrder === -1 ? 1 : authorOrder === 0 ? 0 : -1);
           }
@@ -89,22 +89,11 @@ export class PostService {
   getAllPosts(sortData?: PostSort): Observable<Post[]> {
     // map posts to null when no posts present or reloading needed
     return this.getPostsSubject().pipe(
-      /*map((posts: Post[] | null) => {
-        if(posts) {
-          if(!this.shouldReload()) {
-            return this.sortPosts(posts, sortData);
-          }
-          // force reload
-          return null;
-        }
-        return posts;
-      }),*/
       switchMap((posts: Post[] | null) => {
         if (posts && !this.shouldReload()) {
           // send current posts if already present
           return of(this.sortPosts(posts, sortData));
         } else {
-          console.log('reloading all posts from API');
           this.isReloading = true;
           return this.httpClient.get<Post[]>(`${this.apiPath}`).pipe(
             switchMap((fetchedPosts: Post[]) => {

@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         if(existingUser.isPresent()) {
             throw new EntityExistsException("Email already exists");
         }
-        existingUser = userRepository.findByUserName(user.getUserName());
+        existingUser = userRepository.findByUsername(user.getUsername());
         if(existingUser.isPresent()) {
             throw new EntityExistsException("Username already exists");
         }
@@ -71,15 +71,15 @@ public class UserServiceImpl implements UserService {
             }
         }
         // user wants to change username
-        if(!user.getUserName().equals(updateUser.getUserName())) {
+        if(!user.getUsername().equals(updateUser.getUsername())) {
             log.info("Username changes");
-            Optional<User> existingUser = userRepository.findByUserName(updateUser.getUserName());
+            Optional<User> existingUser = userRepository.findByUsername(updateUser.getUsername());
             if (existingUser.isPresent()) {
                 throw new EntityExistsException("Username already exists");
             }
         }
 
-        user.setUserName(updateUser.getUserName());
+        user.setUsername(updateUser.getUsername());
         user.setEmail(updateUser.getEmail());
         return userRepository.save(user);
     }

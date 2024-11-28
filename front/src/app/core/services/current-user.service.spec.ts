@@ -28,7 +28,7 @@ describe('CurrentUserService', () => {
   });
 
   it('should get current user', (done) => {
-    const mockUser: User = {userName: "user1", email: "user1@example.com"} as User;
+    const mockUser: User = {username: "user1", email: "user1@example.com"} as User;
 
     service.getCurrentUser().subscribe(
       (user: User) => {
@@ -43,7 +43,7 @@ describe('CurrentUserService', () => {
   });
 
   it('should retrieve current user from local cache when present', (done) => {
-    const mockUser: User = {userName: "user1", email: "user1@example.com"} as User;
+    const mockUser: User = {username: "user1", email: "user1@example.com"} as User;
 
     service.getCurrentUser().subscribe(
       (user: User) => {
@@ -67,9 +67,9 @@ describe('CurrentUserService', () => {
   });
   
   it('should update current user and populate or update local cache', (done) => {
-    const mockUser: User = {userName: "newusername", email: "newuser@example.com"} as User;
+    const mockUser: User = {username: "newusername", email: "newuser@example.com"} as User;
 
-    service.updateCurrentUser({userName: "newusername", email: "newuser@example.com"}).subscribe(
+    service.updateCurrentUser({username: "newusername", email: "newuser@example.com"}).subscribe(
       (user: User) => {
         expect(user).toEqual(mockUser);
       }
@@ -89,7 +89,7 @@ describe('CurrentUserService', () => {
   });
 
   it('should retrieve current user from API when cache present but expired', (done) => {
-    const mockUser: User = {userName: "user1", email: "user1@example.com"} as User;
+    const mockUser: User = {username: "user1", email: "user1@example.com"} as User;
 
     // first posts retrieval should trigger an API request and populate cache
     service.getCurrentUser().subscribe(
@@ -125,7 +125,7 @@ describe('CurrentUserService', () => {
     // then clear local cache and check if further retrieval triggers requests
 
     // first retrieval should trigger requests, as no local cache is present on first call
-    const mockUser: User = {id: 1, userName: "user1", email: "user1@example.com", createdAt: "2024-11-28T08:00:00"};
+    const mockUser: User = {id: 1, username: "user1", email: "user1@example.com", createdAt: "2024-11-28T08:00:00"};
     service.getCurrentUser().subscribe(
       (user: User) => {
         expect(user).toEqual(mockUser);

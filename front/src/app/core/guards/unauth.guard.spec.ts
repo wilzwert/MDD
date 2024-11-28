@@ -10,7 +10,7 @@ describe('UnauthGuard', () => {
   let mockRouter: any;
 
   beforeEach(() => {
-    mockSessionService = { isLogged: false };
+    mockSessionService = { isLogged: jest.fn().mockReturnValue(false) };
     mockRouter ={navigate: jest.fn()};
     TestBed.configureTestingModule({
       providers: [
@@ -30,7 +30,7 @@ describe('UnauthGuard', () => {
   })
 
   it('should return false and redirect to posts if logged in', () => {
-    mockSessionService.isLogged = true;
+    mockSessionService.isLogged.mockReturnValue(true);
     expect(guard.canActivate()).toBe(false);
     expect(mockRouter.navigate).toHaveBeenCalledWith(['posts']);
   })

@@ -1,6 +1,9 @@
-@let subscriptions = subscriptions$ | async;
-<div class="responsive-grid">
-    @for (topic of topics$ | async ; track $index) {
+@let topics = topics$ | async;
+
+@if(topics?.length) {
+    @let subscriptions = subscriptions$ | async;
+    <div class="responsive-grid">
+        @for (topic of topics ; track $index) {
             <app-topic
                 [topic]="topic"
                 [subscription]="subscriptions  | filterByTopic:topic"
@@ -9,6 +12,10 @@
                 (unSubscribe)="onUnsubscribe($event)"
             >
             </app-topic>
-    
-    }
-</div>
+        
+        }
+    </div>
+}
+@else {
+    <p>Aucun thème pour le moment.</p>
+}

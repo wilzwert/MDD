@@ -83,7 +83,7 @@ public class UserControllerIT {
         public void shouldReturnUserDto() throws Exception {
             User user = new User();
             user.setId(1);
-            user.setUserName("username");
+            user.setUsername("username");
             user.setEmail("test@example.com");
 
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
@@ -94,7 +94,7 @@ public class UserControllerIT {
             verify(userRepository, times(1)).findByEmail("test@example.com");
 
             assertThat(userDto.getId()).isEqualTo(1);
-            assertThat(userDto.getUserName()).isEqualTo("username");
+            assertThat(userDto.getUsername()).isEqualTo("username");
             assertThat(userDto.getEmail()).isEqualTo("test@example.com");
         }
 
@@ -134,7 +134,7 @@ public class UserControllerIT {
         @WithMockUser(username = "test@example.com")
         public void shouldReturnNotFoundOnUpdateWhenUserNotFound() throws Exception {
             UpdateUserDto updateUserDto = new UpdateUserDto();
-            updateUserDto.setUserName("username");
+            updateUserDto.setUsername("username");
             updateUserDto.setEmail("test@example.com");
 
             when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
@@ -144,20 +144,20 @@ public class UserControllerIT {
 
         @Test
         @WithMockUser(username = "test@example.com")
-        public void shouldReturnConflictOnUpdateWhenUserNameExists() throws Exception {
-            User user = new User().setId(1).setUserName("username").setEmail("test@example.com");
-            User user2 = new User().setId(2).setUserName("otherusername").setEmail("othertest@example.com");
+        public void shouldReturnConflictOnUpdateWhenUsernameExists() throws Exception {
+            User user = new User().setId(1).setUsername("username").setEmail("test@example.com");
+            User user2 = new User().setId(2).setUsername("otherusername").setEmail("othertest@example.com");
 
             UpdateUserDto updateUserDto = new UpdateUserDto();
             // change username
-            updateUserDto.setUserName("otherusername");
+            updateUserDto.setUsername("otherusername");
             // update email
             updateUserDto.setEmail("test@example.com");
 
             // mock current authenticated user retrieval
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
             // mock an other user with username sent in update request
-            when(userRepository.findByUserName("otherusername")).thenReturn(Optional.of(user2));
+            when(userRepository.findByUsername("otherusername")).thenReturn(Optional.of(user2));
 
             mockMvc.perform(put(ME_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updateUserDto)))
                     .andExpect(status().isConflict());
@@ -166,12 +166,12 @@ public class UserControllerIT {
         @Test
         @WithMockUser(username = "test@example.com")
         public void shouldReturnConflictOnUpdateWhenEmailExists() throws Exception {
-            User user = new User().setId(1).setUserName("username").setEmail("test@example.com");
-            User user2 = new User().setId(2).setUserName("otherusername").setEmail("othertest@example.com");
+            User user = new User().setId(1).setUsername("username").setEmail("test@example.com");
+            User user2 = new User().setId(2).setUsername("otherusername").setEmail("othertest@example.com");
 
             UpdateUserDto updateUserDto = new UpdateUserDto();
             // same username
-            updateUserDto.setUserName("username");
+            updateUserDto.setUsername("username");
             // change email
             updateUserDto.setEmail("othertest@example.com");
 
@@ -187,11 +187,11 @@ public class UserControllerIT {
         @Test
         @WithMockUser(username = "test@example.com")
         public void shouldReturnUserDtoWhenUserUpdated() throws Exception {
-            User user = new User().setId(1).setUserName("username").setEmail("test@example.com");
+            User user = new User().setId(1).setUsername("username").setEmail("test@example.com");
 
             UpdateUserDto updateUserDto = new UpdateUserDto();
             // change username
-            updateUserDto.setUserName("otherusername");
+            updateUserDto.setUsername("otherusername");
             // change email
             updateUserDto.setEmail("othertest@example.com");
 
@@ -199,7 +199,7 @@ public class UserControllerIT {
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
             // username and email don't exist in db
             when(userRepository.findByEmail("othertest@example.com")).thenReturn(Optional.empty());
-            when(userRepository.findByUserName("otherusername")).thenReturn(Optional.empty());
+            when(userRepository.findByUsername("otherusername")).thenReturn(Optional.empty());
             when(userRepository.save(user)).thenReturn(user);
             when(refreshTokenRepository.findByToken(anyString())).thenReturn(Optional.empty());
             when(refreshTokenRepository.save(any(RefreshToken.class))).thenAnswer(i -> i.getArgument(0));
@@ -210,7 +210,7 @@ public class UserControllerIT {
 
             UserDto responseUserDto = objectMapper.readValue(responseUser.getResponse().getContentAsString(), UserDto.class);
             assertThat(responseUserDto.getEmail()).isEqualTo("othertest@example.com");
-            assertThat(responseUserDto.getUserName()).isEqualTo("otherusername");
+            assertThat(responseUserDto.getUsername()).isEqualTo("otherusername");
         }
     }
     @Nested
@@ -236,7 +236,7 @@ public class UserControllerIT {
 
             User user = new User();
             user.setId(1);
-            user.setUserName("username");
+            user.setUsername("username");
             user.setEmail("test@example.com");
             Topic topic1 = new Topic().setId(1).setTitle("Topic title");
             Topic topic2 = new Topic().setId(2).setTitle("Topic title2");

@@ -115,7 +115,7 @@ public class PostControllerTest {
 
         @Test
         public void shouldFindAllForUser() {
-            User user = new User().setId(1).setUserName("testuser").setEmail("test@example.com");
+            User user = new User().setId(1).setUsername("testuser").setEmail("test@example.com");
 
             Post post1 = new Post().setId(1).setTitle("Test post");
             Post post2 = new Post().setId(2).setTitle("Other test post");

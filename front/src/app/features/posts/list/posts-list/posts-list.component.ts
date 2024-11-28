@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { PostComponent } from '../post/post.component';
 import { RouterLink } from '@angular/router';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { PostSort } from '../../../../core/models/post-sort.interface';
 import { MatButtonModule } from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
@@ -15,11 +14,11 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-posts-list',
   standalone: true,
-  imports: [PostComponent, AsyncPipe, RouterLink, MatGridListModule, MatButtonModule, MatTooltipModule, MatMenuModule, MatIconModule],
+  imports: [PostComponent, AsyncPipe, RouterLink, MatButtonModule, MatTooltipModule, MatMenuModule, MatIconModule],
   templateUrl: './posts-list.component.html',
   styleUrl: './posts-list.component.scss'
 })
-export class PostsListComponent {
+export class PostsListComponent implements OnInit {
 
   public posts$!: Observable<Post[]>;
   
@@ -29,22 +28,25 @@ export class PostsListComponent {
   public orderAscending: boolean = false;
 
   constructor(private postService: PostService) {
+  }
+
+  ngOnInit(): void {
     this.posts$ = this.postService.getAllPosts();
   }
 
   sortByPostCreation() :void {
     this.sort.sortByPost = true;
-    this.sort.sortByAuthor = this.sort.orderByAuthorAscending = undefined;
-    // when we sort by post creation we keep previous order
-    this.sort.orderByPostAscending = this.orderAscending;
     // sorting by post creation date resets author sorting
-    this.sort.sortByAuthor = false;
+    this.sort.sortByAuthor = this.sort.orderByAuthorAscending = undefined;
+    // by default sorting by creation date is descending
+    this.sort.orderByPostAscending = this.orderAscending = false;
     this.posts$ = this.postService.getAllPosts(this.sort);
   }
 
   sortByAuthor() :void {
     this.sort.sortByAuthor = true;
-    this.sort.sortByPost = false;
+    // deactivate sorting by post, but keep previous post creation date order
+    this.sort.sortByPost = undefined;
     // by default, sorting by author gets ascending order
     this.sort.orderByAuthorAscending = this.orderAscending = true;
     this.posts$ = this.postService.getAllPosts(this.sort);

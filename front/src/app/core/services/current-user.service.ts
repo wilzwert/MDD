@@ -27,7 +27,6 @@ export class CurrentUserService {
   }
 
   public shouldReload(): boolean {
-    console.log('shouldReload ? ', !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs);
     return !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
   }
 
@@ -39,7 +38,6 @@ export class CurrentUserService {
           // send current user if already present
           return of(user);
         } else {
-          console.log('reloading user from API');
           // load from backend otherwise
           this.isReloading = true;
           return this.httpClient.get<User>(`${this.apiPath}/me`).pipe(

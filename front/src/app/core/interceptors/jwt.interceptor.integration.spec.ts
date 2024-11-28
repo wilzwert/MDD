@@ -118,7 +118,7 @@ describe('JwtInterceptor', () => {
 
     // every attempt failed, the interceptor couldn't get any token from the API
     // user should avec been disconnected
-    expect(sessionService.isLogged).toBe(false);
+    expect(sessionService.isLogged()).toBe(false);
   });
 
 })

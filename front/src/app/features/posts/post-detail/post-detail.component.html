@@ -4,21 +4,21 @@
             <h1>{{ post.title }}</h1>
         </header>
         <section class="element-info">
-            <span>{{ post.createdAt | date:'dd/MM/YYYY'}}</span> <span> {{ post.author.userName}} </span>  <span> {{ post.topic.title}}</span>
+            <span>{{ post.createdAt | date:'dd/MM/YYYY'}}</span> <span> {{ post.author.username}} </span>  <span> {{ post.topic.title}}</span>
         </section>
         <section class="element-content">
             <div> {{ post.content}} </div>
         </section>
-
-    @if(comments$ | async) {    
         <section class="element-comments">
-        <h2>Commentaires</h2>
+            <h2>Commentaires</h2>
+    @let comments = comments$ | async;
+    @if(comments?.length) {    
         <ul class="comments-list">
         @for (comment of comments$ | async; track $index) {
             <li>
                 <article class="element-comment">
                     <section class="comment-author">
-                        {{ comment.author.userName}}
+                        {{ comment.author.username}}
                     </section>
                     <section class="comment-content">
                         {{ comment.content }}
@@ -27,34 +27,33 @@
             </li>
         }
         </ul>
+    }
 
-        @if (form) {
-            <form class="comment-form" [formGroup]="form" (ngSubmit)="submit()">   
-                <div class="form-comment-content">
-                    <mat-form-field>
-                        <textarea matInput placeholder="Écrivez ici votre commentaire" formControlName="content"></textarea>
-                        <mat-hint align="start">
-                            @if(content?.value.length < 5) {
-                                <span>Votre commentaire doit comporter au moins 5 caractères</span>
-                            }
-                        </mat-hint>
-                        <mat-hint align="end">
-                            @if(content?.invalid) {
-                                <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
-                            } 
-                            @else {
-                                <mat-icon class="input-valid"  svgIcon="valid">Valide</mat-icon>
-                            }</mat-hint>
-                    </mat-form-field>
-                </div>             
-                <div class="form-comment-submit">
-                    <button mat-icon-button  type="submit" [disabled]="form.invalid"><mat-icon svgIcon="send">Envoyer</mat-icon></button>
-                </div>
-            </form>
-        }
-
-            </section>
-        }
+    @if (form) {
+        <form class="comment-form" [formGroup]="form" (ngSubmit)="submit()">   
+            <div class="form-comment-content">
+                <mat-form-field>
+                    <textarea matInput placeholder="Écrivez ici votre commentaire" formControlName="content"></textarea>
+                    <mat-hint align="start">
+                        @if(content?.value.length < 5) {
+                            <span>Votre commentaire doit comporter au moins 5 caractères</span>
+                        }
+                    </mat-hint>
+                    <mat-hint align="end">
+                        @if(content?.invalid) {
+                            <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
+                        } 
+                        @else {
+                            <mat-icon class="input-valid"  svgIcon="valid">Valide</mat-icon>
+                        }</mat-hint>
+                </mat-form-field>
+            </div>             
+            <div class="form-comment-submit">
+                <button mat-icon-button  type="submit" [disabled]="form.invalid"><mat-icon svgIcon="send">Envoyer</mat-icon></button>
+            </div>
+        </form>
+    }
+    </section>
 
 
     

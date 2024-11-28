@@ -32,7 +32,7 @@ public class User {
     private String email;
 
     @Column(name = "user_name", unique = true, nullable = false)
-    private String userName;
+    private String username;
 
     @Column(nullable = false)
     private String password;
@@ -67,6 +67,6 @@ public class User {
      */
     @Override
     public String toString() {
-        return "User [id=" + id + ", email=" + email + ", userName=" + userName + ", createdAd=" + createdAt+", updatedAt=" + updatedAt+"]";
+        return "User [id=" + id + ", email=" + email + ", username=" + username + ", createdAd=" + createdAt+", updatedAt=" + updatedAt+"]";
     }
 }

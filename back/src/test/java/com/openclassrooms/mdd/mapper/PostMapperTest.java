@@ -71,7 +71,7 @@ public class PostMapperTest {
                 .setId(1)
                 .setTitle("test post")
                 .setContent("this is a test post")
-                .setAuthor(new User().setId(1).setUserName("testuser"))
+                .setAuthor(new User().setId(1).setUsername("testuser"))
                 .setCreatedAt(now)
                 .setUpdatedAt(now)
                 .setTopic(new Topic().setId(1).setTitle("test topic").setDescription("test topic description"));
@@ -85,7 +85,7 @@ public class PostMapperTest {
         assertThat(postDto.getCreatedAt()).isEqualTo(now);
         assertThat(postDto.getUpdatedAt()).isEqualTo(now);
         assertThat(postDto.getAuthor().getId()).isEqualTo(1);
-        assertThat(postDto.getAuthor().getUserName()).isEqualTo("testuser");
+        assertThat(postDto.getAuthor().getUsername()).isEqualTo("testuser");
         assertThat(postDto.getTopic().getTitle()).isEqualTo("test topic");
 
     }
@@ -102,8 +102,8 @@ public class PostMapperTest {
     @Test
     public void testPostListToDtoList() {
         LocalDateTime now = LocalDateTime.now();
-        User user1 = new User().setId(1).setUserName("testuser1");
-        User user2 = new User().setId(2).setUserName("testuser2");
+        User user1 = new User().setId(1).setUsername("testuser1");
+        User user2 = new User().setId(2).setUsername("testuser2");
 
         Post post1 = new Post().setId(1).setTitle("test post1").setContent("this is a test post1").setCreatedAt(now).setUpdatedAt(now).setAuthor(user1);
         post1.setTopic(new Topic().setId(1).setTitle("test topic").setDescription("test topic description"));
@@ -120,13 +120,13 @@ public class PostMapperTest {
         assertThat(postDtos).extracting(PostDto::getCreatedAt).containsExactly(now, now);
         assertThat(postDtos).extracting(PostDto::getUpdatedAt).containsExactly(now, now);
         assertThat(postDtos.getFirst().getAuthor().getId()).isEqualTo(1);
-        assertThat(postDtos.getFirst().getAuthor().getUserName()).isEqualTo("testuser1");
+        assertThat(postDtos.getFirst().getAuthor().getUsername()).isEqualTo("testuser1");
         assertThat(postDtos.getFirst().getTopic().getId()).isEqualTo(1);
         assertThat(postDtos.getFirst().getTopic().getTitle()).isEqualTo("test topic");
         assertThat(postDtos.getFirst().getTopic().getDescription()).isEqualTo("test topic description");
 
         assertThat(postDtos.get(1).getAuthor().getId()).isEqualTo(2);
-        assertThat(postDtos.get(1).getAuthor().getUserName()).isEqualTo("testuser2");
+        assertThat(postDtos.get(1).getAuthor().getUsername()).isEqualTo("testuser2");
         assertThat(postDtos.get(1).getTopic().getId()).isEqualTo(2);
         assertThat(postDtos.get(1).getTopic().getTitle()).isEqualTo("second test topic");
         assertThat(postDtos.get(1).getTopic().getDescription()).isEqualTo("second test topic description");

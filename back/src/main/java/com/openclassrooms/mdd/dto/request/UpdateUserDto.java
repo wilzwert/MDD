@@ -21,5 +21,5 @@ public class UpdateUserDto {
 
     @NotBlank(message = "The username is required")
     @Schema(description = "User username")
-    private String userName;
+    private String username;
 }

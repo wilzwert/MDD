@@ -15,15 +15,9 @@ import { MatCardModule } from '@angular/material/card';
 export class TopicComponent {
   @Input({required: true}) topic!: Topic;
   @Input({required: true}) loggedIn!: boolean | null;
-  @Input({required: false}) subscriptions!: Subscription[] | null;
   @Input({required: false}) subscription!: Subscription | null;
-  @Output() delete = new EventEmitter<Topic>();
   @Output() subscribe = new EventEmitter<number>();
   @Output() unSubscribe = new EventEmitter<number>();
-
-  onDelete() {
-    this.delete.emit(this.topic);
-  }
 
   onSubscribe() {
     this.subscribe.emit(this.topic.id);

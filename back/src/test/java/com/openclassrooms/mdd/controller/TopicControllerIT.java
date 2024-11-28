@@ -75,7 +75,7 @@ public class TopicControllerIT {
         @WithMockUser
         public void shouldGetAllTopics() throws Exception {
             LocalDateTime date = LocalDateTime.parse("2024-11-08T10:00:00", DateTimeFormatter.ISO_DATE_TIME);
-            User user = new User().setId(1).setEmail("test@test.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@test.com").setUsername("test");
             Topic topic1 = new Topic().setId(1).setTitle("Topic title 1").setDescription("topic description 1").setCreator(user).setCreatedAt(date).setUpdatedAt(date);
             Topic topic2 = new Topic().setId(2).setTitle("Topic title 2").setDescription("topic description 2").setCreator(user).setCreatedAt(date).setUpdatedAt(date);
 
@@ -114,7 +114,7 @@ public class TopicControllerIT {
         @WithMockUser
         public void shouldReturnTopic() throws Exception {
             LocalDateTime date = LocalDateTime.parse("2024-11-08T10:00:00", DateTimeFormatter.ISO_DATE_TIME);
-            User user = new User().setId(1).setEmail("test@test.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@test.com").setUsername("test");
             Topic topic = new Topic().setId(1).setTitle("Topic title 1").setDescription("Topic description 1").setCreator(user).setCreatedAt(date).setUpdatedAt(date);
 
             when(topicRepository.findById(anyInt())).thenReturn(Optional.of(topic));
@@ -164,7 +164,7 @@ public class TopicControllerIT {
         @Test
         @WithMockUser(username = "test@example.com")
         public void shouldCreateTopic() throws Exception {
-            User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@example.com").setUsername("test");
 
             CreateTopicDto createTopicDto = new CreateTopicDto();
             createTopicDto.setTitle("Topic title");
@@ -230,7 +230,7 @@ public class TopicControllerIT {
         @WithMockUser(username = "test@example.com")
         public void shouldReturnPostList() throws Exception {
             LocalDateTime now = LocalDateTime.now();
-            User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@example.com").setUsername("test");
             Topic topic = new Topic().setId(1).setTitle("Topic title");
             Post post1 = new Post().setId(1).setTopic(topic).setAuthor(user).setTitle("Post title 1").setContent("Post content 1").setCreatedAt(now).setUpdatedAt(now);
             Post post2 = new Post().setId(2).setTopic(topic).setAuthor(user).setTitle("Post title 2").setContent("Post content 2").setCreatedAt(now).setUpdatedAt(now);
@@ -250,7 +250,7 @@ public class TopicControllerIT {
             assertThat(responsePosts).extracting(PostDto::getCreatedAt).containsExactly(now, now);
             assertThat(responsePosts).extracting(PostDto::getUpdatedAt).containsExactly(now, now);
             assertThat(responsePosts).extracting(PostDto::getAuthor).asInstanceOf(LIST)
-                    .extracting("id", "userName", "email")
+                    .extracting("id", "username", "email")
                     .containsExactly(
                             Tuple.tuple(1,  "test", "test@example.com"),
                             Tuple.tuple(1,  "test", "test@example.com")
@@ -278,7 +278,7 @@ public class TopicControllerIT {
         @Test
         @WithMockUser
         public void shouldReturnBadRequestWhenBadId() throws Exception {
-            User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@example.com").setUsername("test");
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
             mockMvc.perform(post("/api/topics/badId/subscription"))
@@ -288,7 +288,7 @@ public class TopicControllerIT {
         @Test
         @WithMockUser(username = "test@example.com")
         public void shouldReturnNotFoundWhenTopicNotFound() throws Exception {
-            User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@example.com").setUsername("test");
 
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
             when(topicRepository.findById(1)).thenReturn(Optional.empty());
@@ -302,7 +302,7 @@ public class TopicControllerIT {
         public void shouldCreateSubscription() throws Exception {
             LocalDateTime now = LocalDateTime.now();
             Topic topic = new Topic().setId(1).setTitle("Topic title").setDescription("Topic description").setCreatedAt(now).setUpdatedAt(now);
-            User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@example.com").setUsername("test");
 
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
             when(topicRepository.findById(1)).thenReturn(Optional.of(topic));
@@ -342,7 +342,7 @@ public class TopicControllerIT {
         @Test
         @WithMockUser
         public void shouldReturnBadRequestWhenBadId() throws Exception {
-            User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@example.com").setUsername("test");
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
             mockMvc.perform(delete("/api/topics/badId/subscription"))
@@ -352,7 +352,7 @@ public class TopicControllerIT {
         @Test
         @WithMockUser(username = "test@example.com")
         public void shouldReturnNotFoundWhenTopicNotFound() throws Exception {
-            User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@example.com").setUsername("test");
 
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
             when(topicRepository.findById(1)).thenReturn(Optional.empty());
@@ -365,7 +365,7 @@ public class TopicControllerIT {
         @WithMockUser(username = "test@example.com")
         public void shouldReturnNotFoundWhenSubscriptionNotFound() throws Exception {
             Topic topic = new Topic().setId(1).setTitle("Topic title").setDescription("Topic description");
-            User user = new User().setId(1).setEmail("test@example.com").setUserName("test").setSubscriptions(new ArrayList<>());
+            User user = new User().setId(1).setEmail("test@example.com").setUsername("test").setSubscriptions(new ArrayList<>());
 
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
             when(topicRepository.findById(1)).thenReturn(Optional.of(topic));
@@ -378,7 +378,7 @@ public class TopicControllerIT {
         @WithMockUser(username = "test@example.com")
         public void shouldDeleteSubscription() throws Exception {
             Topic topic = new Topic().setId(1).setTitle("Topic title").setDescription("Topic description");
-            User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@example.com").setUsername("test");
             Subscription subscription = new Subscription().setTopic(topic).setUser(user);
             user.setSubscriptions(Collections.singletonList(subscription));
 

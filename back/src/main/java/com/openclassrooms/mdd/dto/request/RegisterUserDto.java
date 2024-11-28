@@ -23,7 +23,7 @@ public class RegisterUserDto {
 
     @NotBlank(message = "The username is required")
     @Schema(description = "User username")
-    private String userName;
+    private String username;
 
     @NotBlank(message = "The password is required")
     @Password

@@ -19,8 +19,6 @@ describe("AuthService unit tests", () =>  {
                 provideHttpClientTesting()
             ],
             imports: [],
-            
-
         });
     
         service = TestBed.inject(AuthService);
@@ -51,7 +49,7 @@ describe("AuthService unit tests", () =>  {
 
       
       it('should post register request and return void as an observable', (done) => {
-        const registerRequest: RegisterRequest = {email: "john.doe@example.com", password: "testpassword", userName: "username"};
+        const registerRequest: RegisterRequest = {email: "john.doe@example.com", password: "testpassword", username: "username"};
         service.register(registerRequest).subscribe(response => {
             expect(response).toBeNull();
             done()
@@ -89,7 +87,7 @@ describe("AuthService unit tests", () =>  {
         // Create mock ProgressEvent with type `error`, raised when something goes wrong
        // at network level. e.g. Connection timeout, DNS error, offline, etc.
        const mockError = new ProgressEvent('error');
-       const registerRequest: RegisterRequest = {email: "john.doe@example.com", password: "testpassword", userName: "username"};
+       const registerRequest: RegisterRequest = {email: "john.doe@example.com", password: "testpassword", username: "username"};
         service.register(registerRequest).subscribe({
             next: response => fail('should have failed with http error'),
             error: (error: HttpErrorResponse) => {

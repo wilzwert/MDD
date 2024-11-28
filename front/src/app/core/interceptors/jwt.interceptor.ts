@@ -16,7 +16,7 @@ export class JwtInterceptor implements HttpInterceptor {
   constructor(private sessionService: SessionService, private authService: AuthService) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler) {
-    if (this.sessionService.isLogged) {      
+    if (this.sessionService.isLogged()) {      
       request = this.addTokenHeader(request, this.sessionService.getToken()!);
     }
 

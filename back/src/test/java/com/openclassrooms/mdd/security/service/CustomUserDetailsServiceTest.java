@@ -49,7 +49,7 @@ public class CustomUserDetailsServiceTest {
         User user = new User()
                 .setId(1)
                 .setEmail("test@example.com")
-                .setUserName("Username")
+                .setUsername("Username")
                 .setPassword("password");
 
         when(userRepository.findById(1)).thenReturn(Optional.of(user));

@@ -18,7 +18,7 @@ export class BackButtonComponent implements OnInit, OnDestroy {
 
   public goBackToRoute: string | undefined;
 
-  constructor(private router: Router, private location: Location, private activatedRoute: ActivatedRoute) {console.log(this.activatedRoute.snapshot);}
+  constructor(private router: Router, private location: Location, private activatedRoute: ActivatedRoute) {}
   
   goBack() :void {
     this.router.navigate([this.goBackToRoute]);

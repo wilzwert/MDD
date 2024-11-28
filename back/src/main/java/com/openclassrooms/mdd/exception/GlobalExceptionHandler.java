@@ -4,6 +4,7 @@ import com.openclassrooms.mdd.dto.response.ErrorResponseDto;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -76,7 +78,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ErrorResponseDto, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(BadRequestException.class)
+    @ExceptionHandler({BadRequestException.class, HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorResponseDto> generateBadRequestException(BadRequestException ex) {
         ErrorResponseDto ErrorResponseDto = new ErrorResponseDto();
         ErrorResponseDto.setStatus(HttpStatus.BAD_REQUEST.toString());
@@ -84,11 +86,14 @@ public class GlobalExceptionHandler {
         ErrorResponseDto.setTime(new Date().toString());
         return new ResponseEntity<>(ErrorResponseDto, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> generateInternalErrorException(Exception ex) {
+        System.out.println("EXCEPTION GOT "+ex.getMessage()+", class of exception is"+ex.getClass().getName());
+        System.out.println(Arrays.toString(ex.getStackTrace()));
         ErrorResponseDto ErrorResponseDto = new ErrorResponseDto();
         ErrorResponseDto.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
-        ErrorResponseDto.setMessage("Internal server error ");
+        ErrorResponseDto.setMessage("Internal server error "+ex.getMessage());
         ErrorResponseDto.setTime(new Date().toString());
         return new ResponseEntity<>(ErrorResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }

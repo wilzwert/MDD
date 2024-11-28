@@ -62,10 +62,10 @@ public class AuthControllerTest {
         @Test
         public void shouldThrowConflictResponseStatusExceptionOnRegisterWhenEmailAlreadyExists() {
             RegisterUserDto registerUserDto = new RegisterUserDto();
-            registerUserDto.setUserName("test");
+            registerUserDto.setUsername("test");
             registerUserDto.setEmail("test@example.com");
 
-            when(userMapper.registerUserDtoToUser(registerUserDto)).thenReturn(new User().setUserName("test").setEmail("test@example.com"));
+            when(userMapper.registerUserDtoToUser(registerUserDto)).thenReturn(new User().setUsername("test").setEmail("test@example.com"));
             when(userService.registerUser(any(User.class))).thenThrow(new EntityExistsException("Email already exists"));
 
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> authController.register(registerUserDto));
@@ -73,12 +73,12 @@ public class AuthControllerTest {
         }
 
         @Test
-        public void shouldThrowConflictResponseStatusExceptionOnRegisterWhenUserNameAlreadyExists() {
+        public void shouldThrowConflictResponseStatusExceptionOnRegisterWhenUsernameAlreadyExists() {
             RegisterUserDto registerUserDto = new RegisterUserDto();
-            registerUserDto.setUserName("test");
+            registerUserDto.setUsername("test");
             registerUserDto.setEmail("test@example.com");
 
-            when(userMapper.registerUserDtoToUser(registerUserDto)).thenReturn(new User().setUserName("test").setEmail("test@example.com"));
+            when(userMapper.registerUserDtoToUser(registerUserDto)).thenReturn(new User().setUsername("test").setEmail("test@example.com"));
             when(userService.registerUser(any(User.class))).thenThrow(new EntityExistsException("Username already exists"));
 
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> authController.register(registerUserDto));
@@ -88,10 +88,10 @@ public class AuthControllerTest {
         @Test
         public void shouldReturnJwtResponseOnRegisterSuccess() {
             RegisterUserDto registerUserDto = new RegisterUserDto();
-            registerUserDto.setUserName("test");
+            registerUserDto.setUsername("test");
             registerUserDto.setEmail("test@example.com");
             registerUserDto.setPassword("Abcd!1234");
-            User user = new User().setId(1).setUserName("test").setEmail("test@example.com").setPassword("Abcd!1234");
+            User user = new User().setId(1).setUsername("test").setEmail("test@example.com").setPassword("Abcd!1234");
             Instant refreshTokenExpiry = Instant.now().plusSeconds(86400);
 
             when(userMapper.registerUserDtoToUser(registerUserDto)).thenReturn(user);
@@ -133,7 +133,7 @@ public class AuthControllerTest {
             loginRequestDto.setEmail("test@example.com");
             loginRequestDto.setPassword("Abcd!1234");
 
-            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            User user = new User().setId(1).setUsername("test").setEmail("test@example.com");
             Instant refreshTokenExpiry = Instant.now().plusSeconds(86400);
 
             when(userService.authenticateUser("test@example.com", "Abcd!1234")).thenReturn(user);
@@ -187,7 +187,7 @@ public class AuthControllerTest {
             RefreshTokenRequestDto refreshTokenRequestDto = new RefreshTokenRequestDto();
             refreshTokenRequestDto.setRefreshToken("refresh_token");
 
-            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            User user = new User().setId(1).setUsername("test").setEmail("test@example.com");
             RefreshToken refreshToken = new RefreshToken().setUser(user).setToken("refresh_token").setExpiryDate(Instant.now().plusSeconds(86400));
 
             when(refreshTokenService.findByToken("refresh_token")).thenReturn(Optional.of(refreshToken));

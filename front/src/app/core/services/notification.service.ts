@@ -21,7 +21,6 @@ export class NotificationService {
   }
 
   private handleNotification(notification: AppNotification) :void {
-    console.log('handlenotif');
     this.notificationSubject$.next(notification);
   }
 

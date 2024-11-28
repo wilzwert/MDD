@@ -19,9 +19,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  title = 'mdd';
+  title = 'MDD';
 
   constructor(private router: Router, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+    // register custom svg icons used for this app
     iconRegistry.addSvgIcon(
       'user',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/user_icon.svg')
@@ -53,7 +54,6 @@ export class AppComponent implements OnInit, OnDestroy {
       'invalid',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/invalid_icon.svg')
     );
-
   }
 
   public ngOnInit() :void {
@@ -64,6 +64,7 @@ export class AppComponent implements OnInit, OnDestroy {
       filter(event => event instanceof NavigationEnd)
     )
     .subscribe(() => {
+      // main menu must not be shown on homepage
       this.showMainMenu = !this.router.url.match(/^\/$/);
     });
   }

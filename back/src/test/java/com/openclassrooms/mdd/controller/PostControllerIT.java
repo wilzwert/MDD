@@ -78,7 +78,7 @@ public class PostControllerIT {
         @WithMockUser(username = "test@example.com")
         public void shouldGetAllPostsForUser() throws Exception {
             LocalDateTime date = LocalDateTime.parse("2024-11-08T10:00:00", DateTimeFormatter.ISO_DATE_TIME);
-            User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@example.com").setUsername("test");
             Topic topic1 = new Topic().setId(1).setTitle("test topic").setDescription("test topic description");
             Topic topic2 = new Topic().setId(2).setTitle("second test topic").setDescription("second test topic description");
             Subscription subscription1 = new Subscription().setTopic(topic1).setUser(user);
@@ -103,7 +103,7 @@ public class PostControllerIT {
             assertThat(responsePosts.getFirst().getCreatedAt()).isEqualTo("2024-11-08T10:00:00");
             assertThat(responsePosts.getFirst().getUpdatedAt()).isEqualTo("2024-11-08T10:00:00");
             assertThat(responsePosts.getFirst().getAuthor().getId()).isEqualTo(1);
-            assertThat(responsePosts.getFirst().getAuthor().getUserName()).isEqualTo("test");
+            assertThat(responsePosts.getFirst().getAuthor().getUsername()).isEqualTo("test");
             assertThat(responsePosts.getFirst().getTopic().getId()).isEqualTo(1);
             assertThat(responsePosts.getFirst().getTopic().getTitle()).isEqualTo("test topic");
 
@@ -112,7 +112,7 @@ public class PostControllerIT {
             assertThat(responsePosts.get(1).getCreatedAt()).isEqualTo("2024-11-08T10:00:00");
             assertThat(responsePosts.get(1).getCreatedAt()).isEqualTo("2024-11-08T10:00:00");
             assertThat(responsePosts.get(1).getAuthor().getId()).isEqualTo(1);
-            assertThat(responsePosts.get(1).getAuthor().getUserName()).isEqualTo("test");
+            assertThat(responsePosts.get(1).getAuthor().getUsername()).isEqualTo("test");
             assertThat(responsePosts.get(1).getTopic().getId()).isEqualTo(2);
             assertThat(responsePosts.get(1).getTopic().getTitle()).isEqualTo("second test topic");
         }
@@ -137,7 +137,7 @@ public class PostControllerIT {
         @WithMockUser
         public void shouldReturnPost() throws Exception {
             LocalDateTime date = LocalDateTime.parse("2024-11-08T10:00:00", DateTimeFormatter.ISO_DATE_TIME);
-            User user = new User().setId(1).setEmail("test@test.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@test.com").setUsername("test");
             Post post = new Post().setId(1).setContent("Post content 1").setTitle("Post title 1").setAuthor(user).setCreatedAt(date).setUpdatedAt(date);
 
             when(postRepository.findById(anyInt())).thenReturn(Optional.of(post));
@@ -152,7 +152,7 @@ public class PostControllerIT {
             assertThat(responsePostDto.getCreatedAt()).isEqualTo("2024-11-08T10:00:00");
             assertThat(responsePostDto.getUpdatedAt()).isEqualTo("2024-11-08T10:00:00");
             assertThat(responsePostDto.getAuthor().getId()).isEqualTo(1);
-            assertThat(responsePostDto.getAuthor().getUserName()).isEqualTo("test");
+            assertThat(responsePostDto.getAuthor().getUsername()).isEqualTo("test");
         }
 
     }
@@ -192,7 +192,7 @@ public class PostControllerIT {
         @Test
         @WithMockUser(username = "test@example.com")
         public void shouldReturnBadRequestWhenTopicNotFound() throws Exception {
-            User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@example.com").setUsername("test");
             CreatePostDto createPostDto = new CreatePostDto();
             createPostDto.setTopicId(1);
             createPostDto.setTitle("Post title");
@@ -208,7 +208,7 @@ public class PostControllerIT {
         @Test
         @WithMockUser(username = "test@example.com")
         public void shouldCreatePost() throws Exception {
-            User user = new User().setId(1).setEmail("test@example.com").setUserName("test");
+            User user = new User().setId(1).setEmail("test@example.com").setUsername("test");
             Topic topic = new Topic().setId(1).setTitle("Post title");
 
             CreatePostDto createPostDto = new CreatePostDto();
@@ -228,7 +228,7 @@ public class PostControllerIT {
             assertThat(responsePostDto.getTitle()).isEqualTo("Post title");
             assertThat(responsePostDto.getContent()).isEqualTo("Post content");
             assertThat(responsePostDto.getAuthor().getId()).isEqualTo(1);
-            assertThat(responsePostDto.getAuthor().getUserName()).isEqualTo("test");
+            assertThat(responsePostDto.getAuthor().getUsername()).isEqualTo("test");
         }
     }
 
@@ -266,7 +266,7 @@ public class PostControllerIT {
         @Test
         @WithMockUser
         public void shouldReturnPostComments() throws Exception {
-            User user = new User().setId(1).setUserName("test");
+            User user = new User().setId(1).setUsername("test");
             Post post = new Post().setId(1).setTitle("Post title").setContent("Post content");
             Comment comment1 = new Comment().setId(1).setContent("Comment content").setPost(post).setAuthor(user);
             Comment comment2 = new Comment().setId(2).setContent("Comment content 2").setPost(post).setAuthor(user);
@@ -281,10 +281,10 @@ public class PostControllerIT {
             assertThat(responseCommentDtos.size()).isEqualTo(2);
             assertThat(responseCommentDtos.getFirst().getContent()).isEqualTo("Comment content");
             assertThat(responseCommentDtos.getFirst().getAuthor().getId()).isEqualTo(1);
-            assertThat(responseCommentDtos.getFirst().getAuthor().getUserName()).isEqualTo("test");
+            assertThat(responseCommentDtos.getFirst().getAuthor().getUsername()).isEqualTo("test");
             assertThat(responseCommentDtos.get(1).getContent()).isEqualTo("Comment content 2");
             assertThat(responseCommentDtos.get(1).getAuthor().getId()).isEqualTo(1);
-            assertThat(responseCommentDtos.get(1).getAuthor().getUserName()).isEqualTo("test");
+            assertThat(responseCommentDtos.get(1).getAuthor().getUsername()).isEqualTo("test");
         }
     }
 
@@ -322,7 +322,7 @@ public class PostControllerIT {
         @Test
         @WithMockUser(username = "test@example.com")
         public void shouldReturnNotFoundWhenPostNotFound() throws Exception {
-            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            User user = new User().setId(1).setUsername("test").setEmail("test@example.com");
             CreateOrUpdateCommentDto createOrUpdateCommentDto = new CreateOrUpdateCommentDto();
             createOrUpdateCommentDto.setContent("Comment content");
 
@@ -337,7 +337,7 @@ public class PostControllerIT {
         @Test
         @WithMockUser(username = "test@example.com")
         public void shouldCreateComment() throws Exception {
-            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            User user = new User().setId(1).setUsername("test").setEmail("test@example.com");
             Post post = new Post().setId(1).setTitle("Post title").setContent("Post content");
             CreateOrUpdateCommentDto createOrUpdateCommentDto = new CreateOrUpdateCommentDto();
             createOrUpdateCommentDto.setContent("Comment content");
@@ -353,7 +353,7 @@ public class PostControllerIT {
             CommentDto responseCommentDto = objectMapper.readValue(result.getResponse().getContentAsString(), CommentDto.class);
             assertThat(responseCommentDto.getContent()).isEqualTo("Comment content");
             assertThat(responseCommentDto.getAuthor().getId()).isEqualTo(1);
-            assertThat(responseCommentDto.getAuthor().getUserName()).isEqualTo("test");
+            assertThat(responseCommentDto.getAuthor().getUsername()).isEqualTo("test");
         }
 
     }

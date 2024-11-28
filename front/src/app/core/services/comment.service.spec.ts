@@ -33,8 +33,8 @@ describe('CommentService', () => {
   
   it('should retreive all post comments', (done) => {
     const mockComments:Comment[] = [
-      {id: 1, author: {userName: "user1", email: "user1@example.com"} as User, postId: 1, content: "comment 1"} as Comment,
-      {id: 2, author: {userName: "user2", email: "user2@example.com"} as User, postId: 1, content: "comment 2"} as Comment
+      {id: 1, author: {username: "user1", email: "user1@example.com"} as User, postId: 1, content: "comment 1"} as Comment,
+      {id: 2, author: {username: "user2", email: "user2@example.com"} as User, postId: 1, content: "comment 2"} as Comment
     ];
 
     service.getPostComments(1).subscribe(
@@ -51,8 +51,8 @@ describe('CommentService', () => {
 
   it('should retreive all post comments from local cache when present', (done) => {
     const mockComments:Comment[] = [
-      {id: 1, author: {userName: "user1", email: "user1@example.com"} as User, postId: 1, content: "comment 1"} as Comment,
-      {id: 2, author: {userName: "user2", email: "user2@example.com"} as User, postId: 1, content: "comment 2"} as Comment
+      {id: 1, author: {username: "user1", email: "user1@example.com"} as User, postId: 1, content: "comment 1"} as Comment,
+      {id: 2, author: {username: "user2", email: "user2@example.com"} as User, postId: 1, content: "comment 2"} as Comment
     ];
 
     service.getPostComments(1).pipe(take(1)).subscribe(
@@ -77,8 +77,8 @@ describe('CommentService', () => {
 
   it('should not get comments from cache when post changes', (done) => {
     const mockComments:Comment[] = [
-      {id: 1, author: {userName: "user1", email: "user1@example.com"} as User, postId: 1, content: "comment 1"} as Comment,
-      {id: 2, author: {userName: "user2", email: "user2@example.com"} as User, postId: 1, content: "comment 2"} as Comment
+      {id: 1, author: {username: "user1", email: "user1@example.com"} as User, postId: 1, content: "comment 1"} as Comment,
+      {id: 2, author: {username: "user2", email: "user2@example.com"} as User, postId: 1, content: "comment 2"} as Comment
     ];
 
     service.getPostComments(1).pipe(take(1)).subscribe(
@@ -92,8 +92,8 @@ describe('CommentService', () => {
     testRequest.flush(mockComments);
 
     const secondMockComments:Comment[] = [
-      {id: 3, author: {userName: "user3", email: "user3@example.com"} as User, postId: 2, content: "comment 3"} as Comment,
-      {id: 4, author: {userName: "user4", email: "user4@example.com"} as User, postId: 2, content: "comment 4"} as Comment
+      {id: 3, author: {username: "user3", email: "user3@example.com"} as User, postId: 2, content: "comment 3"} as Comment,
+      {id: 4, author: {username: "user4", email: "user4@example.com"} as User, postId: 2, content: "comment 4"} as Comment
     ];
 
     service.getPostComments(2).pipe(take(1)).subscribe(
@@ -109,7 +109,7 @@ describe('CommentService', () => {
   });
 
   it('should create comment', (done) => {
-    const mockComment: Comment = {postId: 1, author: {userName: "testuser", email: "testuser@example.com"} as User, content: "Test comment"} as Comment;
+    const mockComment: Comment = {postId: 1, author: {username: "testuser", email: "testuser@example.com"} as User, content: "Test comment"} as Comment;
 
     service.createPostComment(1, {content: "Test comment"} as CreateCommentRequest).pipe(
       take(1)

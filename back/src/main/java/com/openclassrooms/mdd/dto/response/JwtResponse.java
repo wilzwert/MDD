@@ -20,6 +20,6 @@ public class JwtResponse {
   @Schema(description = "The User id")
   private int id;
 
-  @Schema(description = "The User usename")
+  @Schema(description = "The User username")
   private String username;
 }

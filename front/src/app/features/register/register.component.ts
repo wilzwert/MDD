@@ -26,8 +26,6 @@ import { ApiError } from '../../core/errors/api-error';
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
-  public error: string |null = null;
-
   public form: FormGroup;
 
   constructor(
@@ -45,7 +43,7 @@ export class RegisterComponent {
           Validators.email
         ]
       ],
-      userName: [
+      username: [
         '', 
         [
           Validators.required,
@@ -66,8 +64,8 @@ export class RegisterComponent {
     return this.form.get('email');
   }
 
-  get userName() {
-    return this.form.get('userName');
+  get username() {
+    return this.form.get('username');
   }
 
   get password() {
@@ -76,7 +74,6 @@ export class RegisterComponent {
 
 
   submit() :void {
-    this.error = null;
     this.authService.register(this.form.value as RegisterRequest)
     .pipe(
       take(1),
@@ -89,7 +86,7 @@ export class RegisterComponent {
     ))
     .subscribe({
       next: data => {
-        this.matSnackBar.open("Votre inscription a bien été enregistrée, vous pouvez maintenant vous connecter", 'Close', { duration: 3000 })
+        this.notificationService.confirmation("Votre inscription a bien été enregistrée, vous pouvez maintenant vous connecter");
         this.router.navigate(["/login"])
       }
     });

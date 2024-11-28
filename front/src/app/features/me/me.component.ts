@@ -1,19 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CurrentUserService } from '../../core/services/current-user.service';
 import { User } from '../../core/models/user.interface';
-import { Observable, tap } from 'rxjs';
+import { Observable, take, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { TopicComponent } from '../topics/list/topic/topic.component';
 import { Subscription } from '../../core/models/subscription.interface';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UpdateUserRequest } from '../../core/models/update-user-request';
 import { SessionService } from '../../core/services/session.service';
-import { Router } from '@angular/router';
 import { NotificationService } from '../../core/services/notification.service';
 import { CurrentUserSubscriptionService } from '../../core/services/current-user-subscription.service';
 
@@ -22,10 +19,8 @@ import { CurrentUserSubscriptionService } from '../../core/services/current-user
   standalone: true,
   imports: [
     TopicComponent, 
-    AsyncPipe, 
-    MatGridListModule,
+    AsyncPipe,
     MatButtonModule,
-    MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule
@@ -42,12 +37,16 @@ export class MeComponent implements OnInit{
 
   public updateCurrentUser() :void {
     this.userService.updateCurrentUser(this.form.value as UpdateUserRequest).pipe(
-      tap(() => this.notificationService.confirmation("Modifications enregistrées"))
-    ).subscribe();
+      take(1)
+    ).subscribe((user: User) => {
+      this.notificationService.confirmation("Modifications enregistrées");
+    });
   }
 
   public onUnsubscribe(topicId: number) :void {
-    this.userSubscriptionService.unSubscribe(topicId).pipe(tap(() => this.notificationService.confirmation("Désabonnement pris en compte"))).subscribe();
+    this.userSubscriptionService.unSubscribe(topicId).pipe(take(1)).subscribe(() => {
+      this.notificationService.confirmation("Désabonnement pris en compte")
+    });
   }
 
   ngOnInit(): void {
@@ -61,8 +60,8 @@ export class MeComponent implements OnInit{
               Validators.email
             ]
           ],
-          userName: [
-            user.userName, 
+          username: [
+            user.username, 
             [
               Validators.required,
               Validators.min(6)
