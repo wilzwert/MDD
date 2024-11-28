@@ -4,6 +4,8 @@ import { MenuComponent } from './menu.component';
 import { SessionService } from '../../core/services/session.service';
 import { of } from 'rxjs';
 import { provideRouter, RouterLink } from '@angular/router';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -17,11 +19,25 @@ describe('MenuComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        MenuComponent
+        MenuComponent,
+        MatIconModule
       ],
       providers: [
         provideRouter([]),
-        { provide: SessionService, useValue: sessionServiceMock}
+        { provide: SessionService, useValue: sessionServiceMock},
+        {
+          provide: MatIconRegistry,
+          useValue: {
+            addSvgIcon: jest.fn(),
+            getNamedSvgIcon: jest.fn().mockReturnValue(of('<svg></svg>')),
+          },
+        },
+        {
+          provide: DomSanitizer,
+          useValue: {
+            bypassSecurityTrustResourceUrl: jest.fn(),
+          },
+        },
       ]
     })
     .compileComponents();

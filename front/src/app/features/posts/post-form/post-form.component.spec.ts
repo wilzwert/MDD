@@ -3,7 +3,7 @@ import { PostFormComponent } from './post-form.component';
 import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatIconRegistry } from '@angular/material/icon';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { of, throwError } from 'rxjs';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -47,7 +47,8 @@ describe('PostFormComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         PostFormComponent,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        MatIconModule
       ],
       providers: [
         provideHttpClient(),
@@ -173,7 +174,7 @@ describe('PostFormComponent', () => {
     } as any;
 
     component.submit();
-    
+
     expect(routerMock.navigate).not.toHaveBeenCalled();
     expect(notificationServiceMock.confirmation).not.toHaveBeenCalled();
   })
