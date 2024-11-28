@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { PostService } from '../../../core/services/post.service';
 import { CreatePostRequest } from '../../../core/models/create-post-request.interface';
-import { Observable, take } from 'rxjs';
+import { catchError, map, Observable, take, throwError } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -49,10 +48,23 @@ export class PostFormComponent implements OnInit {
     private fb: FormBuilder,
     private notificationService: NotificationService,
   ) {
-    this.topics$ = this.topicService.getAllTopics();
   }
 
   ngOnInit(): void {
+    this.topics$ = this.topicService.getAllTopics().pipe(
+      map((topics: Topic[]) => {
+        if(topics.length < 1) {
+          this.notificationService.error("Aucun thème disponible, impossible de créer un article.");
+          this.router.navigate(["/posts"]);
+        }
+        return topics;
+      }),
+      catchError((error: Error) => {
+        this.notificationService.error("Aucun thème disponible, impossible de créer un article.");
+        this.router.navigate(["/posts"]);
+        return throwError(() => error);
+      })
+    );
     this.initForm();
   }
 
@@ -60,12 +72,11 @@ export class PostFormComponent implements OnInit {
     this.error = null;
     this.postService.createPost(this.form?.value as CreatePostRequest)
     .pipe(take(1))
-    .subscribe({
-      next: data => {
+    .subscribe(() => {
         this.notificationService.confirmation("Votre article a bien été créé")
         this.router.navigate(["/posts"])
       }
-    });
+    );
   }
 
   get topicId() {

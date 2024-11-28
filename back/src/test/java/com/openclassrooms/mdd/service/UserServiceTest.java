@@ -106,16 +106,16 @@ public class UserServiceTest {
         }
 
         @Test
-        public void shouldThrowEntityExistsExceptionWhenUserNameAlreadyExists() {
-            User user = new User().setEmail("test@example.com").setUserName("testuser");
+        public void shouldThrowEntityExistsExceptionWhenUsernameAlreadyExists() {
+            User user = new User().setEmail("test@example.com").setUsername("testuser");
 
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
-            when(userRepository.findByUserName("testuser")).thenReturn(Optional.of(user));
+            when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
 
             EntityExistsException exception = assertThrows(EntityExistsException.class, () -> userService.registerUser(user));
 
             verify(userRepository).findByEmail("test@example.com");
-            verify(userRepository).findByUserName("testuser");
+            verify(userRepository).findByUsername("testuser");
 
             assertThat(exception).isNotNull();
             assertThat(exception).hasMessage("Username already exists");
@@ -158,15 +158,15 @@ public class UserServiceTest {
         }
 
         @Test
-        public void shouldThrowEntityExistsExceptionWhenUserNameAlreadyExists() {
-            User user = new User().setEmail("test@example.com").setUserName("testuser");
-            User updateUser = new User().setEmail("test@example.com").setUserName("othertestuser");
+        public void shouldThrowEntityExistsExceptionWhenUsernameAlreadyExists() {
+            User user = new User().setEmail("test@example.com").setUsername("testuser");
+            User updateUser = new User().setEmail("test@example.com").setUsername("othertestuser");
 
-            when(userRepository.findByUserName("othertestuser")).thenReturn(Optional.of(new User().setEmail("othertest@example.com")));
+            when(userRepository.findByUsername("othertestuser")).thenReturn(Optional.of(new User().setEmail("othertest@example.com")));
 
             EntityExistsException exception = assertThrows(EntityExistsException.class, () -> userService.updateUser(user, updateUser));
 
-            verify(userRepository).findByUserName("othertestuser");
+            verify(userRepository).findByUsername("othertestuser");
 
             assertThat(exception).isNotNull();
             assertThat(exception).hasMessage("Username already exists");
@@ -174,22 +174,22 @@ public class UserServiceTest {
 
         @Test
         public void shouldUpdateUser() {
-            User user = new User().setEmail("test@example.com").setUserName("testuser");
-            User updateUser = new User().setEmail("othertest@example.com").setUserName("othertestuser");
+            User user = new User().setEmail("test@example.com").setUsername("testuser");
+            User updateUser = new User().setEmail("othertest@example.com").setUsername("othertestuser");
 
             when(userRepository.findByEmail("othertest@example.com")).thenReturn(Optional.empty());
-            when(userRepository.findByUserName("othertestuser")).thenReturn(Optional.empty());
+            when(userRepository.findByUsername("othertestuser")).thenReturn(Optional.empty());
             when(userRepository.save(user)).thenReturn(user);
 
             User updatedUser =  userService.updateUser(user, updateUser);
 
             verify(userRepository).findByEmail("othertest@example.com");
-            verify(userRepository).findByUserName("othertestuser");
+            verify(userRepository).findByUsername("othertestuser");
             verify(userRepository).save(user);
 
             assertThat(updatedUser).isNotNull();
             assertThat(updatedUser.getEmail()).isEqualTo("othertest@example.com");
-            assertThat(updatedUser.getUserName()).isEqualTo("othertestuser");
+            assertThat(updatedUser.getUsername()).isEqualTo("othertestuser");
 
         }
     }
@@ -207,7 +207,7 @@ public class UserServiceTest {
         }
         @Test
         public void shouldThrowAuthenticationExceptionWhenAuthenticationManagerFails() {
-            User user = new User().setEmail("test@example.com").setPassword("password").setUserName("test");
+            User user = new User().setEmail("test@example.com").setPassword("password").setUsername("test");
 
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
             when(authenticationManager.authenticate(any(Authentication.class))).thenThrow(new AuthenticationException(""){});
@@ -253,7 +253,7 @@ public class UserServiceTest {
     class SubscriptionCreationTest {
         @Test
         public void shouldThrowEntityNotFoundExceptionWhenTopicNotFound() {
-            User user = new User().setEmail("test@example.com").setPassword("password").setUserName("test");
+            User user = new User().setEmail("test@example.com").setPassword("password").setUsername("test");
             when(topicRepository.findById(1)).thenReturn(Optional.empty());
 
             assertThrows(EntityNotFoundException.class, () -> userService.subscribe(user, 1));
@@ -263,7 +263,7 @@ public class UserServiceTest {
 
         @Test
         public void shouldCreateSubscription() {
-            User user = new User().setEmail("test@example.com").setPassword("password").setUserName("test");
+            User user = new User().setEmail("test@example.com").setPassword("password").setUsername("test");
             Topic topic = new Topic().setId(1).setTitle("Topic title");
 
             when(topicRepository.findById(1)).thenReturn(Optional.of(topic));
@@ -284,7 +284,7 @@ public class UserServiceTest {
     class SubscriptionDeletionTest {
         @Test
         public void shouldThrowEntityNotFoundExceptionWhenTopicNotFound() {
-            User user = new User().setEmail("test@example.com").setPassword("password").setUserName("test");
+            User user = new User().setEmail("test@example.com").setPassword("password").setUsername("test");
             when(topicRepository.findById(1)).thenReturn(Optional.empty());
 
             assertThrows(EntityNotFoundException.class, () -> userService.unSubscribe(user, 1));
@@ -294,7 +294,7 @@ public class UserServiceTest {
 
         @Test
         public void shouldThrowEntityNotFoundExceptionWhenParticipationNotFound() {
-            User user = new User().setEmail("test@example.com").setPassword("password").setUserName("test").setSubscriptions(new ArrayList<>());
+            User user = new User().setEmail("test@example.com").setPassword("password").setUsername("test").setSubscriptions(new ArrayList<>());
             Topic topic = new Topic().setId(1).setTitle("Topic title");
             when(topicRepository.findById(1)).thenReturn(Optional.of(topic));
 
@@ -305,7 +305,7 @@ public class UserServiceTest {
 
         @Test
         public void shouldDeleteSubscription() {
-            User user = new User().setEmail("test@example.com").setPassword("password").setUserName("test");
+            User user = new User().setEmail("test@example.com").setPassword("password").setUsername("test");
             Topic topic = new Topic().setId(1).setTitle("Topic title");
             Subscription subscription = new Subscription().setUser(user).setTopic(topic).setCreatedAt(LocalDateTime.now());
             user.setSubscriptions(Collections.singletonList(subscription));

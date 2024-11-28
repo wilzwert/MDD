@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
    * Handles topics loading and caching through a BehaviorSubject
   */
 export class TopicService {
-  private apiPath:string = '/api/topics';
+  private apiPath:string = 'api/topics';
   private topics$: BehaviorSubject<Topic[] |null> | null = null;
   private cachedAt: number = 0;
   private isReloading: boolean = false;
@@ -43,24 +43,11 @@ export class TopicService {
    */
   getAllTopics(): Observable<Topic[]> {    
     return this.getTopicsSubject().pipe(
-      // map topics to null when no topics present or reloading needed
-      /*
-      map((topics: Topic[] | null) =>  {
-        if(topics) {
-          if(!this.shouldReload()) {
-            return topics;
-          }
-          // force reload
-          return null;
-        }
-        return topics;
-      }),*/
       switchMap((topics: Topic[] | null) => {
         if (topics && !this.shouldReload()) {
           // send current topics if already present
           return of(topics);
         } else {
-          console.log('reloading all topics from API');
           this.isReloading = true;
           // fetch from backend
           return this.httpClient.get<Topic[]>(`${this.apiPath}`).pipe(

@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { SessionService } from '../../core/services/session.service';
 import { LoginRequest } from '../../core/models/login-request.interface';
@@ -19,9 +17,7 @@ import { ApiError } from '../../core/errors/api-error';
   standalone: true,
   imports: [
     MatButtonModule,
-    MatCardModule,
     MatFormFieldModule,
-    MatIconModule,
     MatInputModule,
     ReactiveFormsModule
   ],
@@ -30,8 +26,6 @@ import { ApiError } from '../../core/errors/api-error';
 })
 export class LoginComponent {
   public hide: boolean = true;
-  public onError: boolean = false;
-
   public form:FormGroup;
 
   constructor(
@@ -72,7 +66,7 @@ export class LoginComponent {
         .subscribe(
           (response: SessionInformation) => {
             this.sessionService.logIn(response);
-            this.router.navigate(['/'])
+            this.router.navigate(['/posts'])
           }
         )
   }

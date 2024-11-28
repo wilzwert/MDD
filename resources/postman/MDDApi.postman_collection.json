@@ -17,7 +17,7 @@
 							"script": {
 								"exec": [
 									"pm.collectionVariables.set(\"userMail\", (Math.random() + 1).toString(36).substring(7)+\"@wilhelm.me\");\r",
-									"pm.collectionVariables.set(\"userName\", (Math.random() + 1).toString(36).substring(7));"
+									"pm.collectionVariables.set(\"username\", (Math.random() + 1).toString(36).substring(7));"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -32,7 +32,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"{{userMail}}\",\n    \"userName\": \"{{userName}}\",\n    \"password\": \"aAbcd.1234\"\n}",
+							"raw": "{\n    \"email\": \"{{userMail}}\",\n    \"username\": \"{{username}}\",\n    \"password\": \"aAbcd.1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -932,7 +932,7 @@
 			"type": "string"
 		},
 		{
-			"key": "userName",
+			"key": "username",
 			"value": ""
 		},
 		{

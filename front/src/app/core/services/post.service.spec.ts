@@ -6,15 +6,14 @@ import { User } from '../models/user.interface';
 import { Topic } from '../models/topic.interface';
 import { HttpTestingController, provideHttpClientTesting, TestRequest } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { CurrentUserService } from './current-user.service';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Subscription } from '../models/subscription.interface';
 import { CurrentUserSubscriptionService } from './current-user-subscription.service';
+import { PostSort } from '../models/post-sort.interface';
 
 describe('PostService', () => {
   let service: PostService;
   let mockHttpController: HttpTestingController;
-  let subscriptionService: CurrentUserSubscriptionService;
   let mockSubscriptionsSubject: BehaviorSubject<Subscription[] | null> = new BehaviorSubject<Subscription[] | null>(null);
   const mockSubscriptions: Subscription[] = [
     {userId: 1, createdAt: '2024-11-27T10:03', topic: {id: 1, title: 'Test topic', description: 'This is a test topic', createdAt: '2024-01-28T11:00:00', updatedAt: '2024-01-28T11:00:00'}},
@@ -36,7 +35,7 @@ describe('PostService', () => {
     });
     service = TestBed.inject(PostService);
     mockHttpController = TestBed.inject(HttpTestingController);
-    subscriptionService = TestBed.inject(CurrentUserSubscriptionService);
+    TestBed.inject(CurrentUserSubscriptionService);
 
     spyOnClearCache = jest.spyOn(service, 'clearCache');
   });
@@ -44,7 +43,7 @@ describe('PostService', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-
+  
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
@@ -52,7 +51,7 @@ describe('PostService', () => {
   
   it('should retrieve all posts', (done) => {
     const mockPosts: Post[] = [
-      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "userName": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post
+      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post
     ];
 
     service.getAllPosts().subscribe(
@@ -69,7 +68,7 @@ describe('PostService', () => {
 
   it('should retrieve all posts from cache when present', (done) => {
     const mockPosts: Post[] = [
-      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "userName": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post
+      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post
     ];
 
     // first retrieval should populate local cache
@@ -101,7 +100,7 @@ describe('PostService', () => {
 
     // first retrieval should trigger an API request, as no local cache is present on first call
     const mockPosts: Post[] = [
-      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "userName": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post
+      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post
     ];
 
     service.getAllPosts().subscribe(
@@ -141,7 +140,7 @@ describe('PostService', () => {
     expect(spyOnClearCache).not.toHaveBeenCalled();
 
     const mockPosts: Post[] = [
-      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "userName": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post
+      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post
     ];
 
     // posts retrieval should trigger an API request
@@ -164,7 +163,7 @@ describe('PostService', () => {
   });
 
   it('should retrieve a Post by its id', (done) => {
-    const mockPost = {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "userName": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const mockPost = {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
     service.getPostById("1").subscribe(
       (post: Post) => {
         expect(post).toEqual(mockPost);
@@ -178,9 +177,9 @@ describe('PostService', () => {
 
   it('should create a new post and update local cache when present', (done) => {
     const mockPosts: Post[] = [
-      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "userName": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post
+      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post
     ];
-    const mockCreatedPost: Post = {id: 2, title: "Created post", content: "Created post content", author: {id: 1, "userName": "testuser"} as User, topic: {id: 2, title: "Other test topic"} as Topic} as Post;
+    const mockCreatedPost: Post = {id: 2, title: "Created post", content: "Created post content", author: {id: 1, "username": "testuser"} as User, topic: {id: 2, title: "Other test topic"} as Topic} as Post;
 
     service.getAllPosts().subscribe(
       (posts: Post[]) => {
@@ -212,9 +211,9 @@ describe('PostService', () => {
   });
   
   it('should create a new post and not populate local cache when empty', (done) => {
-    const mockCreatedPost: Post = {id: 2, title: "Created post", content: "Created post content", author: {id: 1, "userName": "testuser"} as User, topic: {id: 2, title: "Other test topic"} as Topic} as Post;
+    const mockCreatedPost: Post = {id: 2, title: "Created post", content: "Created post content", author: {id: 1, "username": "testuser"} as User, topic: {id: 2, title: "Other test topic"} as Topic} as Post;
     const mockPosts: Post[] = [
-      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "userName": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post,
+      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post,
       mockCreatedPost
     ];
     
@@ -242,7 +241,7 @@ describe('PostService', () => {
 
   it('should retrieve all posts from API when cache present but expired', (done) => {
     const mockPosts: Post[] = [
-      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "userName": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post
+      {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post
     ];
 
     // first posts retrieval should trigger an API request and populate cache
@@ -262,9 +261,8 @@ describe('PostService', () => {
     // second posts retrieval when cache expired should trigger an API request and repopulate cache
     service.getAllPosts().subscribe(
       (posts: Post[]) => {
-        console.log(posts);
-        done();
         expect(posts).toEqual(mockPosts);
+        done();
         
       }
     );
@@ -275,4 +273,134 @@ describe('PostService', () => {
     expect(spyOnShouldReload).toHaveBeenCalled();
   });
 
+  it('should sort Posts by creation date desc ', (done) => {
+    const post1: Post = {id: 1, title: "Test post", content: "Test post content", createdAt: '2024-11-02T11:00:00', author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post2: Post = {id: 2, title: "Second test post", content: "Second test post content", createdAt: '2024-10-28T08:00:00', author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post3: Post = {id: 3, title: "Third test post", content: "Third test post content", createdAt: '2024-09-26T08:00:00', author: {id: 2, "username": "testuser2"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post4: Post = {id: 4, title: "Fourth test post", content: "Fourth test post content", createdAt: '2024-09-28T08:00:00', author: {id: 2, "username": "testuser2"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+
+    const mockPosts = [post1, post2, post3, post4];
+    const expectedMockPosts = [post1, post2, post4, post3]
+    // second posts retrieval when cache expired should trigger an API request and repopulate cache
+    service.getAllPosts({sortByAuthor: undefined, sortByPost: true, orderByAuthorAscending: undefined, orderByPostAscending: false} as PostSort).subscribe(
+      (posts: Post[]) => {
+        expect(posts).toEqual(expectedMockPosts);
+        done();
+      }
+    );
+
+    const retrievalRequest: TestRequest = mockHttpController.expectOne("api/posts");
+    expect(retrievalRequest.request.method).toEqual("GET");
+    retrievalRequest.flush(mockPosts);
+    
+  });
+
+  it('should sort Posts by creation date asc', (done) => {
+    const post1: Post = {id: 1, title: "Test post", content: "Test post content", createdAt: '2024-11-02T11:00:00', author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post2: Post = {id: 2, title: "Second test post", content: "Second test post content", createdAt: '2024-10-28T08:00:00', author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post3: Post = {id: 3, title: "Third test post", content: "Third test post content", createdAt: '2024-09-26T08:00:00', author: {id: 2, "username": "testuser2"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post4: Post = {id: 4, title: "Fourth test post", content: "Fourth test post content", createdAt: '2024-09-28T08:00:00', author: {id: 2, "username": "testuser2"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+
+    const mockPosts = [post1, post2, post3, post4];
+    const expectedMockPosts = [post3, post4, post2, post1]
+    // second posts retrieval when cache expired should trigger an API request and repopulate cache
+    service.getAllPosts({sortByAuthor: undefined, sortByPost: true, orderByAuthorAscending: undefined, orderByPostAscending: true} as PostSort).subscribe(
+      (posts: Post[]) => {
+        expect(posts).toEqual(expectedMockPosts);
+        done();
+      }
+    );
+
+    const retrievalRequest: TestRequest = mockHttpController.expectOne("api/posts");
+    expect(retrievalRequest.request.method).toEqual("GET");
+    retrievalRequest.flush(mockPosts);
+
+  });
+
+  it('should sort Posts by username asc and creation date desc', (done) => {
+    const post1: Post = {id: 1, title: "Test post", content: "Test post content", createdAt: '2024-11-02T11:00:00', author: {id: 1, "username": "btestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post2: Post = {id: 2, title: "Second test post", content: "Second test post content", createdAt: '2024-10-28T08:00:00', author: {id: 1, "username": "btestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post3: Post = {id: 3, title: "Third test post", content: "Third test post content", createdAt: '2024-09-26T08:00:00', author: {id: 2, "username": "atestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post4: Post = {id: 4, title: "Fourth test post", content: "Fourth test post content", createdAt: '2024-09-28T08:00:00', author: {id: 2, "username": "atestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+
+    const mockPosts = [post1, post2, post3, post4];
+    const expectedMockPosts = [post4, post3, post1, post2];
+    // second posts retrieval when cache expired should trigger an API request and repopulate cache
+    service.getAllPosts({sortByAuthor: true, sortByPost: undefined, orderByAuthorAscending: true, orderByPostAscending: undefined} as PostSort).subscribe(
+      (posts: Post[]) => {
+        expect(posts).toEqual(expectedMockPosts);
+        done();
+      }
+    );
+
+    const retrievalRequest: TestRequest = mockHttpController.expectOne("api/posts");
+    expect(retrievalRequest.request.method).toEqual("GET");
+    retrievalRequest.flush(mockPosts);
+  });
+
+  it('should sort Posts by username asc and creation date asc', (done) => {
+    const post1: Post = {id: 1, title: "Test post", content: "Test post content", createdAt: '2024-11-02T11:00:00', author: {id: 1, "username": "btestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post2: Post = {id: 2, title: "Second test post", content: "Second test post content", createdAt: '2024-10-28T08:00:00', author: {id: 1, "username": "btestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post3: Post = {id: 3, title: "Third test post", content: "Third test post content", createdAt: '2024-09-26T08:00:00', author: {id: 2, "username": "atestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post4: Post = {id: 4, title: "Fourth test post", content: "Fourth test post content", createdAt: '2024-09-28T08:00:00', author: {id: 2, "username": "atestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+
+    const mockPosts = [post1, post2, post3, post4];
+    const expectedMockPosts = [post3, post4, post2, post1];
+    // second posts retrieval when cache expired should trigger an API request and repopulate cache
+    service.getAllPosts({sortByAuthor: true, sortByPost: true, orderByAuthorAscending: true, orderByPostAscending: true} as PostSort).subscribe(
+      (posts: Post[]) => {
+        expect(posts).toEqual(expectedMockPosts);
+        done();
+      }
+    );
+
+    const retrievalRequest: TestRequest = mockHttpController.expectOne("api/posts");
+    expect(retrievalRequest.request.method).toEqual("GET");
+    retrievalRequest.flush(mockPosts);
+
+  });
+
+  it('should sort Posts by username desc and creation date desc', (done) => {
+    const post1: Post = {id: 1, title: "Test post", content: "Test post content", createdAt: '2024-11-02T11:00:00', author: {id: 1, "username": "btestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post2: Post = {id: 2, title: "Second test post", content: "Second test post content", createdAt: '2024-10-28T08:00:00', author: {id: 1, "username": "btestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post3: Post = {id: 3, title: "Third test post", content: "Third test post content", createdAt: '2024-09-26T08:00:00', author: {id: 2, "username": "atestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post4: Post = {id: 4, title: "Fourth test post", content: "Fourth test post content", createdAt: '2024-09-28T08:00:00', author: {id: 2, "username": "atestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+
+    const mockPosts = [post1, post2, post3, post4];
+    const expectedMockPosts = [post1, post2, post4, post3];
+    // second posts retrieval when cache expired should trigger an API request and repopulate cache
+    service.getAllPosts({sortByAuthor: true, sortByPost: undefined, orderByAuthorAscending: false, orderByPostAscending: undefined} as PostSort).subscribe(
+      (posts: Post[]) => {
+        expect(posts).toEqual(expectedMockPosts);
+        done();
+      }
+    );
+
+    const retrievalRequest: TestRequest = mockHttpController.expectOne("api/posts");
+    expect(retrievalRequest.request.method).toEqual("GET");
+    retrievalRequest.flush(mockPosts);
+
+  });
+
+  it('should sort Posts by username desc and creation date asc', (done) => {
+    const post1: Post = {id: 1, title: "Test post", content: "Test post content", createdAt: '2024-11-02T11:00:00', author: {id: 1, "username": "btestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post2: Post = {id: 2, title: "Second test post", content: "Second test post content", createdAt: '2024-10-28T08:00:00', author: {id: 1, "username": "btestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post3: Post = {id: 3, title: "Third test post", content: "Third test post content", createdAt: '2024-09-26T08:00:00', author: {id: 2, "username": "atestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+    const post4: Post = {id: 4, title: "Fourth test post", content: "Fourth test post content", createdAt: '2024-09-28T08:00:00', author: {id: 2, "username": "atestuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
+
+    const mockPosts = [post1, post2, post3, post4];
+    const expectedMockPosts = [post2, post1, post3, post4];
+    // second posts retrieval when cache expired should trigger an API request and repopulate cache
+    service.getAllPosts({sortByAuthor: true, sortByPost: undefined, orderByAuthorAscending: false, orderByPostAscending: true} as PostSort).subscribe(
+      (posts: Post[]) => {
+        expect(posts).toEqual(expectedMockPosts);
+        done();
+      }
+    );
+
+    const retrievalRequest: TestRequest = mockHttpController.expectOne("api/posts");
+    expect(retrievalRequest.request.method).toEqual("GET");
+    retrievalRequest.flush(mockPosts);
+
+  });
 });

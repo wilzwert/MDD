@@ -42,7 +42,7 @@ public class UserMapperTest {
 
         User user = new User()
                 .setId(1)
-                .setUserName("testuser")
+                .setUsername("testuser")
                 .setEmail("test@example.com")
                 .setCreatedAt(now)
                 .setUpdatedAt(now);
@@ -51,7 +51,7 @@ public class UserMapperTest {
 
         assertThat(userDto).isNotNull();
         assertThat(userDto.getId()).isEqualTo(1);
-        assertThat(userDto.getUserName()).isEqualTo("testuser");
+        assertThat(userDto.getUsername()).isEqualTo("testuser");
         assertThat(userDto.getCreatedAt()).isEqualTo(now);
         assertThat(userDto.getUpdatedAt()).isEqualTo(now);
     }
@@ -68,12 +68,12 @@ public class UserMapperTest {
     @Test
     public void testCreateDtoToUser() {
         RegisterUserDto userDto = new RegisterUserDto();
-        userDto.setUserName("testuser");
+        userDto.setUsername("testuser");
         userDto.setEmail("test@example.com");
         User user = userMapper.registerUserDtoToUser(userDto);
 
         assertThat(user).isNotNull();
-        assertThat(user.getUserName()).isEqualTo("testuser");
+        assertThat(user.getUsername()).isEqualTo("testuser");
         assertThat(user.getEmail()).isEqualTo("test@example.com");
     }
 }

@@ -10,7 +10,7 @@ describe('AuthGuard', () => {
   let mockRouter: any;
 
   beforeEach(() => {
-    mockSessionService = { isLogged: false };
+    mockSessionService = { isLogged: jest.fn().mockReturnValue(false) };
     mockRouter ={navigate: jest.fn()};
     TestBed.configureTestingModule({
       providers: [
@@ -28,7 +28,7 @@ describe('AuthGuard', () => {
   });
 
   it('should return true if logged in', () => {
-    mockSessionService.isLogged = true;
+    mockSessionService.isLogged.mockReturnValue(true);
     expect(guard.canActivate()).toBe(true);
   })
 

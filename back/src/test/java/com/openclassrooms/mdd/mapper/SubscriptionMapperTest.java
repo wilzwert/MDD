@@ -106,8 +106,8 @@ public class SubscriptionMapperTest {
     @Test
     public void testSubscriptionListToDtoList() {
         LocalDateTime now = LocalDateTime.now();
-        User user1 = new User().setId(1).setUserName("testuser1");
-        User user2 = new User().setId(2).setUserName("testuser2");
+        User user1 = new User().setId(1).setUsername("testuser1");
+        User user2 = new User().setId(2).setUsername("testuser2");
         Topic topic1 = new Topic().setId(1).setTitle("test topic 1");
         Topic topic2 = new Topic().setId(2).setTitle("test topic 2");
 

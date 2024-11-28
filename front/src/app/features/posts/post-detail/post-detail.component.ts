@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject, catchError, Observable, Subject, takeUntil, tap, throwError } from 'rxjs';
 import { Post } from '../../../core/models/post.interface';
 import { PostService } from '../../../core/services/post.service';
 import { AsyncPipe, DatePipe } from '@angular/common';
@@ -14,6 +14,7 @@ import { MatIconButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NotificationService } from '../../../core/services/notification.service';
+import { ApiError } from '../../../core/errors/api-error';
 
 @Component({
   selector: 'app-post-detail',
@@ -22,7 +23,9 @@ import { NotificationService } from '../../../core/services/notification.service
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.scss'
 })
-export class PostDetailComponent implements OnInit {
+export class PostDetailComponent implements OnInit, OnDestroy {
+  private destroy$: Subject<boolean> = new Subject<boolean>();
+
   public post$!: Observable<Post>;
   public comments$!: Observable<Comment[]>;
   public form!: FormGroup;
@@ -30,6 +33,7 @@ export class PostDetailComponent implements OnInit {
 
 
   constructor(
+    private router: Router,
     private activatedRoute: ActivatedRoute, 
     private postService: PostService, 
     private commentService: CommentService, 
@@ -52,27 +56,35 @@ export class PostDetailComponent implements OnInit {
 
   submit(): void {
     this.commentService.createPostComment(this.postId, this.form.value as CreateCommentRequest)
-      .pipe(
-        tap(() => this.notificationService.confirmation("Merci pour votre commentaire !"))
-      )
-      .subscribe();
+      .subscribe(() => this.notificationService.confirmation("Merci pour votre commentaire !"));
   }
 
   get content() {
     return this.form.get('content');
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+  }
+
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
-      // Access the 'id' parameter from the URL
-      this.postId = params['id'];
-      this.post$ = this.postService.getPostById(params['id']).pipe(
-        // set page title once the post is available
-        tap((post: Post) =>{this.title.setTitle(`Article - ${post.title}`)})
-      );
-      // load post comments 
-      this.comments$ = this.commentService.getPostComments(params['id']); 
-      this.initForm();
+    
+    this.activatedRoute.params
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        // Access the 'id' parameter from the URL
+        this.postId = params['id'];
+        this.post$ = this.postService.getPostById(params['id']).pipe(
+          // set page title once the post is available
+          tap((post: Post) =>{this.title.setTitle(`Article - ${post.title}`)}),
+          catchError((error: ApiError) => {
+            this.router.navigate(["/posts"]);
+            return throwError(() => new Error('Impossible de charger l\'article'));
+          })
+        );
+        // load post comments 
+        this.comments$ = this.commentService.getPostComments(params['id']); 
+        this.initForm();
     });
   }
 }

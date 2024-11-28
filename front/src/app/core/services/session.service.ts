@@ -12,18 +12,22 @@ import { CacheService } from './cache.service';
 })
 export class SessionService {
 
-  public isLogged = false;
+  public logged:boolean = false;
 
-  private isLoggedSubject = new BehaviorSubject<boolean>(this.isLogged);
+  private isLoggedSubject = new BehaviorSubject<boolean>(this.logged);
 
   constructor(
     private tokenStorageService: TokenStorageService, 
     private router: Router,
     private cacheService: CacheService) {
     if(this.tokenStorageService.getToken() != null) {
-      this.isLogged = true;
+      this.logged = true;
       this.next();
     }
+  }
+
+  public isLogged() :boolean {
+    return this.logged;
   }
 
   public getToken() :string | null {
@@ -48,7 +52,7 @@ export class SessionService {
 
   public logIn(data: SessionInformation): void {
     this.tokenStorageService.saveSessionInformation(data);
-    this.isLogged = true;
+    this.logged = true;
     this.next();
   }
 
@@ -57,12 +61,12 @@ export class SessionService {
     this.tokenStorageService.clearSessionInformation();
     // clear other user-related data cache
     this.cacheService.clearCache();
-    this.isLogged = false;
+    this.logged = false;
     this.next();
     this.router.navigate(['']);
   }
 
   private next(): void {
-    this.isLoggedSubject.next(this.isLogged);
+    this.isLoggedSubject.next(this.logged);
   }
 }

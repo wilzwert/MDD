@@ -102,7 +102,7 @@ public class AuthControllerIT {
                     .setId(1)
                     .setEmail("test@example.com")
                     .setPassword(passwordEncoder.encode("abcd1234"))
-                    .setUserName("testuser");
+                    .setUsername("testuser");
 
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
             when(userRepository.findById(1)).thenReturn(Optional.of(user));
@@ -131,7 +131,7 @@ public class AuthControllerIT {
             // setup a default valid signup request
             registerUserDto = new RegisterUserDto();
             registerUserDto.setEmail("test@example.com");
-            registerUserDto.setUserName("testuser");
+            registerUserDto.setUsername("testuser");
             registerUserDto.setPassword("aBCd.1234");
         }
 
@@ -157,7 +157,7 @@ public class AuthControllerIT {
 
         @Test
         public void shouldReturnBadRequestWhenUsernameEmpty() throws Exception {
-            registerUserDto.setUserName("");
+            registerUserDto.setUsername("");
             mockMvc.perform(post(REGISTER_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerUserDto)))
                     .andExpect(status().isBadRequest());
         }
@@ -208,9 +208,9 @@ public class AuthControllerIT {
         }
 
         @Test
-        public void shouldReturnBadRequestWhenUserWithUserNameAlreadyExists() throws Exception {
+        public void shouldReturnBadRequestWhenUserWithUsernameAlreadyExists() throws Exception {
             User existingUser = new User();
-            when(userRepository.findByUserName("testuser")).thenReturn(Optional.of(existingUser));
+            when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(existingUser));
 
             mockMvc.perform(post(REGISTER_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerUserDto)))
                     .andExpect(status().is(HttpStatus.CONFLICT.value()))
@@ -264,7 +264,7 @@ public class AuthControllerIT {
             RefreshTokenRequestDto refreshTokenRequestDto = new RefreshTokenRequestDto();
             refreshTokenRequestDto.setRefreshToken("refresh_token");
 
-            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            User user = new User().setId(1).setUsername("test").setEmail("test@example.com");
             RefreshToken refreshToken = new RefreshToken().setUser(user).setToken("refresh_token").setExpiryDate(Instant.now().plusSeconds(86400));
 
             when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));

@@ -87,7 +87,7 @@ public class CommentMapperTest {
     @Test
     public void testCommentToDto() {
         LocalDateTime now = LocalDateTime.now();
-        User user = new User().setId(1).setUserName("testuser");
+        User user = new User().setId(1).setUsername("testuser");
         Topic topic = new Topic().setId(1).setTitle("testtopic");
         Subscription subscription = new Subscription().setUser(user).setTopic(topic);
         user.setSubscriptions(Collections.singletonList(subscription));
@@ -108,7 +108,7 @@ public class CommentMapperTest {
         assertThat(commentDto.getCreatedAt()).isEqualTo(now);
         assertThat(commentDto.getUpdatedAt()).isEqualTo(now);
         assertThat(commentDto.getAuthor().getId()).isEqualTo(1);
-        assertThat(commentDto.getAuthor().getUserName()).isEqualTo("testuser");
+        assertThat(commentDto.getAuthor().getUsername()).isEqualTo("testuser");
     }
 
     @Test
@@ -123,8 +123,8 @@ public class CommentMapperTest {
     @Test
     public void testCommentListToDtoList() {
         LocalDateTime now = LocalDateTime.now();
-        User user1 = new User().setId(1).setUserName("testuser1");
-        User user2 = new User().setId(2).setUserName("testuser2");
+        User user1 = new User().setId(1).setUsername("testuser1");
+        User user2 = new User().setId(2).setUsername("testuser2");
 
         Comment comment1 = new Comment().setId(1).setContent("this is a test comment1").setCreatedAt(now).setUpdatedAt(now).setAuthor(user1);
         Comment comment2 = new Comment().setId(2).setContent("this is a test comment2").setCreatedAt(now).setUpdatedAt(now).setAuthor(user2);
@@ -139,9 +139,9 @@ public class CommentMapperTest {
         assertThat(commentDtos).extracting(CommentDto::getCreatedAt).containsExactly(now, now);
         assertThat(commentDtos).extracting(CommentDto::getUpdatedAt).containsExactly(now, now);
         assertThat(commentDtos.getFirst().getAuthor().getId()).isEqualTo(1);
-        assertThat(commentDtos.getFirst().getAuthor().getUserName()).isEqualTo("testuser1");
+        assertThat(commentDtos.getFirst().getAuthor().getUsername()).isEqualTo("testuser1");
         assertThat(commentDtos.get(1).getAuthor().getId()).isEqualTo(2);
-        assertThat(commentDtos.get(1).getAuthor().getUserName()).isEqualTo("testuser2");
+        assertThat(commentDtos.get(1).getAuthor().getUsername()).isEqualTo("testuser2");
 
     }
 

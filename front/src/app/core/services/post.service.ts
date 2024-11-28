@@ -44,7 +44,12 @@ export class PostService {
     this.posts$ = null;
   }
 
-  // sort posts according to sort data
+  /**
+   * Sort posts according to sort data
+   * @param posts 
+   * @param sortData 
+   * @returns sorted posts
+   */
   sortPosts(posts: Post[], sortData?: PostSort): Post[] {
     if(!sortData) {
       return posts;
@@ -55,7 +60,7 @@ export class PostService {
       return sortedPosts.sort((a, b) => {
         let authorOrder, postOrder = 0;
         if(sortData.sortByAuthor) {
-          authorOrder = a.author.userName.localeCompare(b.author.userName);
+          authorOrder = a.author.username.localeCompare(b.author.username);
           if(sortData.orderByAuthorAscending === false) {
             authorOrder = (authorOrder === -1 ? 1 : authorOrder === 0 ? 0 : -1);
           }
@@ -65,7 +70,7 @@ export class PostService {
         // event when user asked for a sort by author  
         // if(sortData.sortByPost) {
           postOrder = a.createdAt.localeCompare(b.createdAt);
-          if(sortData.orderByPostAscending === false) {
+          if(sortData.orderByPostAscending === undefined || sortData.orderByPostAscending === false) {
             postOrder = (postOrder === -1 ? 1 : postOrder === 0 ? 0 : -1);
           }
         // }
@@ -77,25 +82,18 @@ export class PostService {
     return !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
   }
 
+  /**
+   * Retrieves the sorted posts after reloading them from the backend if needed
+   * @returns the posts 
+   */
   getAllPosts(sortData?: PostSort): Observable<Post[]> {
     // map posts to null when no posts present or reloading needed
     return this.getPostsSubject().pipe(
-      /*map((posts: Post[] | null) => {
-        if(posts) {
-          if(!this.shouldReload()) {
-            return this.sortPosts(posts, sortData);
-          }
-          // force reload
-          return null;
-        }
-        return posts;
-      }),*/
       switchMap((posts: Post[] | null) => {
         if (posts && !this.shouldReload()) {
           // send current posts if already present
-          return of(posts);
+          return of(this.sortPosts(posts, sortData));
         } else {
-          console.log('reloading all posts from API');
           this.isReloading = true;
           return this.httpClient.get<Post[]>(`${this.apiPath}`).pipe(
             switchMap((fetchedPosts: Post[]) => {

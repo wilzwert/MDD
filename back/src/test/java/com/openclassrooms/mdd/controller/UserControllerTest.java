@@ -68,12 +68,12 @@ public class UserControllerTest {
         public void shouldGetCurrentUserInfo() {
             User user = new User();
             user.setId(1);
-            user.setUserName("username");
+            user.setUsername("username");
             user.setEmail("test@example.com");
 
             UserDto userDto = new UserDto();
             userDto.setId(1);
-            userDto.setUserName("username");
+            userDto.setUsername("username");
             userDto.setEmail("test@example.com");
 
             Principal principal = mock(Principal.class);
@@ -90,7 +90,7 @@ public class UserControllerTest {
         public void shouldDeleteCurrentUser() {
             User user = new User();
             user.setId(1);
-            user.setUserName("username");
+            user.setUsername("username");
             user.setEmail("test@example.com");
 
             Principal principal = mock(Principal.class);
@@ -115,7 +115,7 @@ public class UserControllerTest {
         @Test
         public void shouldThrowResponseStatusExceptionNotFoundOnUpdateWhenUserNotFound() {
             UpdateUserDto requestUserUpdate = new UpdateUserDto();
-            requestUserUpdate.setUserName("testuser");
+            requestUserUpdate.setUsername("testuser");
             requestUserUpdate.setEmail("test@example.com");
             Principal principal = mock(Principal.class);
             when(principal.getName()).thenReturn("test@example.com");
@@ -125,9 +125,9 @@ public class UserControllerTest {
         }
 
         @Test
-        public void shouldThrowResponseStatusExceptionConflictOnUpdateWhenUserNameOrEmailExists() {
+        public void shouldThrowResponseStatusExceptionConflictOnUpdateWhenUsernameOrEmailExists() {
             UpdateUserDto requestUserUpdate = new UpdateUserDto();
-            requestUserUpdate.setUserName("testuser");
+            requestUserUpdate.setUsername("testuser");
             requestUserUpdate.setEmail("test@example.com");
             User user = new User();
             User updateUser = new User();
@@ -143,14 +143,14 @@ public class UserControllerTest {
         @Test
         public void shouldUpdateUser() {
             UpdateUserDto requestUserUpdate = new UpdateUserDto();
-            requestUserUpdate.setUserName("othertestuser");
+            requestUserUpdate.setUsername("othertestuser");
             requestUserUpdate.setEmail("testother@example.com");
             User user = new User();
             User updateUser = new User();
             Principal principal = mock(Principal.class);
             UserDto userDto = new UserDto();
             userDto.setId(1);
-            userDto.setUserName("othertestuser");
+            userDto.setUsername("othertestuser");
             userDto.setEmail("testother@example.com");
 
             when(principal.getName()).thenReturn("test@example.com");
@@ -186,7 +186,7 @@ public class UserControllerTest {
         public void shouldGetCurrentUserSubscriptions() {
             User user = new User();
             user.setId(1);
-            user.setUserName("username");
+            user.setUsername("username");
             user.setEmail("test@example.com");
             Topic topic1 = new Topic().setId(1).setTitle("Topic title");
             Topic topic2 = new Topic().setId(2).setTitle("Topic title2");

@@ -73,10 +73,10 @@ public class AuthController {
             User user = userService.registerUser(registerUser);
             String token = jwtService.generateToken(user);
             log.info("User with email {} registered with id {}", registerUserDto.getEmail(), user.getId());
-            return new JwtResponse(token, "Bearer", refreshTokenService.getOrCreateRefreshToken(user).getToken(), user.getId(), user.getUserName());
+            return new JwtResponse(token, "Bearer", refreshTokenService.getOrCreateRefreshToken(user).getToken(), user.getId(), user.getUsername());
         }
         catch (EntityExistsException e) {
-            log.warn("Email or username {} {} already exists", registerUserDto.getEmail(), registerUserDto.getUserName());
+            log.warn("Email or username {} {} already exists", registerUserDto.getEmail(), registerUserDto.getUsername());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
@@ -99,7 +99,7 @@ public class AuthController {
             log.info("User login - generating token");
             String token = jwtService.generateToken(user);
             log.info("User with email {} successfully authenticated, sending JWT token", loginRequestDto.getEmail());
-            return new JwtResponse(token, "Bearer", refreshTokenService.getOrCreateRefreshToken(user).getToken(), user.getId(), user.getUserName());
+            return new JwtResponse(token, "Bearer", refreshTokenService.getOrCreateRefreshToken(user).getToken(), user.getId(), user.getUsername());
         }
         catch (AuthenticationException e) {
             log.info("Login failed for User with email {}", loginRequestDto.getEmail());

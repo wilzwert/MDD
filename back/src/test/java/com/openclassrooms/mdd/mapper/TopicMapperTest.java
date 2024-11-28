@@ -47,7 +47,7 @@ public class TopicMapperTest {
                 .setId(1)
                 .setTitle("test topic")
                 .setDescription("this is a test topic")
-                .setCreator(new User().setId(1).setUserName("testuser"))
+                .setCreator(new User().setId(1).setUsername("testuser"))
                 .setCreatedAt(now)
                 .setUpdatedAt(now);
         TopicDto topicDto = topicMapper.topicToTopicDto(topic);

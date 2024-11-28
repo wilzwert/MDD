@@ -15,10 +15,10 @@
     
         <mat-form-field>
         <mat-label>Nom d'utilisateur</mat-label>
-        <input matInput minlength="5" formControlName="userName" placeholder="Entrez votre nom d'utilisateur">
+        <input matInput minlength="5" formControlName="username" placeholder="Entrez votre nom d'utilisateur">
         <mat-hint align="start">Min. 5 caractères</mat-hint>
         <mat-hint align="end">
-        @if(userName?.invalid) {
+        @if(username?.invalid) {
             <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
         } 
         @else {
@@ -41,9 +41,6 @@
         </mat-form-field>
 
         <button mat-raised-button type="submit" [disabled]="form.invalid">Submit</button>
-        @if (error) {
-            <p class="error">An error occurred : {{error}}</p>
-        }
     </form>
         
     

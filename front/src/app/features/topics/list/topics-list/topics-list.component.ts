@@ -1,15 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { TopicService } from '../../../../core/services/topic.service';
-import { Observable, of, take, tap } from 'rxjs';
+import { Observable, of, Subject, take, takeUntil, tap } from 'rxjs';
 import { Topic } from '../../../../core/models/topic.interface';
 import { TopicComponent } from "../topic/topic.component";
 import { AsyncPipe } from '@angular/common';
-import { animate, style, transition, trigger } from '@angular/animations';
 import { Subscription } from '../../../../core/models/subscription.interface';
-import { CurrentUserService } from '../../../../core/services/current-user.service';
 import { SessionService } from '../../../../core/services/session.service';
-import { FilterByTopicPipe } from '../../../../core/pipes/filter-by';
-import {MatGridListModule} from '@angular/material/grid-list';
+import { FilterByTopicPipe } from '../../../../core/pipes/filter-by-topic';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { CurrentUserSubscriptionService } from '../../../../core/services/current-user-subscription.service';
 
@@ -17,32 +14,22 @@ import { CurrentUserSubscriptionService } from '../../../../core/services/curren
 @Component({
   selector: 'app-topics-list',
   standalone: true,
-  imports: [TopicComponent, AsyncPipe, FilterByTopicPipe, MatGridListModule],
+  imports: [TopicComponent, AsyncPipe, FilterByTopicPipe],
   templateUrl: './topics-list.component.html',
-  styleUrl: './topics-list.component.scss',
-  animations: [
-    trigger('fadeOut', [
-      transition(':leave', [
-        animate('300ms', style({ opacity: 0, transform: 'translateX(50px)' })),
-      ]),
-    ]),
-  ]
+  styleUrl: './topics-list.component.scss'
 })
-export class TopicsListComponent implements OnInit {
+export class TopicsListComponent implements OnInit, OnDestroy {
 
-  // keep a reference on an observable provided by topic service in case topics list is updated (this may happen in the future on topic deletion for example)
-  // public topics$: Observable<Topic[]> = this.topicService.topics$;
-  // for now we use our own behaviorsubject
+  private destroy$: Subject<boolean> = new Subject<boolean>;
+
   public topics$!: Observable<Topic[]>;
   public subscriptions$!: Observable<Subscription[]>;
-  public loggedIn$: Observable<boolean>;
+  // keep a reference on an observable provided by SessionService in case user loggedin status changes (this may happen in the future on topic deletion for example)
+  public loggedIn$!: Observable<boolean>;
 
   constructor(private topicService: TopicService, private userSubscriptionService: CurrentUserSubscriptionService, private sessionService:SessionService, private notificationService: NotificationService){
-    this.topics$ = this.topicService.getAllTopics();
-    this.sessionService = sessionService;
-    this.loggedIn$ = sessionService.$isLogged();
   }
- 
+  
     public onSubscribe(topicId: number) :void {
         this.userSubscriptionService.subscribe(topicId).pipe(
           take(1),
@@ -59,9 +46,17 @@ export class TopicsListComponent implements OnInit {
     }
 
     ngOnInit(): void {
+      this.topics$ = this.topicService.getAllTopics();
+      this.loggedIn$ = this.sessionService.$isLogged();
 
-      // get current user subscriptions only if user is logged in 
+      // fetch current user subscriptions from backend only if user is acutally logged in 
+      // note : for now, user HAS to be loggedin to access topic list
+      // but it may change in the future ; for that, see routes and guards configuration
+      // both possibilities should be tested anyway
+      // note2 : this could be done only by using the isLogged() method of the SessionService
+      // but it's safer to actually observe it in case something happens elsewhere that disconnects the user
       this.loggedIn$.pipe(
+        takeUntil(this.destroy$),
         tap((v: boolean) => {
           if(v) {
             this.subscriptions$ = this.userSubscriptionService.getCurrentUserSubscriptions();
@@ -71,5 +66,9 @@ export class TopicsListComponent implements OnInit {
           }
         })
       ).subscribe();
+    }
+
+    ngOnDestroy(): void {
+      this.destroy$.next(true);
     }
 }

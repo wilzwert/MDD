@@ -315,7 +315,7 @@ public class TopicControllerTest {
 
         @Test
         public void shouldThrowNotFoundResponseStatusExceptionWhenTopicNotFound() {
-            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            User user = new User().setId(1).setUsername("test").setEmail("test@example.com");
 
             when(principal.getName()).thenReturn("test@example.com");
             when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
@@ -331,7 +331,7 @@ public class TopicControllerTest {
 
         @Test
         public void shouldReturnSubscriptionWhenSubscriptionSuccessful() {
-            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            User user = new User().setId(1).setUsername("test").setEmail("test@example.com");
             Topic topic = new Topic().setId(1).setTitle("Test topic").setCreatedAt(LocalDateTime.now());
             Subscription subscription = new Subscription().setTopic(topic).setUser(user);
             SubscriptionDto subscriptionDto = new SubscriptionDto();
@@ -368,7 +368,7 @@ public class TopicControllerTest {
         @Test
         public void shouldReturnEntityNotFoundExceptionWhenTopicOrSubscriptionNotFound() {
             when(principal.getName()).thenReturn("test@example.com");
-            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            User user = new User().setId(1).setUsername("test").setEmail("test@example.com");
             when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
             doThrow(EntityNotFoundException.class).when(userService).unSubscribe(user, 1);
 
@@ -379,7 +379,7 @@ public class TopicControllerTest {
         @Test
         public void shouldReturnNoContentWhenUnsubscribeSuccessful() {
             when(principal.getName()).thenReturn("test@example.com");
-            User user = new User().setId(1).setUserName("test").setEmail("test@example.com");
+            User user = new User().setId(1).setUsername("test").setEmail("test@example.com");
             when(userService.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
             doNothing().when(userService).unSubscribe(user, 1);
 

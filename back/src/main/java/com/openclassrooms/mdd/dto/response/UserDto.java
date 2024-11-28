@@ -19,7 +19,7 @@ public class UserDto {
     private String email;
 
     @Schema(description = "User username")
-    private String userName;
+    private String username;
 
     @Schema(description = "User creation date")
     private LocalDateTime createdAt;

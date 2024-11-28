@@ -84,11 +84,11 @@ public class UserController {
             // String token = jwtService.generateToken(user);
             log.info("User  {} updated", user.getId());
             return userMapper.userToUserDto(updatedUser);
-            // return new JwtResponse(token, "Bearer", refreshTokenService.getOrCreateRefreshToken(user).getToken(), user.getId(), user.getUserName());
+            // return new JwtResponse(token, "Bearer", refreshTokenService.getOrCreateRefreshToken(user).getToken(), user.getId(), user.getUsername());
 
         }
         catch (EntityExistsException e) {
-            log.warn("Email or username {} {} already exists", updateUserDto.getEmail(), updateUserDto.getUserName());
+            log.warn("Email or username {} {} already exists", updateUserDto.getEmail(), updateUserDto.getUsername());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }

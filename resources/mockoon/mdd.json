@@ -25,7 +25,7 @@
           "rules": [
             {
               "target": "body",
-              "modifier": "userName",
+              "modifier": "username",
               "value": "username",
               "invert": true,
               "operator": "null"
@@ -68,7 +68,7 @@
           "rules": [
             {
               "target": "body",
-              "modifier": "userName",
+              "modifier": "username",
               "value": "u",
               "invert": false,
               "operator": "equals"
@@ -209,7 +209,7 @@
         },
         {
           "uuid": "2accac71-b052-4efe-9819-06dde4e5c8e9",
-          "body": "{\n  \"id\": 1,\n\t\"userName\": \"test\",\n\t\"email\": \"test@test.com\",\n\t\"createdAt\": \"2022/02/02\",\n\t\"updatedAt\": \"2022/08/02\" \n}",
+          "body": "{\n  \"id\": 1,\n\t\"username\": \"test\",\n\t\"email\": \"test@test.com\",\n\t\"createdAt\": \"2022/02/02\",\n\t\"updatedAt\": \"2022/08/02\" \n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -879,7 +879,7 @@
       "responses": [
         {
           "uuid": "8880a6a9-c36d-48d0-b307-e9e9370aa5ff",
-          "body": "[\n  {\n\t\"id\": 1,\n\t\"title\": \"test post 1\",\n\t\"content\": \"This is a test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"userName\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n},\n{\n\t\"id\": 2,\n\t\"title\": \"test post 2\",\n\t\"description\": \"This is a second test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 2,\n\t  \"userName\": \"otheruser\",\n\t  \"email\": \"otheruser@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n},{\n\t\"id\": 3,\n\t\"title\": \"test post 3\",\n\t\"description\": \"This is a third test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"userName\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 2,\n\t  \"title\": \"second test topic\",\n\t  \"description\": \"second test topic description\"\n\t}\n}\n]\n",
+          "body": "[\n  {\n\t\"id\": 1,\n\t\"title\": \"test post 1\",\n\t\"content\": \"This is a test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"username\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n},\n{\n\t\"id\": 2,\n\t\"title\": \"test post 2\",\n\t\"description\": \"This is a second test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 2,\n\t  \"username\": \"otheruser\",\n\t  \"email\": \"otheruser@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n},{\n\t\"id\": 3,\n\t\"title\": \"test post 3\",\n\t\"description\": \"This is a third test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"username\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 2,\n\t  \"title\": \"second test topic\",\n\t  \"description\": \"second test topic description\"\n\t}\n}\n]\n",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -959,7 +959,7 @@
       "responses": [
         {
           "uuid": "aaea5293-f49d-412a-b1f4-c07604a638a2",
-          "body": "{\n\t\"id\": 2,\n\t\"title\": \"test post 2\",\n\t\"content\": \"This is a second test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 2,\n\t  \"userName\": \"otheruser\",\n\t  \"email\": \"otheruser@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n}",
+          "body": "{\n\t\"id\": 2,\n\t\"title\": \"test post 2\",\n\t\"content\": \"This is a second test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 2,\n\t  \"username\": \"otheruser\",\n\t  \"email\": \"otheruser@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Post 2",
@@ -1007,7 +1007,7 @@
         },
         {
           "uuid": "60e8a6de-9962-42c9-9339-d9b6b387a841",
-          "body": "{\n\t\"id\": 3,\n\t\"title\": \"test post 3\",\n\t\"content\": \"This is a third test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"userName\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 2,\n\t  \"title\": \"second test topic\",\n\t  \"description\": \"second test topic description\"\n\t}\n}",
+          "body": "{\n\t\"id\": 3,\n\t\"title\": \"test post 3\",\n\t\"content\": \"This is a third test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"username\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 2,\n\t  \"title\": \"second test topic\",\n\t  \"description\": \"second test topic description\"\n\t}\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Post 3",
@@ -1055,7 +1055,7 @@
         },
         {
           "uuid": "db59becb-cb9c-47aa-ba5a-ee6d2f1d43a3",
-          "body": "{\n\t\"id\": 1,\n\t\"title\": \"test post 1\",\n\t\"content\": \"This is a test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"userName\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n}",
+          "body": "{\n\t\"id\": 1,\n\t\"title\": \"test post 1\",\n\t\"content\": \"This is a test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"username\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Post 1",

@@ -17,5 +17,13 @@ globalThis.ngJest = {
     moduleDirectories: ['node_modules', 'src'],
     fakeTimers: {
       enableGlobally: true,
-    }
+    },
+    coverageDirectory: './coverage/jest',
+    testPathIgnorePatterns: ['<rootDir>/node_modules/'],
+    coveragePathIgnorePatterns: ['<rootDir>/node_modules/'],
+    coverageThreshold: {
+      global: {
+        statements: 80
+      },
+    },
   };
