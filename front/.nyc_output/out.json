@@ -1,0 +1,488 @@
+{
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/jest.config.js": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/jest.config.js",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/cypress.config.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/cypress.config.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/setup-jest.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/setup-jest.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/app.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/app.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/app.config.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/app.config.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/app.routes.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/app.routes.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/environments/environment.development.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/environments/environment.development.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/environments/environment.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/environments/environment.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/global-error.handler.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/global-error.handler.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/errors/api-error.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/errors/api-error.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/guards/auth.guard.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/guards/auth.guard.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/guards/unauth.guard.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/guards/unauth.guard.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/interceptors/error.interceptor.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/interceptors/error.interceptor.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/interceptors/jwt.interceptor.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/interceptors/jwt.interceptor.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/app-notification.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/app-notification.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/comment.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/comment.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/create-comment-request.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/create-comment-request.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/create-post-request.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/create-post-request.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/login-request.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/login-request.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/post-sort.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/post-sort.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/post.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/post.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/refresh-token-request.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/refresh-token-request.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/refresh-token-response.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/refresh-token-response.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/register-request.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/register-request.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/session-information.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/session-information.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/subscription.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/subscription.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/topic.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/topic.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/update-user-request.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/update-user-request.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/user.interface.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/models/user.interface.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/pipes/filter-by-topic.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/pipes/filter-by-topic.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/auth.service.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/auth.service.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/cache.service.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/cache.service.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/comment.service.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/comment.service.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/current-user-subscription.service.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/current-user-subscription.service.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/current-user.service.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/current-user.service.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/notification.service.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/notification.service.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/post.service.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/post.service.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/session.service.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/session.service.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/token-storage.service.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/token-storage.service.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/topic.service.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/core/services/topic.service.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/login/login.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/login/login.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/me/me.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/me/me.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/register/register.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/register/register.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/layout/back-button/back-button.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/layout/back-button/back-button.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/layout/home/home.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/layout/home/home.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/layout/menu/menu.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/layout/menu/menu.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/layout/not-found/not-found.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/layout/not-found/not-found.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/layout/notification/notification.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/layout/notification/notification.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/posts/post-detail/post-detail.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/posts/post-detail/post-detail.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/posts/post-form/post-form.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/posts/post-form/post-form.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/posts/list/post/post.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/posts/list/post/post.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/posts/list/posts-list/posts-list.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/posts/list/posts-list/posts-list.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/topics/list/topic/topic.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/topics/list/topic/topic.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/topics/list/topics-list/topics-list.component.ts": {
+    "path": "D:/dev/Openclassrooms/ParcoursDevJavaAngular/Projet6-Développez une application full-stack complète/mdd/front/src/app/features/topics/list/topics-list/topics-list.component.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  }
+}
