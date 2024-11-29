@@ -79,6 +79,7 @@ export class RegisterComponent {
       take(1),
       catchError(
         (error: ApiError) => {
+          console.log(error);
           return throwError(() => new Error(
             'Impossible de créer votre compte. '+(error.httpStatus === 409 ? "Email ou nom d'utilisateur déjà utilisé" : 'Une erreur est survenue')
           ));

@@ -38,6 +38,7 @@ export class CurrentUserSubscriptionService {
           return of(subscriptions);
         } else {
           // load from backend otherwise
+          this.isReloading = true;
           return this.httpClient.get<Subscription[]>(`${this.apiPath}/me/subscriptions`).pipe(
             switchMap((fetchedSubscriptions: Subscription[]) => {
               this.cachedAt = new Date().getTime();

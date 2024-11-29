@@ -41,3 +41,58 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+Cypress.Commands.add("login", () => {
+    cy.visit('/login');
+  
+    cy.intercept(
+        {
+            method: 'POST',
+            url:  '/api/auth/login'
+        }, 
+        req => {
+            req.reply({
+                type: 'Bearer',
+                token: 'access_token',
+                refreshTokn: 'refresh_token',
+                id: 1,
+                username: 'username'
+              })
+        }
+    ).as('login');
+
+    cy.intercept(
+        {
+          method: 'GET',
+          url: '/api/posts',
+          times: 1
+        },
+        (req) => {req.reply([]);}
+    ).as('posts')
+
+    cy.intercept(
+        {
+          method: 'GET',
+          url: '/api/user/me/subscriptions',
+          times: 1
+        },
+        (req) => {req.reply([]);}
+    ).as('subsriptions')
+
+    cy.intercept(
+        {
+            method: 'GET',
+            url:  '/api/user/me'
+        }, 
+        req => {
+            req.reply({
+                id: 1,
+                username: 'username',
+                email: 'test@example.com'
+              })
+        }
+    ).as('userMe');
+  
+    cy.get('input[formControlName=email]').type("user@example.com");
+    cy.get('input[formControlName=password]').type("password{enter}{enter}");
+    cy.url().should('include', '/posts');
+  });

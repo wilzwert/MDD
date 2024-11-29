@@ -95,6 +95,12 @@
             "proxyConfig": "proxy.conf.json"
           }
         },
+        "serve-coverage": {
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "browserTarget": "mdd:build:e2e"
+          }
+        },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"
         },
@@ -149,13 +155,13 @@
         "e2e": {
           "builder": "@cypress/schematic:cypress",
           "options": {
-            "devServerTarget": "mdd:serve",
+            "devServerTarget": "mdd:serve-coverage",
             "watch": true,
             "headless": false
           },
           "configurations": {
             "production": {
-              "devServerTarget": "mdd:serve:production"
+              "devServerTarget": "mdd:serve-coverage:production"
             }
           }
         },
@@ -163,13 +169,13 @@
           "builder": "@cypress/schematic:cypress",
           "options": {
             "browser": "chrome",
-            "devServerTarget": "mdd:serve",
+            "devServerTarget": "mdd:serve-coverage",
             "watch": false,
             "headless": true
           },
           "configurations": {
             "production": {
-              "devServerTarget": "mdd:serve:production"
+              "devServerTarget": "mdd:serve-coverage:production"
             }
           }
         }

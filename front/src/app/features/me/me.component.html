@@ -21,17 +21,23 @@
     @if (subscriptions$ | async; as subscriptions) {
         <hr>
         <h2>Abonnements</h2>
-        <div class="responsive-grid">
-        @for (subscription of subscriptions; track $index) {            
-            <app-topic
-                [topic]="subscription.topic"
-                [subscription]="subscription"
-                [loggedIn]="true"
-                (unSubscribe)="onUnsubscribe($event)"
-            >
-            </app-topic>            
+        @if(subscriptions?.length) {
+            <div class="responsive-grid">
+            @for (subscription of subscriptions; track $index) {            
+                <app-topic
+                    [topic]="subscription.topic"
+                    [subscription]="subscription"
+                    [loggedIn]="true"
+                    (unSubscribe)="onUnsubscribe($event)"
+                >
+                </app-topic>            
+            }
+            </div>
         }
-        </div>
+        @else {
+            <p>Aucun abonnement pour le moment.</p>
+            <p><a class="topics" routerLink="/topics"> Cliquez ici</a> pour accéder aux thèmes et vous abonner !</p>
+        }
     }
 }
 @else {

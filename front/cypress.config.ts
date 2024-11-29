@@ -5,7 +5,7 @@ export default defineConfig({
   e2e: {
     'baseUrl': 'http://localhost:4200',
     setupNodeEvents(on, config) {
-      return require('./cypress/plugins/index.js')(on, config)
+      return require('@cypress/code-coverage/task')(on, config)
     },
   },
   

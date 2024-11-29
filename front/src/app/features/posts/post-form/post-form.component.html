@@ -14,7 +14,7 @@
                             </mat-option>
                         }
                     </mat-select>
-                    <mat-hint align="end">
+                    <mat-hint class="topic-hint" align="end">
                         @if(topicId?.invalid) {
                             <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
                         } 
@@ -28,7 +28,7 @@
                 <mat-form-field>
                     <mat-label>Titre</mat-label>
                     <input matInput placeholder="Saisissez le titre de votre article" formControlName="title">
-                    <mat-hint align="end">
+                    <mat-hint class="title-hint" align="end">
                         @if(title?.invalid) {
                             <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
                         } 
@@ -41,7 +41,7 @@
                 <mat-form-field>
                     <mat-label>Contenu</mat-label>
                     <textarea matInput placeholder="Saisissez le contenu de votre article" formControlName="content"></textarea>
-                    <mat-hint align="end">
+                    <mat-hint class="content-hint" align="end">
                         @if(content?.invalid) {
                             <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
                         } 
@@ -51,7 +51,7 @@
                 </mat-form-field>
             </p>
         
-        <button mat-raised-button type="submit" [disabled]="form.invalid">Submit</button>
+        <button mat-raised-button type="submit" [disabled]="form.invalid">Créer</button>
         @if (error) {
             <p class="error">An error occurred : {{error}}</p>
         }
