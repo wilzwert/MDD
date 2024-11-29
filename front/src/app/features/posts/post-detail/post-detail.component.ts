@@ -56,7 +56,10 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   submit(): void {
     this.commentService.createPostComment(this.postId, this.form.value as CreateCommentRequest)
-      .subscribe(() => this.notificationService.confirmation("Merci pour votre commentaire !"));
+      .subscribe(() => {
+        this.form.reset();
+        this.notificationService.confirmation("Merci pour votre commentaire !");
+      });
   }
 
   get content() {

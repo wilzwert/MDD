@@ -54,7 +54,7 @@ export class PostFormComponent implements OnInit {
     this.topics$ = this.topicService.getAllTopics().pipe(
       map((topics: Topic[]) => {
         if(topics.length < 1) {
-          this.notificationService.error("Aucun thème disponible, impossible de créer un article.");
+          this.notificationService.error("Aucun thème disponible, impossible de créer un article");
           this.router.navigate(["/posts"]);
         }
         return topics;

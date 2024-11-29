@@ -15,6 +15,7 @@ import { Topic } from "../models/topic.interface";
         if(subscriptions == null) {
             return null;
         }
+        
         const filtered = subscriptions.filter(s => s.topic.id == topic.id);
         return filtered.length ? filtered[0] : null;
     }

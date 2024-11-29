@@ -8,10 +8,10 @@
     <section class="element-actions">
         @if (loggedIn) {
             @if (subscription) {
-                <a mat-flat-button (click)="onUnsubscribe()">Unsubscribe</a>
+                <a mat-flat-button (click)="onUnsubscribe()">Se désabonner </a>
             }
             @else {
-                <a mat-flat-button (click)="onSubscribe()">Subscribe</a>
+                <a mat-flat-button (click)="onSubscribe()">S'abonner</a>
             }
         }
     </section>

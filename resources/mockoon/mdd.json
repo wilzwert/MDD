@@ -1,6 +1,6 @@
 {
   "uuid": "7c9f7059-72ec-48b2-91de-9e72e3ae1097",
-  "lastMigration": 33,
+  "lastMigration": 32,
   "name": "MDD",
   "endpointPrefix": "api",
   "latency": 0,
@@ -25,7 +25,7 @@
           "rules": [
             {
               "target": "body",
-              "modifier": "username",
+              "modifier": "userName",
               "value": "username",
               "invert": true,
               "operator": "null"
@@ -68,7 +68,7 @@
           "rules": [
             {
               "target": "body",
-              "modifier": "username",
+              "modifier": "userName",
               "value": "u",
               "invert": false,
               "operator": "equals"
@@ -83,9 +83,7 @@
         }
       ],
       "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
+      "type": "http"
     },
     {
       "uuid": "4dc3af14-a0ba-4fa2-b4ca-b8dca5352b3e",
@@ -163,9 +161,7 @@
         }
       ],
       "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
+      "type": "http"
     },
     {
       "uuid": "0a5f3820-6b8d-469a-a371-f83a81f0ef9a",
@@ -209,7 +205,7 @@
         },
         {
           "uuid": "2accac71-b052-4efe-9819-06dde4e5c8e9",
-          "body": "{\n  \"id\": 1,\n\t\"username\": \"test\",\n\t\"email\": \"test@test.com\",\n\t\"createdAt\": \"2022/02/02\",\n\t\"updatedAt\": \"2022/08/02\" \n}",
+          "body": "{\n  \"id\": 1,\n\t\"userName\": \"test\",\n\t\"email\": \"test@test.com\",\n\t\"createdAt\": \"2022/02/02\",\n\t\"updatedAt\": \"2022/08/02\" \n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -243,9 +239,7 @@
         }
       ],
       "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
+      "type": "http"
     },
     {
       "uuid": "f63bc9e7-f7f8-464a-8fbb-f8fc95873e57",
@@ -323,9 +317,7 @@
         }
       ],
       "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
+      "type": "http"
     },
     {
       "uuid": "72e4ca05-94f7-4273-92f0-956a01594130",
@@ -408,9 +400,7 @@
         }
       ],
       "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
+      "type": "http"
     },
     {
       "uuid": "ab17de52-463a-44c0-a8bf-3fe2f66a0a7d",
@@ -466,9 +456,7 @@
         }
       ],
       "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
+      "type": "http"
     },
     {
       "uuid": "df82e370-def5-4809-ba4c-2bc3323e9485",
@@ -532,9 +520,7 @@
         }
       ],
       "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
+      "type": "http"
     },
     {
       "uuid": "7a4c9e3e-0dae-4c55-b8bb-4b2df10832db",
@@ -617,9 +603,7 @@
         }
       ],
       "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
+      "type": "http"
     },
     {
       "uuid": "97d8b203-a334-4280-ba71-13cc6071be53",
@@ -702,9 +686,7 @@
         }
       ],
       "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
+      "type": "http"
     },
     {
       "uuid": "7aee1346-34ac-4471-bb78-3e1a40ae33d7",
@@ -787,9 +769,7 @@
         }
       ],
       "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
+      "type": "http"
     },
     {
       "uuid": "599df377-093a-4712-9e71-81f30dc1e349",
@@ -867,9 +847,7 @@
         }
       ],
       "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
+      "type": "http"
     },
     {
       "uuid": "de29f702-5934-42c6-8356-bc5654f9a121",
@@ -879,7 +857,7 @@
       "responses": [
         {
           "uuid": "8880a6a9-c36d-48d0-b307-e9e9370aa5ff",
-          "body": "[\n  {\n\t\"id\": 1,\n\t\"title\": \"test post 1\",\n\t\"content\": \"This is a test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"username\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n},\n{\n\t\"id\": 2,\n\t\"title\": \"test post 2\",\n\t\"description\": \"This is a second test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 2,\n\t  \"username\": \"otheruser\",\n\t  \"email\": \"otheruser@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n},{\n\t\"id\": 3,\n\t\"title\": \"test post 3\",\n\t\"description\": \"This is a third test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"username\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 2,\n\t  \"title\": \"second test topic\",\n\t  \"description\": \"second test topic description\"\n\t}\n}\n]\n",
+          "body": "[\n  {\n\t\"id\": 1,\n\t\"title\": \"test post 1\",\n\t\"content\": \"This is a test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"userName\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n},\n{\n\t\"id\": 2,\n\t\"title\": \"test post 2\",\n\t\"description\": \"This is a second test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 2,\n\t  \"userName\": \"otheruser\",\n\t  \"email\": \"otheruser@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n},{\n\t\"id\": 3,\n\t\"title\": \"test post 3\",\n\t\"description\": \"This is a third test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"userName\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 2,\n\t  \"title\": \"second test topic\",\n\t  \"description\": \"second test topic description\"\n\t}\n}\n]\n",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -947,192 +925,7 @@
         }
       ],
       "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
-    },
-    {
-      "uuid": "7657e2da-c25f-42bd-9ecf-480017ac223f",
-      "documentation": "",
-      "method": "get",
-      "endpoint": "posts/:id",
-      "responses": [
-        {
-          "uuid": "aaea5293-f49d-412a-b1f4-c07604a638a2",
-          "body": "{\n\t\"id\": 2,\n\t\"title\": \"test post 2\",\n\t\"content\": \"This is a second test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 2,\n\t  \"username\": \"otheruser\",\n\t  \"email\": \"otheruser@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n}",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "Post 2",
-          "headers": [],
-          "filePath": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "header",
-              "modifier": "Authorization",
-              "value": "Bearer jwt",
-              "invert": false,
-              "operator": "equals"
-            },
-            {
-              "target": "header",
-              "modifier": "Authorization",
-              "value": "Bearer refreshed_jwt",
-              "invert": false,
-              "operator": "equals"
-            },
-            {
-              "target": "header",
-              "modifier": "Authorization",
-              "value": "Bearer jwt",
-              "invert": true,
-              "operator": "equals"
-            },
-            {
-              "target": "query",
-              "modifier": ":id",
-              "value": "1",
-              "invert": false,
-              "operator": "equals"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "60e8a6de-9962-42c9-9339-d9b6b387a841",
-          "body": "{\n\t\"id\": 3,\n\t\"title\": \"test post 3\",\n\t\"content\": \"This is a third test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"username\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 2,\n\t  \"title\": \"second test topic\",\n\t  \"description\": \"second test topic description\"\n\t}\n}",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "Post 3",
-          "headers": [],
-          "filePath": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "header",
-              "modifier": "Authorization",
-              "value": "Bearer jwt",
-              "invert": false,
-              "operator": "equals"
-            },
-            {
-              "target": "header",
-              "modifier": "Authorization",
-              "value": "Bearer refreshed_jwt",
-              "invert": false,
-              "operator": "equals"
-            },
-            {
-              "target": "header",
-              "modifier": "Authorization",
-              "value": "Bearer jwt",
-              "invert": true,
-              "operator": "equals"
-            },
-            {
-              "target": "query",
-              "modifier": ":id",
-              "value": "1",
-              "invert": false,
-              "operator": "equals"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "db59becb-cb9c-47aa-ba5a-ee6d2f1d43a3",
-          "body": "{\n\t\"id\": 1,\n\t\"title\": \"test post 1\",\n\t\"content\": \"This is a test post\",\n\t\"createdAt\": \"2012/12/02\",\n\t\"updatedAt\": \"2014/12/02\",\n\t\"author\": {\n\t  \"id\": 1,\n\t  \"username\": \"testuser\",\n\t  \"email\": \"test@test.com\",\n\t  \"createdAt\": \"2024-06-30\",\n\t  \"updatedAt\": \"2024-06-30\"\n\t},\n\t\"topic\": {\n\t  \"id\": 1,\n\t  \"title\": \"test topic\",\n\t  \"description\": \"test topic description\"\n\t}\n}",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "Post 1",
-          "headers": [],
-          "filePath": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "header",
-              "modifier": "Authorization",
-              "value": "Bearer jwt",
-              "invert": false,
-              "operator": "equals"
-            },
-            {
-              "target": "header",
-              "modifier": "Authorization",
-              "value": "Bearer refreshed_jwt",
-              "invert": false,
-              "operator": "equals"
-            },
-            {
-              "target": "header",
-              "modifier": "Authorization",
-              "value": "Bearer jwt",
-              "invert": true,
-              "operator": "equals"
-            },
-            {
-              "target": "query",
-              "modifier": ":id",
-              "value": "2",
-              "invert": false,
-              "operator": "equals"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "50ab20ce-4b81-41cb-a315-c1642d11c5ac",
-          "body": "",
-          "latency": 0,
-          "statusCode": 401,
-          "label": "",
-          "headers": [],
-          "filePath": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "header",
-              "modifier": "Authorization",
-              "value": "Bearer jwt",
-              "invert": false,
-              "operator": "equals"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id",
-          "callbacks": []
-        }
-      ],
-      "responseMode": null,
-      "type": "http",
-      "streamingMode": null,
-      "streamingInterval": 0
+      "type": "http"
     }
   ],
   "proxyMode": false,
@@ -1228,10 +1021,6 @@
     {
       "type": "route",
       "uuid": "de29f702-5934-42c6-8356-bc5654f9a121"
-    },
-    {
-      "type": "route",
-      "uuid": "7657e2da-c25f-42bd-9ecf-480017ac223f"
     }
   ],
   "callbacks": []

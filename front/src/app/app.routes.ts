@@ -36,8 +36,7 @@ export const routes: Routes = [
         path: 'me', 
         canActivate: [AuthGuard],
         component: MeComponent, 
-        title: 'Profil utilisateur',
-        data: {goBackToRoute: "posts"} 
+        title: 'Profil utilisateur'
     },
     { 
         path: 'topics', 

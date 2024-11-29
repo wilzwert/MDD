@@ -1,0 +1,19 @@
+[
+{
+    "id": 1,
+    "title": "Test post",
+    "content": "This is a test post",
+    "createdAt": "2024-11-06T08:45:12",
+    "updatedAt": "2024-11-07T11:23:54" ,
+    "author": {
+        "id": 1,
+        "username": "testuser",
+        "email": "test@example.com"
+    },
+    "topic": {
+        "id": 1,
+        "title": "Test topic",
+        "description": "Test topic description"
+    }
+}
+]

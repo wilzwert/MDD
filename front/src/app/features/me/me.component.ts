@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CurrentUserService } from '../../core/services/current-user.service';
 import { User } from '../../core/models/user.interface';
-import { Observable, take, tap } from 'rxjs';
+import { catchError, Observable, take, tap, throwError } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { TopicComponent } from '../topics/list/topic/topic.component';
 import { Subscription } from '../../core/models/subscription.interface';
@@ -13,6 +13,7 @@ import { UpdateUserRequest } from '../../core/models/update-user-request';
 import { SessionService } from '../../core/services/session.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { CurrentUserSubscriptionService } from '../../core/services/current-user-subscription.service';
+import { ApiError } from 'src/app/core/errors/api-error';
 
 @Component({
   selector: 'app-me',
@@ -37,7 +38,15 @@ export class MeComponent implements OnInit{
 
   public updateCurrentUser() :void {
     this.userService.updateCurrentUser(this.form.value as UpdateUserRequest).pipe(
-      take(1)
+      take(1),
+      catchError(
+        (error: ApiError) => {
+          console.log(error);
+          return throwError(() => new Error(
+            'Impossible de modifier vos informations. '+(error.httpStatus === 409 ? "Email ou nom d'utilisateur déjà utilisé" : 'Une erreur est survenue')
+          ));
+        }
+      )
     ).subscribe((user: User) => {
       this.notificationService.confirmation("Modifications enregistrées");
     });

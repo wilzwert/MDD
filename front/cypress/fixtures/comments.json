@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "postId": 1,
+        "content": "First comment",
+        "createdAt": "2024-11-25T06:07:08",
+        "author": {
+            "id": 1,
+            "username": "testuser"
+        }
+    },
+    {
+        "id": 2,
+        "postId": 1,
+        "content": "Second comment",
+        "createdAt": "2024-11-27T09:54:08",
+        "author": {
+            "id": 2,
+            "username": "test"
+        }
+    }
+]
