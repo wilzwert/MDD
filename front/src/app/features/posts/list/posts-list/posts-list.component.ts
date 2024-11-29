@@ -45,7 +45,7 @@ export class PostsListComponent implements OnInit {
 
   sortByAuthor() :void {
     this.sort.sortByAuthor = true;
-    // deactivate sorting by post, but keep previous post creation date order
+    // resets sorting by post, but keep previous post creation date order
     this.sort.sortByPost = undefined;
     // by default, sorting by author gets ascending order
     this.sort.orderByAuthorAscending = this.orderAscending = true;
