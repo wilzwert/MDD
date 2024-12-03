@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { SessionInformation } from '../models/session-information.interface';
 import { TokenStorageService } from './token-storage.service';
 import { RefreshTokenResponse } from '../models/refresh-token-response.interface';
-import { CurrentUserService } from './current-user.service';
 import { Router } from '@angular/router';
 import { CacheService } from './cache.service';
 
@@ -12,7 +11,7 @@ import { CacheService } from './cache.service';
 })
 export class SessionService {
 
-  public logged:boolean = false;
+  public logged = false;
 
   private isLoggedSubject = new BehaviorSubject<boolean>(this.logged);
 

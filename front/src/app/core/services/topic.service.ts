@@ -1,8 +1,8 @@
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
 import { Topic } from '../models/topic.interface';
-import { HttpClient } from '@angular/common/http';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +11,12 @@ import { HttpClient } from '@angular/common/http';
    * Handles topics loading and caching through a BehaviorSubject
   */
 export class TopicService {
-  private apiPath:string = 'api/topics';
+  private apiPath = 'topics';
   private topics$: BehaviorSubject<Topic[] |null> | null = null;
-  private cachedAt: number = 0;
-  private isReloading: boolean = false;
+  private cachedAt = 0;
+  private isReloading = false;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private dataService: DataService) { }
 
   /**
    * Creates or gets the existing BahaviorSubject used for local caching 
@@ -49,8 +49,8 @@ export class TopicService {
           return of(topics);
         } else {
           this.isReloading = true;
-          // fetch from backend
-          return this.httpClient.get<Topic[]>(`${this.apiPath}`).pipe(
+          // fetch from data service
+          return this.dataService.get<Topic[]>(`${this.apiPath}`).pipe(
             switchMap((fetchedTopics: Topic[]) => {
               this.cachedAt = new Date().getTime();
               this.isReloading = false;

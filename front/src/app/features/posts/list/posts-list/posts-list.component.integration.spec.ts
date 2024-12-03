@@ -89,6 +89,10 @@ describe('PostsListComponent integration tests', () => {
     postsRequest.flush(defaultPosts);
     fixture.detectChanges();
   });
+
+  afterEach(() => {
+    httpControllerMock.verify()
+  })
   
   it('should have default posts on init', () => {
     const h2Elements = fixture.debugElement.queryAll(By.css('app-post h2'));

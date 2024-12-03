@@ -8,19 +8,20 @@ import { PostSort } from '../models/post-sort.interface';
 import { CurrentUserService } from './current-user.service';
 import { Subscription } from '../models/subscription.interface';
 import { CurrentUserSubscriptionService } from './current-user-subscription.service';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
 
-  private apiPath:string = 'api/posts';
+  private apiPath = 'posts';
   private posts$: BehaviorSubject<Post[] |null> | null = null;
   private userSubscriptions$: Observable<Subscription[] | null> | null = null;
-  private cachedAt: number = 0;
-  private isReloading: boolean = false;
+  private cachedAt = 0;
+  private isReloading = false;
   
-  constructor(private httpClient: HttpClient, private subscriptionService: CurrentUserSubscriptionService) {
+  constructor(private dataService: DataService, private subscriptionService: CurrentUserSubscriptionService) {
    }
 
    private getPostsSubject() : BehaviorSubject<Post[] | null> {
@@ -54,10 +55,9 @@ export class PostService {
     if(!sortData) {
       return posts;
     }
-    let sortedPosts: Post[] = posts;
-
+    
     // author + post creation date
-      return sortedPosts.sort((a, b) => {
+      return posts.sort((a, b) => {
         let authorOrder, postOrder = 0;
         if(sortData.sortByAuthor) {
           authorOrder = a.author.username.localeCompare(b.author.username);
@@ -95,7 +95,7 @@ export class PostService {
           return of(this.sortPosts(posts, sortData));
         } else {
           this.isReloading = true;
-          return this.httpClient.get<Post[]>(`${this.apiPath}`).pipe(
+          return this.dataService.get<Post[]>(`${this.apiPath}`).pipe(
             switchMap((fetchedPosts: Post[]) => {
               this.cachedAt = new Date().getTime();
               this.isReloading = false;
@@ -108,11 +108,11 @@ export class PostService {
   }
 
   getPostById(postId: string): Observable<Post> {
-    return this.httpClient.get<Post>(`${this.apiPath}/${postId}`);
+    return this.dataService.get<Post>(`${this.apiPath}/${postId}`);
   }
 
   createPost(createPostRequest: CreatePostRequest) :Observable<Post> {
-    return this.httpClient.post<Post>(`${this.apiPath}`, createPostRequest).pipe(
+    return this.dataService.post<Post>(`${this.apiPath}`, createPostRequest).pipe(
       map((p: Post) => {
         if(this.getPostsSubject().getValue() != null) {
           this.getPostsSubject().next([p, ...this.getPostsSubject().getValue() as Post[]]);

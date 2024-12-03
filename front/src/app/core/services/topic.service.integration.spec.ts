@@ -8,7 +8,7 @@ import { provideHttpClient } from '@angular/common/http';
 describe('TopicService', () => {
   let service: TopicService;
   let mockHttpController: HttpTestingController;
-  let spyOnClearCache: any;
+  let spyOnClearCache: jest.SpyInstance;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -21,6 +21,11 @@ describe('TopicService', () => {
     mockHttpController = TestBed.inject(HttpTestingController);
     spyOnClearCache = jest.spyOn(service, 'clearCache');
   });
+
+  afterEach(() => {
+    mockHttpController.verify();
+    jest.clearAllMocks();
+  })
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -129,7 +134,7 @@ describe('TopicService', () => {
     expect(retrievalRequest.request.method).toEqual("GET");
     retrievalRequest.flush(mockTopics);
 
-    let hasBeenCalled: boolean = false;
+    let hasBeenCalled = false;
     // shouldReload will return true one time only
     const spyOnShouldReload = jest.spyOn(service, 'shouldReload').mockImplementation(() => {const res = hasBeenCalled ? false : true; hasBeenCalled = true; return res;});
 

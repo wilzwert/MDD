@@ -1,15 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-
 import { CurrentUserService } from './current-user.service';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, TestRequest } from '@angular/common/http/testing';
 import { User } from '../models/user.interface';
-import { Subscription } from '../models/subscription.interface';
 
 describe('CurrentUserService', () => {
   let service: CurrentUserService;
   let mockHttpController: HttpTestingController;
-  let spyOnClearCache: any;
+  let spyOnClearCache: jest.SpyInstance;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -22,6 +20,11 @@ describe('CurrentUserService', () => {
     mockHttpController = TestBed.inject(HttpTestingController);
     spyOnClearCache = jest.spyOn(service, 'clearCache');
   });
+
+  afterEach(() => {
+    mockHttpController.verify();
+    jest.clearAllMocks();
+  })
   
   it('should be created', () => {
     expect(service).toBeTruthy();
