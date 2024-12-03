@@ -24,7 +24,9 @@ describe('CommentService', () => {
   });
 
   afterEach(() => {
+    mockHttpController.verify()
     jest.clearAllMocks()
+    
   });
 
   it('should be created', () => {
@@ -127,6 +129,11 @@ describe('CommentService', () => {
     service.getPostComments(1).subscribe((comments: Comment[]) => {
       expect(comments).toContain(mockComment);
     })
+
+    // as we didn't retrieve comments before creating a new comment, a request should have been triggered
+    const secondRequest = mockHttpController.expectOne("api/posts/1/comments");
+    expect(secondRequest.request.method).toEqual("GET");
+    secondRequest.flush([mockComment]);
   });
 
 })

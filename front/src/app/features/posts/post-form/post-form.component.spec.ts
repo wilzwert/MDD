@@ -102,7 +102,7 @@ describe('PostFormComponent', () => {
     expect(routerMock.navigate).toHaveBeenCalledTimes(1);
     expect(routerMock.navigate).toHaveBeenCalled();
     expect(notificationServiceMock.error).toHaveBeenCalledTimes(1);
-    expect(notificationServiceMock.error).toHaveBeenCalledWith("Aucun thème disponible, impossible de créer un article.");
+    expect(notificationServiceMock.error).toHaveBeenCalledWith("Aucun thème disponible, impossible de créer un article");
   });
 
   it('should redirect to /posts when topic retrieval throws error', () => {

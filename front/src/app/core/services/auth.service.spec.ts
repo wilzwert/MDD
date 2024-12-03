@@ -1,5 +1,5 @@
 import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { AuthService } from './auth.service';
 import { HttpTestingController, provideHttpClientTesting, TestRequest } from '@angular/common/http/testing';
@@ -69,7 +69,7 @@ describe("AuthService unit tests", () =>  {
         
         service.login(loginRequest).subscribe(
             {
-                next: response =>  fail('should have failed with http error'),
+                next: () =>  fail('should have failed with http error'),
                 error: (error: HttpErrorResponse) => {
                     expect(error.error).toBe(mockError);
                     done()
@@ -89,7 +89,7 @@ describe("AuthService unit tests", () =>  {
        const mockError = new ProgressEvent('error');
        const registerRequest: RegisterRequest = {email: "john.doe@example.com", password: "testpassword", username: "username"};
         service.register(registerRequest).subscribe({
-            next: response => fail('should have failed with http error'),
+            next: () => fail('should have failed with http error'),
             error: (error: HttpErrorResponse) => {
                 expect(error.error).toBe(mockError);
                 done()

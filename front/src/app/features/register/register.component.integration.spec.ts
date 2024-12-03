@@ -65,6 +65,10 @@ describe('RegisterComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    mockHttpController.verify();
+  })
+
   it('should handle successful registration and navigate to login', () => {
     const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation(() => firstValueFrom(of(true)));
 

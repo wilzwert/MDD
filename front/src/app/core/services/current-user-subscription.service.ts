@@ -1,23 +1,19 @@
 import { environment } from '../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, shareReplay, switchMap } from 'rxjs';
-import { User } from '../models/user.interface';
+import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { Subscription } from '../models/subscription.interface';
-import { UpdateUserRequest } from '../models/update-user-request';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CurrentUserSubscriptionService {
 
-  private apiPath = 'api/user';
-
   private subscriptions$: BehaviorSubject<Subscription[] |null> | null = null;
-  private cachedAt: number = 0;
-  private isReloading: boolean = false;
+  private cachedAt = 0;
+  private isReloading = false;
   
-  constructor(private httpClient: HttpClient) { }
+  constructor(private dataService: DataService) { }
 
   private getSubscriptionSubject() : BehaviorSubject<Subscription[] | null> {
     if(this.subscriptions$ === null) {
@@ -39,7 +35,7 @@ export class CurrentUserSubscriptionService {
         } else {
           // load from backend otherwise
           this.isReloading = true;
-          return this.httpClient.get<Subscription[]>(`${this.apiPath}/me/subscriptions`).pipe(
+          return this.dataService.get<Subscription[]>(`user/me/subscriptions`).pipe(
             switchMap((fetchedSubscriptions: Subscription[]) => {
               this.cachedAt = new Date().getTime();
               this.isReloading = false;
@@ -53,7 +49,7 @@ export class CurrentUserSubscriptionService {
   }
 
   subscribe(topicId: number): Observable<Subscription> {
-    return this.httpClient.post<Subscription>(`api/topics/${topicId}/subscription`, '').pipe(
+    return this.dataService.post<Subscription>(`topics/${topicId}/subscription`, '').pipe(
       map((t: Subscription) => {
         // do not populate local cache when it was empty because next subscriptions retrieval must make an API request
         if(this.getSubscriptionSubject().getValue() != null) {
@@ -64,14 +60,14 @@ export class CurrentUserSubscriptionService {
     );
   }
 
-  unSubscribe(topicId: number): Observable<any> {
-    return this.httpClient.delete<void>(`api/topics/${topicId}/subscription`).pipe(
+  unSubscribe(topicId: number): Observable<null> {
+    return this.dataService.delete<null>(`topics/${topicId}/subscription`).pipe(
       map(() => {
         // do not populate local cache when it was empty because next subscriptions retrieval must make an API request
         if(this.getSubscriptionSubject().getValue() != null) {
           this.getSubscriptionSubject().next(this.getSubscriptionSubject().getValue()!.filter(s => s.topic.id != topicId));
         }
-        return of(null);
+        return null;
       }),
     );
   }

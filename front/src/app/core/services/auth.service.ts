@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoginRequest } from '../models/login-request.interface';
@@ -6,25 +5,26 @@ import { SessionInformation } from '../models/session-information.interface';
 import { RegisterRequest } from '../models/register-request.interface';
 import { RefreshTokenRequest } from '../models/refresh-token-request.interface';
 import { RefreshTokenResponse } from '../models/refresh-token-response.interface';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private pathService = 'api/auth';
+  private apiPath = 'auth';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private dataService: DataService) { }
 
   public register(registerRequest: RegisterRequest): Observable<null> {
-    return this.httpClient.post<null>(`${this.pathService}/register`, registerRequest);
+    return this.dataService.post<null>(`${this.apiPath}/register`, registerRequest);
   }
 
   public login(loginRequest: LoginRequest): Observable<SessionInformation> {
-    return this.httpClient.post<SessionInformation>(`${this.pathService}/login`, loginRequest);
+    return this.dataService.post<SessionInformation>(`${this.apiPath}/login`, loginRequest);
   }
 
   public refreshToken(refreshTokenRequest: RefreshTokenRequest): Observable<RefreshTokenResponse> {
-    return this.httpClient.post<RefreshTokenResponse>(`${this.pathService}/refreshToken`, refreshTokenRequest);
+    return this.dataService.post<RefreshTokenResponse>(`${this.apiPath}/refreshToken`, refreshTokenRequest);
   }
 }

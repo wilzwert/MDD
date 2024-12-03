@@ -1,23 +1,22 @@
 import { environment } from '../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
 import { User } from '../models/user.interface';
-import { Subscription } from '../models/subscription.interface';
 import { UpdateUserRequest } from '../models/update-user-request';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CurrentUserService {
 
-  private apiPath = 'api/user';
+  private apiPath = 'user';
 
   private user$: BehaviorSubject<User | null> | null = null;
-  private cachedAt: number = 0;
-  private isReloading: boolean = false;
+  private cachedAt = 0;
+  private isReloading = false;
   
-  constructor(private httpClient: HttpClient) { }
+  constructor(private dataService: DataService) { }
 
   private getUserSubject() : BehaviorSubject<User | null> {
     if(this.user$ === null) {
@@ -40,7 +39,7 @@ export class CurrentUserService {
         } else {
           // load from backend otherwise
           this.isReloading = true;
-          return this.httpClient.get<User>(`${this.apiPath}/me`).pipe(
+          return this.dataService.get<User>(`${this.apiPath}/me`).pipe(
             switchMap((fetchedUser: User) => {
               this.cachedAt = new Date().getTime();
               this.isReloading = false;
@@ -55,7 +54,7 @@ export class CurrentUserService {
 
   public updateCurrentUser(updateUserRequest: UpdateUserRequest): Observable<User> {
     // load from backend otherwise
-    return this.httpClient.put<User>(`${this.apiPath}/me`, updateUserRequest).pipe(
+    return this.dataService.put<User>(`${this.apiPath}/me`, updateUserRequest).pipe(
       switchMap((updatedUser: User) => {
         this.cachedAt = new Date().getTime();
         this.isReloading = false;

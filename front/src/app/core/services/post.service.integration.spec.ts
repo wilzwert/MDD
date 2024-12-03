@@ -14,12 +14,12 @@ import { PostSort } from '../models/post-sort.interface';
 describe('PostService', () => {
   let service: PostService;
   let mockHttpController: HttpTestingController;
-  let mockSubscriptionsSubject: BehaviorSubject<Subscription[] | null> = new BehaviorSubject<Subscription[] | null>(null);
+  const mockSubscriptionsSubject: BehaviorSubject<Subscription[] | null> = new BehaviorSubject<Subscription[] | null>(null);
   const mockSubscriptions: Subscription[] = [
     {userId: 1, createdAt: '2024-11-27T10:03', topic: {id: 1, title: 'Test topic', description: 'This is a test topic', createdAt: '2024-01-28T11:00:00', updatedAt: '2024-01-28T11:00:00'}},
     {userId: 1, createdAt: '2024-11-27T10:03', topic: {id: 2, title: 'Other test topic', description: 'This is another test topic', createdAt: '2024-01-28T11:00:00', updatedAt: '2024-01-28T11:00:00'}}
   ];
-  let spyOnClearCache: any;
+  let spyOnClearCache: jest.SpyInstance;
 
   beforeEach(() => {
     const mockUserSubscriptionService = {
@@ -41,6 +41,7 @@ describe('PostService', () => {
   });
 
   afterEach(() => {
+    mockHttpController.verify();
     jest.clearAllMocks();
   });
   

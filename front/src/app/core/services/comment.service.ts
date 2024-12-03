@@ -3,17 +3,18 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { Comment } from '../models/comment.interface';
 import { CreateCommentRequest } from '../models/create-comment-request.interface';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentService {
 
-  private apiPath = 'api/posts';
+  private apiPath = 'posts';
   private comments$: BehaviorSubject<Comment[] |null> = new BehaviorSubject<Comment[] | null >(null);
   private postId!: number;
 
-  constructor(private httpClient:HttpClient) { }
+  constructor(private dataService:DataService) { }
 
   getPostComments(postId: number): Observable<Comment[]> {
     return this.comments$.pipe(
@@ -24,7 +25,7 @@ export class CommentService {
           return of(commments);
         } else {
           this.postId = postId;
-          return this.httpClient.get<Comment[]>(`${this.apiPath}/${postId}/comments`).pipe(
+          return this.dataService.get<Comment[]>(`${this.apiPath}/${postId}/comments`).pipe(
             switchMap((fetchedComments: Comment[]) => {
               this.comments$.next(fetchedComments); // update BehaviorSubject
               return of(fetchedComments);
@@ -35,7 +36,7 @@ export class CommentService {
   }
 
   createPostComment(postId: number, createCommentRequest: CreateCommentRequest) : Observable<Comment>{
-    return this.httpClient.post<Comment>(`${this.apiPath}/${postId}/comments`, createCommentRequest).pipe(
+    return this.dataService.post<Comment>(`${this.apiPath}/${postId}/comments`, createCommentRequest).pipe(
       map((c: Comment) => {
         // we do not check whether postId has changed because all comments are created only from the post detail page
         this.comments$.next(this.comments$.getValue() != null ? [c, ...this.comments$.getValue() as Comment[]] : [c]);

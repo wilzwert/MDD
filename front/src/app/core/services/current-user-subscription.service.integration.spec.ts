@@ -8,7 +8,7 @@ import { Subscription } from '../models/subscription.interface';
 describe('CurrentUserSubscriptionService', () => {
   let service: CurrentUserSubscriptionService;
   let mockHttpController: HttpTestingController;
-  let spyOnClearCache: any;
+  let spyOnClearCache: jest.SpyInstance;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -21,6 +21,11 @@ describe('CurrentUserSubscriptionService', () => {
     mockHttpController = TestBed.inject(HttpTestingController);
     spyOnClearCache = jest.spyOn(service, 'clearCache');
   });
+
+  afterEach(() => {
+    mockHttpController.verify()
+    jest.clearAllMocks();
+  })
 
   it('should be created', () => {
     expect(service).toBeTruthy();

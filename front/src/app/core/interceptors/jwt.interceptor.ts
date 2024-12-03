@@ -10,12 +10,12 @@ import { ApiError } from "../errors/api-error";
 
 @Injectable({ providedIn: 'root' })
 export class JwtInterceptor implements HttpInterceptor {
-  private isRefreshing: boolean = false;
-  private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  private isRefreshing = false;
+  private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
   constructor(private sessionService: SessionService, private authService: AuthService) {}
 
-  public intercept(request: HttpRequest<any>, next: HttpHandler) {
+  public intercept(request: HttpRequest<unknown>, next: HttpHandler) {
     if (this.sessionService.isLogged()) {      
       request = this.addTokenHeader(request, this.sessionService.getToken()!);
     }
@@ -32,11 +32,11 @@ export class JwtInterceptor implements HttpInterceptor {
     );
   }
 
-  private shouldTryToRefreshToken(request: HttpRequest<any>, error: HttpErrorResponse) :boolean {
+  private shouldTryToRefreshToken(request: HttpRequest<unknown>, error: HttpErrorResponse) :boolean {
     return error instanceof HttpErrorResponse && error.status === 401 && !request.url.includes('auth/login') && !request.url.includes('auth/refreshToken')
   }
 
-  private tryToRefreshToken(request: HttpRequest<any>, next: HttpHandler) {
+  private tryToRefreshToken(request: HttpRequest<unknown>, next: HttpHandler) {
     if (!this.isRefreshing) {
       console.log('should we refresh ?');
       this.isRefreshing = true;
@@ -75,7 +75,7 @@ export class JwtInterceptor implements HttpInterceptor {
     );
   }
 
-  private addTokenHeader(request: HttpRequest<any>, token: string): HttpRequest<any> {
+  private addTokenHeader(request: HttpRequest<unknown>, token: string): HttpRequest<unknown> {
     console.log('adding bearer '+token+' for '+request.method+' '+request.url);
     return request.clone({ headers: request.headers.set('Authorization', this.sessionService.getTokenType()!+' '+token) });
   }
