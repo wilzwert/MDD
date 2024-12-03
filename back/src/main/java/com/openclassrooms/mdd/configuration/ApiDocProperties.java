@@ -7,10 +7,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
+ * Provides springdoc related configuration properties
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:16:04
- * Provides springdoc related configuration properties
  */
 @ConfigurationProperties(prefix="springdoc")
 @Getter

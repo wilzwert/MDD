@@ -30,10 +30,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * Handles user related REST operations
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:15:51
- * Handles user related REST operations
  */
 
 @RestController

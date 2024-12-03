@@ -6,11 +6,11 @@ import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
 /**
+ * Custom annotation to validate password
+ * Used for user registration requests
  * @author Wilhelm Zwertvaegher
  * Date:08/11/2024
  * Time:11:53
- * Custom annotation to validate password
- * Used for user registration requests
  */
 @Documented
 @Constraint(validatedBy = {PasswordValidator.class})

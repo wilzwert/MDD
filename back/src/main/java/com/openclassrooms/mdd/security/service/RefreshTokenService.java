@@ -12,10 +12,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
+ * This service handles Refresh Tokens creation, retrieval and verifying
  * @author Wilhelm Zwertvaegher
  * Date:15/11/2024
  * Time:09:16
- * This service handles Refresh Tokens creation, retrieval and verifying
  */
 
 @Service

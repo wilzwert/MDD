@@ -23,12 +23,12 @@ import java.io.IOException;
 import java.util.Optional;
 
 /**
- * @author Wilhelm Zwertvaegher
- * Date:07/11/2024
- * Time:16:01
  * Custom Jwt filter, added to security filter chain in SpringSecurityConfig
  * The goal here is to intercept a bearer token if present in the request
  * and use it to authenticate the current user
+ * @author Wilhelm Zwertvaegher
+ * Date:07/11/2024
+ * Time:16:01
  */
 @Component
 @Slf4j

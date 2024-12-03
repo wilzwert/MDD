@@ -19,10 +19,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
+ * Provides custom security configuration for the Application
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:15:57
- * Security configuration for the Application
  */
 
 @Configuration

@@ -5,11 +5,10 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 /**
+ * Custom validator to validate password complexity requirements
  * @author Wilhelm Zwertvaegher
  * Date:08/11/2024
  * Time:11:55
- *
- * Custom validator to validate Password complexity requirements
  */
 public class PasswordValidator implements ConstraintValidator<Password, String> {
     @Override
