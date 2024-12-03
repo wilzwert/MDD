@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -6,8 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../core/services/auth.service';
 import { RegisterRequest } from '../../core/models/register-request.interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { catchError, of, take, throwError } from 'rxjs';
+import { catchError, take, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../core/services/notification.service';
 import { ApiError } from '../../core/errors/api-error';
@@ -32,7 +31,6 @@ export class RegisterComponent {
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private matSnackBar: MatSnackBar,
     private notificationService: NotificationService
   ) {
     this.form = this.fb.group({

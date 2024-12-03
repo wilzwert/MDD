@@ -255,7 +255,7 @@ describe('PostService', () => {
     expect(retrievalRequest.request.method).toEqual("GET");
     retrievalRequest.flush(mockPosts);
 
-    let hasBeenCalled: boolean = false;
+    let hasBeenCalled = false;
     // shouldReload will return true one time only
     const spyOnShouldReload = jest.spyOn(service, 'shouldReload').mockImplementation(() => {const res = hasBeenCalled ? false : true; hasBeenCalled = true; return res;});
 

@@ -10,8 +10,6 @@ export class NotificationService {
   private notificationSubject$ = new Subject<AppNotification | null>();
   public notification$: Observable<AppNotification | null> = this.notificationSubject$.asObservable();
 
-  constructor() { }
-
   public error(errorMessage: string) :void {
     this.handleNotification({type: 'error', message: errorMessage} as AppNotification);
   }

@@ -25,7 +25,6 @@ import { ApiError } from '../../core/errors/api-error';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  public hide: boolean = true;
   public form:FormGroup;
 
   constructor(

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, catchError, Observable, Subject, takeUntil, tap, throwError } from 'rxjs';
+import { catchError, Observable, Subject, takeUntil, tap, throwError } from 'rxjs';
 import { Post } from '../../../core/models/post.interface';
 import { PostService } from '../../../core/services/post.service';
 import { AsyncPipe, DatePipe } from '@angular/common';
@@ -14,7 +14,6 @@ import { MatIconButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NotificationService } from '../../../core/services/notification.service';
-import { ApiError } from '../../../core/errors/api-error';
 
 @Component({
   selector: 'app-post-detail',
@@ -80,7 +79,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         this.post$ = this.postService.getPostById(params['id']).pipe(
           // set page title once the post is available
           tap((post: Post) =>{this.title.setTitle(`Article - ${post.title}`)}),
-          catchError((error: ApiError) => {
+          catchError(() => {
             this.router.navigate(["/posts"]);
             return throwError(() => new Error('Impossible de charger l\'article'));
           })
