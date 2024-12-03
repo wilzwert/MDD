@@ -21,7 +21,6 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-eslint/schematics": "^18.4.1",
     "@angular/animations": "^18.2.0",
     "@angular/cdk": "^18.2.13",
     "@angular/common": "^18.2.0",
@@ -41,6 +40,11 @@
     "@angular-builders/custom-webpack": "^18.0.0",
     "@angular-builders/jest": "^18.0.0",
     "@angular-devkit/build-angular": "^18.2.3",
+    "@angular-eslint/builder": "^18.4.2",
+    "@angular-eslint/eslint-plugin": "^18.4.2",
+    "@angular-eslint/eslint-plugin-template": "^18.4.2",
+    "@angular-eslint/schematics": "^18.4.2",
+    "@angular-eslint/template-parser": "^18.4.2",
     "@angular/cli": "^18.2.3",
     "@angular/compiler-cli": "^18.2.0",
     "@cypress/code-coverage": "^3.13.7",
@@ -49,6 +53,7 @@
     "@jsdevtools/coverage-istanbul-loader": "^3.0.5",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.1",
+    "angular-eslint": "^18.4.2",
     "cypress": "^13.16.0",
     "istanbul-lib-coverage": "^3.2.2",
     "istanbul-lib-instrument": "^6.0.3",
@@ -56,6 +61,7 @@
     "jest-preset-angular": "^14.3.1",
     "nyc": "^17.1.0",
     "typescript": "~5.5.2",
+    "typescript-eslint": "^8.16.0",
     "webpack": "^5.96.1"
   }
 }

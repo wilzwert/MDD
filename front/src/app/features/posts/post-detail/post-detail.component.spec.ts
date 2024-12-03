@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PostDetailComponent } from './post-detail.component';
 import { PostService } from '../../../core/services/post.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { CommentService } from '../../../core/services/comment.service';
 import { of, throwError } from 'rxjs';
 import { ApiError } from '../../../core/errors/api-error';
@@ -136,9 +135,7 @@ describe('PostDetailComponent', () => {
     
     component.ngOnInit();
 
-    component.form = {
-      value: { content: "Newly created comment content"}
-    } as any;
+    component.form.controls['content'].setValue("Newly created comment content");
     component.submit();
 
     expect(notificationServiceMock.confirmation).toHaveBeenCalledWith("Merci pour votre commentaire !");

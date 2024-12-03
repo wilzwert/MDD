@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:16:05
+ * Provides server related configuration properties
  */
 
 @ConfigurationProperties(prefix = "server")
