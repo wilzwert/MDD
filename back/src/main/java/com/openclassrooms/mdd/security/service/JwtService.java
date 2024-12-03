@@ -33,6 +33,16 @@ public class JwtService {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
+    /**
+     * Extracts a JWT token from the current Request
+     * @param request the current request
+     * @return the extracted jwt token
+     * @throws ExpiredJwtException when JWT token is expired
+     * @throws MalformedJwtException when JWT token is malformed
+     * @throws IllegalArgumentException when JWT token is illegal
+     * @throws UnsupportedJwtException when JWT token is unsupported
+     * @throws SignatureException when JWT token's signature is invalid
+     */
     public Optional<JwtToken> extractTokenFromRequest(HttpServletRequest request) throws ExpiredJwtException, MalformedJwtException, IllegalArgumentException, UnsupportedJwtException, SignatureException {
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -73,6 +83,11 @@ public class JwtService {
         }
     }
 
+    /**
+     * Generates a token for a user
+     * @param user the user we want to generate the token for
+     * @return the JWT Token
+     */
     public String generateToken(User user) {
         log.info("Generating JWT token for user {} {}", user.getEmail(), user.getId());
         return Jwts
@@ -84,6 +99,10 @@ public class JwtService {
                 .compact();
     }
 
+    /**
+     *
+     * @return the signin key
+     */
     private SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);

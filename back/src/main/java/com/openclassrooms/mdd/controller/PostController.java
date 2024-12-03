@@ -36,6 +36,7 @@ import java.util.Optional;
  * @author Wilhelm Zwertvaegher
  * Date:08/11/2024
  * Time:15:32
+ * Handles posts related REST operations
  */
 @RestController
 @Slf4j

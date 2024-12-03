@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:15:57
+ * Security configuration for the Application
  */
 
 @Configuration
@@ -45,7 +46,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                // disable CSRF protection, as the app is RESTful API
                 .csrf(AbstractHttpConfigurer::disable)
+                // RESTFul API should not use HTTP sessions
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         // allow publicly accessible paths
@@ -68,16 +71,28 @@ public class SecurityConfig {
                 .build();
     }
 
+    /**
+     * Provide our custom UserDetailsService to the security component
+     * @return UserDetailsService
+     */
     @Bean
     public UserDetailsService userDetailsService() {
         return userDetailsService;
     }
 
+    /**
+     * Use a BCryptPasswordEncode as password encoder
+     * @return BCryptPasswordEncoder
+     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
 
+    /**
+     * Configure the app's AuthenticationProvide with our custom elements
+     * @return AuthenticationProvider
+     */
     @Bean
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
