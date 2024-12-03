@@ -14,7 +14,6 @@ import { of, throwError } from 'rxjs';
 import { SessionInformation } from '../../core/models/session-information.interface';
 import { LoginRequest } from '../../core/models/login-request.interface';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { NotificationService } from '../../core/services/notification.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;

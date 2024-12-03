@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { Comment } from '../models/comment.interface';
 import { CreateCommentRequest } from '../models/create-comment-request.interface';
 
@@ -9,7 +9,7 @@ import { CreateCommentRequest } from '../models/create-comment-request.interface
 })
 export class CommentService {
 
-  private apiPath:string = 'api/posts';
+  private apiPath = 'api/posts';
   private comments$: BehaviorSubject<Comment[] |null> = new BehaviorSubject<Comment[] | null >(null);
   private postId!: number;
 
