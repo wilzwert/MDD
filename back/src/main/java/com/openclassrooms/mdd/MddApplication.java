@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 /**
+ * MDD main application
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:15:47

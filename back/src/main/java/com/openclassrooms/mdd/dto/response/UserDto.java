@@ -5,6 +5,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 /**
+ * Response DTO used for users
  * @author Wilhelm Zwertvaegher
  * DTO used to send a User in a http response
  */

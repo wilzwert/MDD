@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.Instant;
 
 /**
+ * Represents a refresh token, may be persisted
  * @author Wilhelm Zwertvaegher
  * Date:15/11/2024
  * Time:09:17

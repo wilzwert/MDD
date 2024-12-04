@@ -6,6 +6,10 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * Represents a subscription composite key, made of user id and topic id
+ * @author Wilhelm Zwertvaegher
+ */
 @Data
 @Embeddable
 public class SubscriptionKey implements Serializable {

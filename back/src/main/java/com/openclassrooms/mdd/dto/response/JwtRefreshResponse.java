@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 /**
+ * DTO for JWT token refresh request success
  * @author Wilhelm Zwertvaegher
  * Date:15/11/2024
  * Time:09:15

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
+ * Comment repository
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:15:58
@@ -18,5 +19,4 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
     List<Comment> findCommentsByPost(Post post, Sort sort);
-    List<Comment> findCommentsByAuthor(User user);
 }

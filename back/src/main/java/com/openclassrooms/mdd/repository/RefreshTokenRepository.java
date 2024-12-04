@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 /**
+ * Refresh token repository
  * @author Wilhelm Zwertvaegher
  * Date:15/11/2024
  * Time:09:17

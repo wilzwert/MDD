@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
+ * Represents a topic, may be persisted
  * @author Wilhelm Zwertvaegher
  * Date:08/11/2024
  * Time:15:23

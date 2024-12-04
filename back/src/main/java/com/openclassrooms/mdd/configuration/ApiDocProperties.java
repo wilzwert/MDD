@@ -17,18 +17,12 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @Setter
 public class ApiDocProperties {
 
-    /**
-     * springdoc.api-docs.* properties
-     */
     @NestedConfigurationProperty
     private ApiDocs apiDocs = new ApiDocs();
     public String getApiDocsPath() {
         return apiDocs.getPath();
     }
 
-    /**
-     * springdoc.swagger-ui.* properties
-     */
     @NestedConfigurationProperty
     private SwaggerUi swaggerUi = new SwaggerUi();
 
@@ -36,12 +30,22 @@ public class ApiDocProperties {
         return swaggerUi.getPath();
     }
 
+    /**
+     *  Api doc related properties
+     * found in springdoc.api-docs.*
+     * As of now, only 'path' is handled
+     */
     @Getter
     @Setter
     public static class ApiDocs {
         private String path;
     }
 
+    /**
+     * Swagger ui related properties
+     * found in springdoc.swagger-ui.* properties
+     * As of now, only 'path' is handled
+     */
     @Getter
     @Setter
     public static class SwaggerUi {

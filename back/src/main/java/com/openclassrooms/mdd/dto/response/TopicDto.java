@@ -6,6 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 /**
+ * Response DTO used for topics
  * @author Wilhelm Zwertvaegher
  * Date:08/11/2024
  * Time:15:25

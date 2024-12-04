@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
+ * DTO used for post creation request
  * @author Wilhelm Zwertvaegher
  * Date:08/11/2024
  * Time:15:28

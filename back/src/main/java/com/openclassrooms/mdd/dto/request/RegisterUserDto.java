@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
+ * Request DTO used for user registration
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:16:38

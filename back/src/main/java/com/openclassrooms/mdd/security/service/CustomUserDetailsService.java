@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
+ * Custom UserDetailsService used to retrieve user by username extracted from a jwt token subject
+ * As of now, the jwt token subject is the user's id
+ *
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:15:58
