@@ -12,6 +12,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents a subscription, may be persisted
+ * @author Wilhelm Zwertvaegher
+ */
 @Data
 @Accessors(chain = true)
 @Entity

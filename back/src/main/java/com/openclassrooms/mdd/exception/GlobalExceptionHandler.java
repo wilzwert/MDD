@@ -19,9 +19,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Wilhelm Zwertvaegher
  * Global exception handler to intercept several types of Exceptions
  * and set http response accordingly
+ * @author Wilhelm Zwertvaegher
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {

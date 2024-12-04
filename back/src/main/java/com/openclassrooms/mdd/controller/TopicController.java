@@ -37,10 +37,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * Handles topics related REST operations
  * @author Wilhelm Zwertvaegher
  * Date:08/11/2024
  * Time:15:32
- * Handles topics related REST operations
  */
 @RestController
 @Slf4j

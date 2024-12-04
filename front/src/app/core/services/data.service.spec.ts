@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 
 import { DataService } from './data.service';
-import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, TestRequest } from '@angular/common/http/testing';
 import { Topic } from '../models/topic.interface';
-import { catchError } from 'rxjs';
 
-describe('ApiService', () => {
+describe('DataService', () => {
   let service: DataService;
   let httpMock: HttpTestingController;
 

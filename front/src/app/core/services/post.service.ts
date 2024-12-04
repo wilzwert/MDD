@@ -1,11 +1,9 @@
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap, tap } from 'rxjs';
 import { Post } from '../models/post.interface';
-import { HttpClient } from '@angular/common/http';
 import { CreatePostRequest } from '../models/create-post-request.interface';
 import { PostSort } from '../models/post-sort.interface';
-import { CurrentUserService } from './current-user.service';
 import { Subscription } from '../models/subscription.interface';
 import { CurrentUserSubscriptionService } from './current-user-subscription.service';
 import { DataService } from './data.service';

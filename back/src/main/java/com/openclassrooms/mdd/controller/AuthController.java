@@ -34,10 +34,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 /**
+ * Auth-related REST controller
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:15:51
- * Auth-related REST controller
+ *
  */
 
 @RestController

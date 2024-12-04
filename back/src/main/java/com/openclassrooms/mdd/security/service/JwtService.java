@@ -18,6 +18,7 @@ import java.util.Optional;
 
 
 /**
+ * Provides JWT token generation and validation
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:16:06

@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { Comment } from '../models/comment.interface';
@@ -14,7 +13,7 @@ export class CommentService {
   private comments$: BehaviorSubject<Comment[] |null> = new BehaviorSubject<Comment[] | null >(null);
   private postId!: number;
 
-  constructor(private dataService:DataService) { }
+  constructor(private dataService: DataService) { }
 
   getPostComments(postId: number): Observable<Comment[]> {
     return this.comments$.pipe(

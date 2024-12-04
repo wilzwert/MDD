@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bc0c2ea9-1cc3-42a5-a5f7-1c66b9a75b03",
+		"_postman_id": "086e6edd-a7f4-4183-98cb-8bf3d9f96ed3",
 		"name": "MDDApi",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "38710569"
@@ -17,7 +17,7 @@
 							"script": {
 								"exec": [
 									"pm.collectionVariables.set(\"userMail\", (Math.random() + 1).toString(36).substring(7)+\"@wilhelm.me\");\r",
-									"pm.collectionVariables.set(\"username\", (Math.random() + 1).toString(36).substring(7));"
+									"pm.collectionVariables.set(\"userName\", (Math.random() + 1).toString(36).substring(7));"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -32,7 +32,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"{{userMail}}\",\n    \"username\": \"{{username}}\",\n    \"password\": \"aAbcd.1234\"\n}",
+							"raw": "{\n    \"email\": \"{{userMail}}\",\n    \"username\": \"{{userName}}\",\n    \"password\": \"aAbcd.1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -63,7 +63,11 @@
 								"exec": [
 									"// Stores the authentication token in a global variable\r",
 									"var authToken = pm.response.json().token;\r",
-									"pm.collectionVariables.set(\"authToken\", authToken);"
+									"pm.collectionVariables.set(\"authToken\", authToken);\r",
+									"\r",
+									"// Stores the authentication token in a global variable\r",
+									"var refreshToken = pm.response.json().refreshToken;\r",
+									"pm.collectionVariables.set(\"refreshToken\", refreshToken);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -101,24 +105,15 @@
 					"response": []
 				},
 				{
-					"name": "me",
+					"name": "refresh token",
 					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var id = pm.response.json().id;\r",
-									"pm.collectionVariables.set(\"userId\", id);"
+									"// Stores the authentication token in a global variable\r",
+									"var authToken = pm.response.json().token;\r",
+									"pm.collectionVariables.set(\"authToken\", authToken);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -131,23 +126,32 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{authToken}}",
+									"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0ZXN0VXNlciIsImlhdCI6MTczMTY1Nzc3NCwiZXhwIjoxNzMxNjY2Nzc0fQ._p7J0W-3MVezgSdXLYiQXL42x0pJr-f3eJIM-vp6xzZyZxg2WMi82sTg6iWzkA9v",
 									"type": "string"
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/user/me",
+							"raw": "{{apiHost}}:{{apiPort}}/api/auth/refreshToken",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"user",
-								"me"
+								"auth",
+								"refreshToken"
 							]
 						}
 					},
@@ -227,64 +231,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/topic",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topics",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"topic"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "create2",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.collectionVariables.set(\"secondCreatedTopicId\", pm.response.json().id);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{authToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\"title\": \"My second postman topic {{randomText}} {{userId}}\",\r\n\"description\": \"My second postman topic description {{randomText}} {{userId}}\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/topic",
-							"host": [
-								"{{apiHost}}"
-							],
-							"port": "{{apiPort}}",
-							"path": [
-								"api",
-								"topic"
+								"topics"
 							]
 						}
 					},
@@ -327,14 +281,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{createdTopicId}}/subscription",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topics/{{createdTopicId}}/subscription",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"topic",
+								"topics",
 								"{{createdTopicId}}",
 								"subscription"
 							]
@@ -379,14 +333,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{createdTopicId}}/subscription",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topics/{{createdTopicId}}/subscription",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"topic",
+								"topics",
 								"{{createdTopicId}}",
 								"subscription"
 							]
@@ -422,14 +376,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/topic",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topics",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"topic"
+								"topics"
 							]
 						}
 					},
@@ -451,14 +405,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{createdTopicId}}",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topics/{{createdTopicId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"topic",
+								"topics",
 								"{{createdTopicId}}"
 							]
 						}
@@ -481,130 +435,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{createdTopicId}}",
+							"raw": "{{apiHost}}:{{apiPort}}/api/topics/{{createdTopicId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"topic",
+								"topics",
 								"{{createdTopicId}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{authToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "Oh yeah",
-									"type": "text"
-								},
-								{
-									"key": "surface",
-									"value": "250",
-									"type": "text"
-								},
-								{
-									"key": "price",
-									"value": "450",
-									"type": "text"
-								},
-								{
-									"key": "description",
-									"value": "Lorem ipsum dolor et caetera.",
-									"type": "text"
-								},
-								{
-									"key": "picture",
-									"type": "file",
-									"src": "postman-cloud:///1ef8583f-0647-44a0-9e09-68b88b944443"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{createdTopicId}}",
-							"host": [
-								"{{apiHost}}"
-							],
-							"port": "{{apiPort}}",
-							"path": [
-								"api",
-								"topic",
-								"{{createdTopicId}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{authToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "name",
-									"type": "text"
-								},
-								{
-									"key": "surface",
-									"value": "50",
-									"type": "text"
-								},
-								{
-									"key": "price",
-									"value": "200",
-									"type": "text"
-								},
-								{
-									"key": "description",
-									"value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a lectus eleifend, varius massa ac, mollis tortor. Quisque ipsum nulla, faucibus ac metus a, eleifend efficitur augue. Integer vel pulvinar ipsum. Praesent mollis neque sed sagittis ultricies. Suspendisse congue ligula at justo molestie, eget cursus nulla tincidunt. Pellentesque elementum rhoncus arcu, viverra gravida turpis mattis in. Maecenas tempor elementum lorem vel ultricies. Nam tempus laoreet eros, et viverra libero tincidunt a. Nunc vel nisi vulputate, sodales massa eu, varius erat.",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/topic/{{secondCreatedTopicId}}",
-							"host": [
-								"{{apiHost}}"
-							],
-							"port": "{{apiPort}}",
-							"path": [
-								"api",
-								"topic",
-								"{{secondCreatedTopicId}}"
 							]
 						}
 					},
@@ -676,7 +515,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\"title\": \"My postman post {{randomText}} {{userId}}\",\r\n\"content\": \"My postman post content {{randomText}} {{userId}}\",\r\n\"topic_id\": \"{{createdTopicId}}\"\r\n}",
+							"raw": "{\r\n\"title\": \"My postman post {{randomText}} {{userId}}\",\r\n\"content\": \"My postman post content {{randomText}} {{userId}}\",\r\n\"topicId\": \"{{createdTopicId}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -684,14 +523,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/post",
+							"raw": "{{apiHost}}:{{apiPort}}/api/posts",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"post"
+								"posts"
 							]
 						}
 					},
@@ -713,14 +552,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/post/{{createdPostId}}",
+							"raw": "{{apiHost}}:{{apiPort}}/api/posts/{{createdPostId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"post",
+								"posts",
 								"{{createdPostId}}"
 							]
 						}
@@ -752,16 +591,16 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/post/{{createdPostId}}/comment",
+							"raw": "{{apiHost}}:{{apiPort}}/api/posts/{{createdPostId}}/comments",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"post",
+								"posts",
 								"{{createdPostId}}",
-								"comment"
+								"comments"
 							]
 						}
 					},
@@ -769,6 +608,9 @@
 				},
 				{
 					"name": "post comments",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -780,11 +622,11 @@
 								}
 							]
 						},
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"content\":\"youpi\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -792,23 +634,23 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/post/{{createdPostId}}/comment",
+							"raw": "{{apiHost}}:{{apiPort}}/api/posts/{{createdPostId}}/comments",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"post",
+								"posts",
 								"{{createdPostId}}",
-								"comment"
+								"comments"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "get all",
+					"name": "get all posts",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -823,14 +665,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}:{{apiPort}}/api/post",
+							"raw": "{{apiHost}}:{{apiPort}}/api/posts",
 							"host": [
 								"{{apiHost}}"
 							],
 							"port": "{{apiPort}}",
 							"path": [
 								"api",
-								"post"
+								"posts"
 							]
 						}
 					},
@@ -839,8 +681,115 @@
 			]
 		},
 		{
-			"name": "delete",
+			"name": "me",
 			"item": [
+				{
+					"name": "me",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var id = pm.response.json().id;\r",
+									"pm.collectionVariables.set(\"userId\", id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/user/me",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"user",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subscriptions",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var id = pm.response.json().id;\r",
+									"pm.collectionVariables.set(\"userId\", id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}:{{apiPort}}/api/user/me/subscriptions",
+							"host": [
+								"{{apiHost}}"
+							],
+							"port": "{{apiPort}}",
+							"path": [
+								"api",
+								"user",
+								"me",
+								"subscriptions"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "me",
 					"request": {
@@ -932,7 +881,7 @@
 			"type": "string"
 		},
 		{
-			"key": "username",
+			"key": "userName",
 			"value": ""
 		},
 		{
@@ -945,6 +894,10 @@
 		},
 		{
 			"key": "createdPostId",
+			"value": ""
+		},
+		{
+			"key": "refreshToken",
 			"value": ""
 		}
 	]

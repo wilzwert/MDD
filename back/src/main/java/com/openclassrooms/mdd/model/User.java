@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
+ * Represents a use, may be persisted
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:15:52

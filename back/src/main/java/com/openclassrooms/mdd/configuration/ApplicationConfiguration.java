@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 /**
+ * Sets .env source for properties
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:16:05
- * Sets .env source for properties
  */
 @Configuration
 @PropertySource("file:.env")

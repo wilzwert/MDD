@@ -33,10 +33,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * Handles posts related REST operations
  * @author Wilhelm Zwertvaegher
  * Date:08/11/2024
  * Time:15:32
- * Handles posts related REST operations
+ *
  */
 @RestController
 @Slf4j

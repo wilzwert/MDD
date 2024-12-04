@@ -134,7 +134,7 @@ describe('PostFormComponent', () => {
   })
 
   it('should create post', () => {
-    const date: string = '2024-11-28T11:00:00';
+    const date = '2024-11-28T11:00:00';
     const createdPostMock: Post = {
       id: 1, title: 'Test post', content: 'Test post content', createdAt: date, updatedAt: date, 
       author: {id: 1, username: 'testuser'} as User,
@@ -142,13 +142,9 @@ describe('PostFormComponent', () => {
     };
     postServiceMock.createPost.mockReturnValue(of(createdPostMock))
 
-    component.form = {
-      value: {
-        topicId: 1,
-        title: 'Post title',
-        content: 'Post content'
-      }
-    } as any;
+    component.form?.controls['topicId'].setValue(1);
+    component.form?.controls['title'].setValue('Post title');
+    component.form?.controls['content'].setValue('Post content');
     component.submit();
 
     expect(postServiceMock.createPost).toHaveBeenCalledTimes(1);
@@ -165,14 +161,10 @@ describe('PostFormComponent', () => {
 
   it('should do nothing when post creation fails', () => {
     postServiceMock.createPost.mockReturnValue(throwError(() => new ApiError({status: 500} as HttpErrorResponse)));
-    component.form = {
-      value: {
-        topicId: 1,
-        title: 'Post title',
-        content: 'Post content'
-      }
-    } as any;
-
+    component.form?.controls['topicId'].setValue(1);
+    component.form?.controls['title'].setValue('Post title');
+    component.form?.controls['content'].setValue('Post content');
+    
     component.submit();
 
     expect(routerMock.navigate).not.toHaveBeenCalled();

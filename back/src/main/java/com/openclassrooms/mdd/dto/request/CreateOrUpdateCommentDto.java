@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
+ * DTO used for comment creation or update request
+ * Please note : as of now, only comment creation is supported by the API
  * @author Wilhelm Zwertvaegher
  * Date:08/11/2024
  * Time:15:28

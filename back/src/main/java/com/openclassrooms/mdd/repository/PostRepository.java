@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
+ * Post repository
  * @author Wilhelm Zwertvaegher
  * Date:07/11/2024
  * Time:15:58

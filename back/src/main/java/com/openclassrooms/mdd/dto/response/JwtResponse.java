@@ -3,6 +3,11 @@ package com.openclassrooms.mdd.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+/**
+ * DTO used for login success response
+ * @author Wilhelm Zwertvaegher
+ */
+
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor

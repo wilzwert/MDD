@@ -11,6 +11,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 
+/**
+ * Custom UserDetails basic implementation
+ * As of now, we do not handle authorities, expiration, activation/deactivation, account lock
+ * @author Wilhelm Zwertvaegher
+ */
 @Builder
 @AllArgsConstructor
 @Getter

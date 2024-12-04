@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- * @author Wilhelm Zwertvaegher
  * DTO for error responses
+ * @author Wilhelm Zwertvaegher
  */
 @Data
 @Schema(description = "Common error object")
