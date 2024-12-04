@@ -1,45 +1,38 @@
-import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { Subscription } from '../models/subscription.interface';
 import { DataService } from './data.service';
+import { SessionCacheableService } from './session-cacheable-service';
+import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CurrentUserSubscriptionService {
+export class CurrentUserSubscriptionService extends SessionCacheableService<Subscription[]> {
 
-  private subscriptions$: BehaviorSubject<Subscription[] |null> | null = null;
-  private cachedAt = 0;
-  private isReloading = false;
   
-  constructor(private dataService: DataService) { }
-
-  private getSubscriptionSubject() : BehaviorSubject<Subscription[] | null> {
-    if(this.subscriptions$ === null) {
-      this.subscriptions$ = new BehaviorSubject<Subscription[] | null>(null);
-    }
-    return this.subscriptions$;
+  constructor(private dataService: DataService, protected override sessionService: SessionService) { 
+    super(sessionService);
   }
 
-  public shouldReload(): boolean {
-    return !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
+  protected override initCacheSubject() : BehaviorSubject<Subscription[] | null> {
+    return  new BehaviorSubject<Subscription[] | null>(null);
   }
+
   
   public getCurrentUserSubscriptions() : Observable<Subscription[]>{
-    return this.getSubscriptionSubject().pipe(
+    return this.getCacheSubject().pipe(
       switchMap((subscriptions: Subscription[] | null) => {
         if (subscriptions && !this.shouldReload()) {
           // send current subscriptions if already present
           return of(subscriptions);
         } else {
           // load from backend otherwise
-          this.isReloading = true;
+          this.setReloading();
           return this.dataService.get<Subscription[]>(`user/me/subscriptions`).pipe(
             switchMap((fetchedSubscriptions: Subscription[]) => {
-              this.cachedAt = new Date().getTime();
-              this.isReloading = false;
-              this.getSubscriptionSubject().next(fetchedSubscriptions); // update BehaviorSubject
+              this.setCached();
+              this.getCacheSubject().next(fetchedSubscriptions); // update BehaviorSubject
               return of(fetchedSubscriptions);
             })
           );
@@ -52,8 +45,8 @@ export class CurrentUserSubscriptionService {
     return this.dataService.post<Subscription>(`topics/${topicId}/subscription`, '').pipe(
       map((t: Subscription) => {
         // do not populate local cache when it was empty because next subscriptions retrieval must make an API request
-        if(this.getSubscriptionSubject().getValue() != null) {
-          this.getSubscriptionSubject().next([...this.getSubscriptionSubject().getValue() as Subscription[], t]);
+        if(this.getCacheSubject().getValue() != null) {
+          this.getCacheSubject().next([...this.getCacheSubject().getValue() as Subscription[], t]);
         }
         return t;
       }),
@@ -64,15 +57,11 @@ export class CurrentUserSubscriptionService {
     return this.dataService.delete<null>(`topics/${topicId}/subscription`).pipe(
       map(() => {
         // do not populate local cache when it was empty because next subscriptions retrieval must make an API request
-        if(this.getSubscriptionSubject().getValue() != null) {
-          this.getSubscriptionSubject().next(this.getSubscriptionSubject().getValue()!.filter(s => s.topic.id != topicId));
+        if(this.getCacheSubject().getValue() != null) {
+          this.getCacheSubject().next(this.getCacheSubject().getValue()!.filter(s => s.topic.id != topicId));
         }
         return null;
       }),
     );
-  }
-
-  public clearCache(): void {
-    this.subscriptions$ = null;
   }
 }

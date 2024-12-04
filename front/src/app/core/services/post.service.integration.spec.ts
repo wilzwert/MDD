@@ -162,7 +162,7 @@ describe('PostService', () => {
     // then local cache should have been cleard
     expect(spyOnClearCache).toHaveBeenCalled();
   });
-
+  
   it('should retrieve a Post by its id', (done) => {
     const mockPost = {id: 1, title: "Test post", content: "Test post content", author: {id: 1, "username": "testuser"} as User, topic: {id: 1, title: "Test topic"} as Topic} as Post;
     service.getPostById("1").subscribe(

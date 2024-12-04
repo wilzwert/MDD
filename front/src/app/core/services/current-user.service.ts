@@ -1,49 +1,40 @@
-import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
 import { User } from '../models/user.interface';
 import { UpdateUserRequest } from '../models/update-user-request';
 import { DataService } from './data.service';
+import { SessionCacheableService } from './session-cacheable-service';
+import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CurrentUserService {
+export class CurrentUserService extends SessionCacheableService<User> {
 
   private apiPath = 'user';
-
-  private user$: BehaviorSubject<User | null> | null = null;
-  private cachedAt = 0;
-  private isReloading = false;
   
-  constructor(private dataService: DataService) { }
-
-  private getUserSubject() : BehaviorSubject<User | null> {
-    if(this.user$ === null) {
-      this.user$ = new BehaviorSubject<User | null>(null);
-    }
-    return this.user$;
+  constructor(private dataService: DataService, protected override sessionService: SessionService) { 
+    super(sessionService);
   }
 
-  public shouldReload(): boolean {
-    return !this.isReloading && new Date().getTime() - this.cachedAt > environment.serviceCacheMaxAgeMs;
+  protected override initCacheSubject() : BehaviorSubject<User | null> {
+    return new BehaviorSubject<User | null>(null);
   }
 
   public getCurrentUser() : Observable<User> {
     
-    return this.getUserSubject().pipe(
+    return this.getCacheSubject().pipe(
       switchMap((user: User | null) => {
         if (user && !this.shouldReload()) {
           // send current user if already present
           return of(user);
         } else {
           // load from backend otherwise
-          this.isReloading = true;
+          this.setReloading();
           return this.dataService.get<User>(`${this.apiPath}/me`).pipe(
             switchMap((fetchedUser: User) => {
-              this.cachedAt = new Date().getTime();
-              this.isReloading = false;
-              this.getUserSubject().next(fetchedUser); // update BehaviorSubject
+              this.setCached();
+              this.getCacheSubject().next(fetchedUser); // update BehaviorSubject
               return of(fetchedUser);
             })
           );
@@ -56,14 +47,11 @@ export class CurrentUserService {
     // load from backend otherwise
     return this.dataService.put<User>(`${this.apiPath}/me`, updateUserRequest).pipe(
       switchMap((updatedUser: User) => {
-        this.cachedAt = new Date().getTime();
-        this.isReloading = false;
-        this.getUserSubject().next(updatedUser); // reset BehaviorSubject
+        this.setCached();
+        this.getCacheSubject().next(updatedUser); // reset BehaviorSubject
         return of(updatedUser);
       })
     );
   }
-  public clearCache(): void {
-    this.user$ = null;
-  }
+  
 }
