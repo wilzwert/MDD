@@ -14,6 +14,7 @@ import { MatIconButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NotificationService } from '../../../core/services/notification.service';
+import { ApiError } from 'src/app/core/errors/api-error';
 
 @Component({
   selector: 'app-post-detail',
@@ -29,6 +30,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   public comments$!: Observable<Comment[]>;
   public form!: FormGroup;
   private postId!: number;
+
+  public isSubmitting = false;
 
 
   constructor(
@@ -54,11 +57,24 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   submit(): void {
-    this.commentService.createPostComment(this.postId, this.form.value as CreateCommentRequest)
+    if(!this.isSubmitting) {
+      this.isSubmitting = true;
+      this.commentService.createPostComment(this.postId, this.form.value as CreateCommentRequest)
+      .pipe(
+        catchError((error: ApiError) => {
+          this.isSubmitting = false;
+          return throwError(error);
+        })
+      )
       .subscribe(() => {
+        this.isSubmitting = false;
         this.form.reset();
+        this.form.markAsPristine();
+        this.form.markAsUntouched();
+        this.form.updateValueAndValidity();
         this.notificationService.confirmation("Merci pour votre commentaire !");
       });
+    }
   }
 
   get content() {

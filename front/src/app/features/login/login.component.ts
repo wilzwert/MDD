@@ -26,6 +26,7 @@ import { ApiError } from '../../core/errors/api-error';
 })
 export class LoginComponent {
   public form:FormGroup;
+  public isSubmitting = false;
 
   constructor(
     private authService: AuthService,
@@ -51,11 +52,14 @@ export class LoginComponent {
   }
 
   public submit() :void {
+    if(!this.isSubmitting) {
+      this.isSubmitting = true;
       const loginRequest: LoginRequest = this.form.value as LoginRequest;
       this.authService.login(loginRequest)
         .pipe(
           catchError(
             (error: ApiError) => {
+              this.isSubmitting = false;
               return throwError(() => new Error(
                 'La connexion a échoué.'+(error.httpStatus === 401 ? ' Email ou mot de passe incorrect' : '')
               ));
@@ -64,9 +68,11 @@ export class LoginComponent {
         )
         .subscribe(
           (response: SessionInformation) => {
+            this.isSubmitting = false;
             this.sessionService.logIn(response);
             this.router.navigate(['/posts'])
           }
         )
+    }
   }
 }
