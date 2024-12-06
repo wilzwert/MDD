@@ -63,7 +63,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       .pipe(
         catchError((error: ApiError) => {
           this.isSubmitting = false;
-          return throwError(error);
+          return throwError(() => error);
         })
       )
       .subscribe(() => {

@@ -14,11 +14,13 @@ import { SessionService } from '../../core/services/session.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { CurrentUserSubscriptionService } from '../../core/services/current-user-subscription.service';
 import { ApiError } from 'src/app/core/errors/api-error';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-me',
   standalone: true,
   imports: [
+    RouterLink,
     TopicComponent, 
     AsyncPipe,
     MatButtonModule,
