@@ -26,6 +26,7 @@ import { ApiError } from '../../core/errors/api-error';
 })
 export class RegisterComponent {
   public form: FormGroup;
+  public isSubmitting = false;
 
   constructor(
     private authService: AuthService,
@@ -72,19 +73,24 @@ export class RegisterComponent {
 
 
   submit() :void {
-    this.authService.register(this.form.value as RegisterRequest)
-    .pipe(
-      take(1),
-      catchError(
-        (error: ApiError) => {
-          return throwError(() => new Error(
-            'Impossible de créer votre compte. '+(error.httpStatus === 409 ? "Email ou nom d'utilisateur déjà utilisé" : 'Une erreur est survenue')
-          ));
-        }
-    ))
-    .subscribe(() => {
-        this.notificationService.confirmation("Votre inscription a bien été enregistrée, vous pouvez maintenant vous connecter");
-        this.router.navigate(["/login"])
-    });
+    if(!this.isSubmitting) {
+      this.isSubmitting = true;
+      this.authService.register(this.form.value as RegisterRequest)
+      .pipe(
+        take(1),
+        catchError(
+          (error: ApiError) => {
+            this.isSubmitting = false;
+            return throwError(() => new Error(
+              'Impossible de créer votre compte. '+(error.httpStatus === 409 ? "Email ou nom d'utilisateur déjà utilisé" : 'Une erreur est survenue')
+            ));
+          }
+      ))
+      .subscribe(() => {
+          this.isSubmitting = false;
+          this.notificationService.confirmation("Votre inscription a bien été enregistrée, vous pouvez maintenant vous connecter");
+          this.router.navigate(["/login"])
+      });
+    }
   }
 }

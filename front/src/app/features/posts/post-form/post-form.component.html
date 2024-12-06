@@ -40,7 +40,7 @@
             <p>
                 <mat-form-field>
                     <mat-label>Contenu</mat-label>
-                    <textarea matInput placeholder="Saisissez le contenu de votre article" formControlName="content"></textarea>
+                    <textarea cdkTextareaAutosize cdkAutosizeMinRows="5" cdkAutosizeMaxRows="15" matInput placeholder="Saisissez le contenu de votre article" formControlName="content"></textarea>
                     <mat-hint class="content-hint" align="end">
                         @if(content?.invalid) {
                             <mat-icon class="input-invalid" svgIcon="invalid">Invalide</mat-icon>
@@ -51,7 +51,7 @@
                 </mat-form-field>
             </p>
         
-        <button mat-raised-button type="submit" [disabled]="form.invalid">Créer</button>
+        <button mat-raised-button type="submit" [disabled]="form.invalid ||isSubmitting"> @if (isSubmitting) { Chargement... } @else { Créer }</button>
         @if (error) {
             <p class="error">An error occurred : {{error}}</p>
         }

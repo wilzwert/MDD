@@ -49,7 +49,7 @@
                 </mat-form-field>
             </div>             
             <div class="form-comment-submit">
-                <button mat-icon-button  type="submit" [disabled]="form.invalid"><mat-icon svgIcon="send">Envoyer</mat-icon></button>
+                <button mat-icon-button  type="submit" [disabled]="form.invalid || isSubmitting">@if (isSubmitting) {...} @else {<mat-icon svgIcon="send">Envoyer</mat-icon>}</button>
             </div>
         </form>
     }

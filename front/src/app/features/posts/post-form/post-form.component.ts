@@ -16,6 +16,7 @@ import { Topic } from '../../../core/models/topic.interface';
 import { TopicService } from '../../../core/services/topic.service';
 import { MatSelectModule } from '@angular/material/select';
 import { NotificationService } from '../../../core/services/notification.service';
+import { ApiError } from 'src/app/core/errors/api-error';
 
 @Component({
   selector: 'app-post-form',
@@ -40,6 +41,8 @@ export class PostFormComponent implements OnInit {
   public form: FormGroup | undefined;
 
   public topics$!:Observable<Topic[]>;
+
+  public isSubmitting = false;
 
   constructor(
     private postService: PostService,
@@ -69,14 +72,27 @@ export class PostFormComponent implements OnInit {
   }
 
   submit() :void {
-    this.error = null;
-    this.postService.createPost(this.form?.value as CreatePostRequest)
-    .pipe(take(1))
-    .subscribe(() => {
+    if(!this.isSubmitting) {
+      this.isSubmitting = true;
+      this.error = null;
+      this.postService.createPost(this.form?.value as CreatePostRequest)
+      .pipe(
+        take(1),
+        catchError(
+          (error: ApiError) => {
+            this.isSubmitting = false;
+            return throwError(() => new Error(
+              'La création de votre artivle a échoué.'+error.message
+            ));
+          }
+        )
+      )
+      .subscribe(() => {
+        this.isSubmitting = false;
         this.notificationService.confirmation("Votre article a bien été créé")
         this.router.navigate(["/posts"])
-      }
-    );
+      });
+    }
   }
 
   get topicId() {
